@@ -1,0 +1,46 @@
+# Render Blueprint Specification for Food Allergy Detection System
+# https://render.com/docs/blueprint-spec
+
+services:
+  # -----------------------------------------------------------------
+  # Backend API - Render Web Service (Node.js + Express)
+  # -----------------------------------------------------------------
+  - type: web
+    name: food-allergy-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        sync: false
+
+  # -----------------------------------------------------------------
+  # Frontend - Render Static Site (React + Vite + Tailwind CSS)
+  # -----------------------------------------------------------------
+  - type: web
+    name: food-allergy-frontend
+    runtime: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      # SPA Rewrite: redirect all browser routes to index.html
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Set to the backend Web Service URL + /api (e.g. https://food-allergy-backend.onrender.com/api)
+      - key: VITE_API_URL
+        sync: false
