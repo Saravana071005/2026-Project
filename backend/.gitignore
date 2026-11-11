@@ -11,5 +11,8 @@ node_modules/
 *.log
 npm-debug.log*
 
+# Uploaded patient medical reports & temporary files
+uploads/
+
 # Coverage
 coverage/

@@ -54,6 +54,22 @@ const medicalTestRecordSchema = new mongoose.Schema(
       default: '',
       maxlength: [100, 'Units cannot exceed 100 characters'],
     },
+    referenceRange: {
+      type: String,
+      trim: true,
+      default: '',
+      maxlength: [100, 'Reference range cannot exceed 100 characters'],
+    },
+    reportId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'MedicalReport',
+      default: null,
+      index: true,
+    },
+    ocrExtracted: {
+      type: Boolean,
+      default: false,
+    },
     // Distinguish recorded test result from a doctor-confirmed diagnosis
     isDoctorConfirmedDiagnosis: {
       type: Boolean,

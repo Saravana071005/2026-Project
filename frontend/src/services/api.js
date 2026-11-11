@@ -1,7 +1,26 @@
 import axios from 'axios';
 
+/**
+ * Determine and normalize the API base URL.
+ * Supports:
+ * - Empty or undefined: defaults to '/api' (for local Vite dev proxy)
+ * - Domain without path: 'https://backend.onrender.com' -> automatically appends '/api'
+ * - Complete path with trailing slash: 'https://backend.onrender.com/api/' -> 'https://backend.onrender.com/api'
+ */
+const getBaseURL = () => {
+  let url = import.meta.env.VITE_API_URL;
+  if (!url || typeof url !== 'string' || !url.trim()) {
+    return '/api';
+  }
+  url = url.trim().replace(/\/+$/, '');
+  if (!url.endsWith('/api')) {
+    url = `${url}/api`;
+  }
+  return url;
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },

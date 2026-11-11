@@ -25,10 +25,16 @@ export default function LoginPage({ setActivePage }) {
       await login(email.trim(), password);
       setActivePage('dashboard');
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          'Failed to sign in. Please verify your email and password.'
-      );
+      const serverMsg = err.response?.data?.message;
+      if (serverMsg) {
+        setError(serverMsg);
+      } else if (err.code === 'ERR_NETWORK' || !err.response) {
+        setError(
+          'Cannot connect to backend server. Please verify your network connection or ensure the backend service on Render is active.'
+        );
+      } else {
+        setError('Failed to sign in. Please verify your email and password.');
+      }
     } finally {
       setLoading(false);
     }

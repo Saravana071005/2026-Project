@@ -20,6 +20,10 @@ import {
   Info,
   ShieldCheck,
   RefreshCw,
+  UploadCloud,
+  FileText,
+  Eye,
+  Building2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -28,16 +32,19 @@ import AllergyModal from '../components/AllergyModal';
 import MedicalTestModal from '../components/MedicalTestModal';
 import ProfileEditModal from '../components/ProfileEditModal';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
+import ReportUploadModal from '../components/ReportUploadModal';
+import ReportReviewModal from '../components/ReportReviewModal';
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState('allergies'); // 'allergies' | 'tests' | 'profile'
+  const [activeTab, setActiveTab] = useState('allergies'); // 'allergies' | 'tests' | 'reports' | 'profile'
 
   // Data States
   const [allergies, setAllergies] = useState([]);
   const [medicalTests, setMedicalTests] = useState([]);
+  const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toastMessage, setToastMessage] = useState('');
@@ -55,9 +62,14 @@ export default function DashboardPage() {
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
+  // OCR Upload and Review Modals state
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedReportForReview, setSelectedReportForReview] = useState(null);
+
   const [deleteModalState, setDeleteModalState] = useState({
     isOpen: false,
-    type: null, // 'allergy' | 'test'
+    type: null, // 'allergy' | 'test' | 'report'
     id: null,
     title: '',
     loading: false,
@@ -68,12 +80,14 @@ export default function DashboardPage() {
     setLoading(true);
     setError('');
     try {
-      const [allergiesRes, testsRes] = await Promise.all([
+      const [allergiesRes, testsRes, reportsRes] = await Promise.all([
         api.get('/allergies'),
         api.get('/medical-tests'),
+        api.get('/medical-reports'),
       ]);
       setAllergies(allergiesRes.data.data || []);
       setMedicalTests(testsRes.data.data || []);
+      setReports(reportsRes.data.data || []);
     } catch (err) {
       console.error('Failed to load records:', err);
       setError('Could not load records from MongoDB Atlas. Please check your connection.');
@@ -124,13 +138,39 @@ export default function DashboardPage() {
     showToast('Personal profile updated successfully.');
   };
 
+  // Medical report OCR callbacks
+  const handleUploadSuccess = (newReport) => {
+    setReports((prev) => [newReport, ...prev]);
+    setSelectedReportForReview(newReport);
+    setIsReviewModalOpen(true);
+    showToast('Medical report uploaded! Reviewing extracted data...');
+  };
+
+  const handleReportConfirmed = (savedTests, updatedReport) => {
+    if (Array.isArray(savedTests)) {
+      setMedicalTests((prev) => [...savedTests, ...prev]);
+    }
+    setReports((prev) =>
+      prev.map((r) => (r._id === updatedReport._id ? updatedReport : r))
+    );
+    showToast(
+      `Successfully saved ${savedTests?.length || 0} verified medical test record(s) to your health portal.`
+    );
+    fetchData();
+  };
+
   // Delete Handlers
   const openDeleteModal = (type, item) => {
+    let title = 'Confirm Deletion';
+    if (type === 'allergy') title = `Delete Allergy: ${item.allergenName}`;
+    else if (type === 'test') title = `Delete Test: ${item.allergenName} (${item.testType})`;
+    else if (type === 'report') title = `Delete Report Document: ${item.originalFileName}`;
+
     setDeleteModalState({
       isOpen: true,
       type,
       id: item._id,
-      title: type === 'allergy' ? `Delete Allergy: ${item.allergenName}` : `Delete Test: ${item.allergenName} (${item.testType})`,
+      title,
       loading: false,
     });
   };
@@ -148,6 +188,10 @@ export default function DashboardPage() {
         await api.delete(`/medical-tests/${id}`);
         setMedicalTests((prev) => prev.filter((t) => t._id !== id));
         showToast('Medical test record deleted from MongoDB Atlas.');
+      } else if (type === 'report') {
+        await api.delete(`/medical-reports/${id}`);
+        setReports((prev) => prev.filter((r) => r._id !== id));
+        showToast('Medical report and document file deleted from storage.');
       }
       setDeleteModalState({ isOpen: false, type: null, id: null, title: '', loading: false });
     } catch (err) {
@@ -182,6 +226,25 @@ export default function DashboardPage() {
       (t.clinicOrLabName && t.clinicOrLabName.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
+
+  // Filtered Medical Reports (OCR Documents)
+  const filteredReports = reports.filter((r) => {
+    const term = searchTerm.toLowerCase();
+    const filenameMatch = r.originalFileName?.toLowerCase().includes(term);
+    const clinicMatch = r.structuredExtractedData?.clinicOrLabName?.toLowerCase().includes(term);
+    const allergensMatch = (r.structuredExtractedData?.allergyTests || []).some((t) =>
+      t.allergenName?.toLowerCase().includes(term)
+    );
+    return !searchTerm || filenameMatch || clinicMatch || allergensMatch;
+  });
+
+  const formatFileSize = (bytes) => {
+    if (!bytes) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -245,6 +308,13 @@ export default function DashboardPage() {
               <span>Edit Profile</span>
             </button>
             <button
+              onClick={() => setIsUploadModalOpen(true)}
+              className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+            >
+              <UploadCloud className="w-4 h-4 text-slate-900" />
+              <span>Scan Report (OCR)</span>
+            </button>
+            <button
               onClick={() => {
                 setEditingAllergy(null);
                 setIsAllergyModalOpen(true);
@@ -272,60 +342,74 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Cards Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {/* Total Allergies */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
-            <ShieldAlert className="w-6 h-6" />
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+            <ShieldAlert className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Food Allergies
             </p>
-            <h3 className="text-2xl font-black text-slate-900">{allergies.length}</h3>
-            <p className="text-[11px] text-teal-600 font-medium">Recorded in MongoDB</p>
+            <h3 className="text-xl font-black text-slate-900">{allergies.length}</h3>
+            <p className="text-[10px] text-teal-600 font-medium">Recorded in MongoDB</p>
           </div>
         </div>
 
         {/* Medical Tests */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center shrink-0">
-            <FileCheck className="w-6 h-6" />
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center shrink-0">
+            <FileCheck className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Medical Tests
             </p>
-            <h3 className="text-2xl font-black text-slate-900">{medicalTests.length}</h3>
-            <p className="text-[11px] text-cyan-600 font-medium">Lab & SPT Reports</p>
+            <h3 className="text-xl font-black text-slate-900">{medicalTests.length}</h3>
+            <p className="text-[10px] text-cyan-600 font-medium">Lab & SPT Reports</p>
           </div>
         </div>
 
         {/* Confirmed Diagnoses */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-6 h-6" />
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Doctor-Confirmed
             </p>
-            <h3 className="text-2xl font-black text-slate-900">{confirmedDiagnosesCount}</h3>
-            <p className="text-[11px] text-emerald-600 font-medium">Physician Verified</p>
+            <h3 className="text-xl font-black text-slate-900">{confirmedDiagnosesCount}</h3>
+            <p className="text-[10px] text-emerald-600 font-medium">Physician Verified</p>
           </div>
         </div>
 
         {/* Severe Risks */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-6 h-6" />
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Severe / Anaphylaxis
             </p>
-            <h3 className="text-2xl font-black text-slate-900">{severeRiskCount}</h3>
-            <p className="text-[11px] text-rose-600 font-medium">EpiPen Action Level</p>
+            <h3 className="text-xl font-black text-slate-900">{severeRiskCount}</h3>
+            <p className="text-[10px] text-rose-600 font-medium">EpiPen Action Level</p>
+          </div>
+        </div>
+
+        {/* Scanned Lab Reports */}
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3 col-span-2 sm:col-span-1">
+          <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+            <UploadCloud className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              Scanned Reports
+            </p>
+            <h3 className="text-xl font-black text-slate-900">{reports.length}</h3>
+            <p className="text-[10px] text-amber-600 font-medium">OCR Extracted</p>
           </div>
         </div>
       </div>
@@ -357,6 +441,18 @@ export default function DashboardPage() {
             >
               <FileCheck className="w-4 h-4" />
               <span>Medical Test Records ({medicalTests.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('reports')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                activeTab === 'reports'
+                  ? 'bg-teal-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <UploadCloud className="w-4 h-4" />
+              <span>Scanned Documents ({reports.length})</span>
             </button>
 
             <button
@@ -625,16 +721,25 @@ export default function DashboardPage() {
                     Skin Prick Tests (SPT), Specific IgE Blood Tests, Oral Food Challenges (OFC)
                   </p>
                 </div>
-                <button
-                  onClick={() => {
-                    setEditingTest(null);
-                    setIsTestModalOpen(true);
-                  }}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 text-white text-xs font-bold hover:from-cyan-700 hover:to-teal-700 shadow-xs flex items-center gap-1.5 transition-all"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Add Medical Test</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setIsUploadModalOpen(true)}
+                    className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 transition-all"
+                  >
+                    <UploadCloud className="w-4 h-4" />
+                    <span>Scan Lab Report (OCR)</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditingTest(null);
+                      setIsTestModalOpen(true);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 text-white text-xs font-bold hover:from-cyan-700 hover:to-teal-700 shadow-xs flex items-center gap-1.5 transition-all"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Medical Test</span>
+                  </button>
+                </div>
               </div>
 
               {/* Clinical distinction guidance box */}
@@ -694,18 +799,26 @@ export default function DashboardPage() {
                             </p>
                           </div>
 
-                          {/* Clinical Confirmation Badge */}
-                          <span
-                            className={`px-2.5 py-1 rounded-full text-xs font-bold border shrink-0 ${
-                              test.isDoctorConfirmedDiagnosis
-                                ? 'bg-teal-50 text-teal-800 border-teal-300'
-                                : 'bg-amber-50 text-amber-800 border-amber-300'
-                            }`}
-                          >
-                            {test.isDoctorConfirmedDiagnosis
-                              ? 'Doctor Confirmed'
-                              : 'Test Report Only'}
-                          </span>
+                          {/* Clinical Confirmation & OCR Badges */}
+                          <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                            {test.ocrExtracted && (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-50 text-teal-800 border border-teal-200 flex items-center gap-1 shrink-0">
+                                <Sparkles className="w-3 h-3 text-teal-600" />
+                                OCR Verified
+                              </span>
+                            )}
+                            <span
+                              className={`px-2.5 py-1 rounded-full text-xs font-bold border shrink-0 ${
+                                test.isDoctorConfirmedDiagnosis
+                                  ? 'bg-teal-50 text-teal-800 border-teal-300'
+                                  : 'bg-amber-50 text-amber-800 border-amber-300'
+                              }`}
+                            >
+                              {test.isDoctorConfirmedDiagnosis
+                                ? 'Doctor Confirmed'
+                                : 'Test Report Only'}
+                            </span>
+                          </div>
                         </div>
 
                         {/* Test Result Highlight Card */}
@@ -721,6 +834,11 @@ export default function DashboardPage() {
                               <span className="text-xs text-slate-600 ml-1.5 font-medium">
                                 {test.units}
                               </span>
+                            )}
+                            {test.referenceRange && (
+                              <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                                Ref Range: <span className="font-mono text-slate-700">{test.referenceRange}</span>
+                              </p>
                             )}
                           </div>
 
@@ -794,7 +912,214 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* TAB 3: PERSONAL PROFILE DETAILS */}
+          {/* TAB 3: SCANNED LAB DOCUMENTS & OCR */}
+          {activeTab === 'reports' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">
+                    Scanned Medical Reports & Lab Documents
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    PDF and photo document uploads parsed with intelligent OCR layout understanding
+                  </p>
+                </div>
+                <button
+                  onClick={() => setIsUploadModalOpen(true)}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-bold hover:from-amber-600 hover:to-amber-700 shadow-xs flex items-center gap-1.5 transition-all self-start sm:self-auto"
+                >
+                  <UploadCloud className="w-4 h-4" />
+                  <span>Upload & Scan Document</span>
+                </button>
+              </div>
+
+              {/* Informational Guardrail */}
+              <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-950 text-xs flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold text-amber-950">Intelligent Document Extraction Protocol:</p>
+                  <p className="mt-0.5 text-amber-800 leading-relaxed">
+                    Unmeasured tests remain strictly saved as <code className="bg-amber-100 text-amber-900 px-1 py-0.5 rounded font-mono text-[11px]">null</code> and are never fabricated or assumed normal.
+                    All extracted allergen lines, reference ranges, and numerical values require your verification before becoming active medical records.
+                  </p>
+                </div>
+              </div>
+
+              {filteredReports.length === 0 ? (
+                <div className="p-12 text-center rounded-3xl bg-white border border-dashed border-slate-300 space-y-4">
+                  <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto">
+                    <UploadCloud className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-base">
+                      No Scanned Documents Found
+                    </h4>
+                    <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">
+                      {searchTerm
+                        ? 'No documents match your search query. Try clearing the search filter.'
+                        : 'Upload your laboratory PDF or clinical photo report. Our multi-engine OCR will extract allergens, decimal values, and reference ranges automatically.'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setIsUploadModalOpen(true)}
+                    className="px-5 py-2.5 rounded-xl bg-amber-500 text-white text-xs font-bold hover:bg-amber-600 transition-colors inline-flex items-center gap-1.5 shadow-xs"
+                  >
+                    <UploadCloud className="w-4 h-4" />
+                    <span>Upload First Document (OCR)</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {filteredReports.map((report) => {
+                    const isPdf = report.fileType === 'application/pdf';
+                    const isVerified = report.userVerificationStatus === 'verified';
+                    const structured = report.structuredExtractedData || {};
+                    const testsList = structured.allergyTests || [];
+
+                    return (
+                      <div
+                        key={report._id}
+                        className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between space-y-4"
+                      >
+                        <div>
+                          {/* File Header */}
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                                  isPdf
+                                    ? 'bg-rose-50 text-rose-600'
+                                    : 'bg-teal-50 text-teal-600'
+                                }`}
+                              >
+                                <FileText className="w-5 h-5" />
+                              </div>
+                              <div className="min-w-0">
+                                <h4
+                                  className="text-sm font-bold text-slate-900 truncate"
+                                  title={report.originalFileName}
+                                >
+                                  {report.originalFileName}
+                                </h4>
+                                <p className="text-[11px] text-slate-500 flex items-center gap-1">
+                                  <span>{formatFileSize(report.fileSize)}</span>
+                                  <span>&bull;</span>
+                                  <span>{isPdf ? 'PDF' : 'Image'}</span>
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Verification Pill */}
+                            <span
+                              className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${
+                                isVerified
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                  : 'bg-amber-50 text-amber-800 border-amber-200'
+                              }`}
+                            >
+                              {isVerified ? 'Verified' : 'Pending Review'}
+                            </span>
+                          </div>
+
+                          {/* Engine & Date row */}
+                          <div className="mt-3 flex items-center justify-between text-[11px] text-slate-500 bg-slate-50 p-2 rounded-xl border border-slate-100">
+                            <span className="font-medium">
+                              Engine:{' '}
+                              <strong className="text-slate-700 capitalize">
+                                {report.ocrEngine?.replace('_', ' ') || 'Hybrid'}
+                              </strong>
+                            </span>
+                            <span>{formatDate(report.createdAt)}</span>
+                          </div>
+
+                          {/* Extracted Lab / Doctor */}
+                          {(structured.clinicOrLabName || structured.doctorName) && (
+                            <div className="mt-3 text-xs space-y-0.5 text-slate-600">
+                              {structured.clinicOrLabName && (
+                                <p className="truncate flex items-center gap-1">
+                                  <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                  <span className="font-semibold text-slate-800">
+                                    {structured.clinicOrLabName}
+                                  </span>
+                                </p>
+                              )}
+                              {structured.doctorName && (
+                                <p className="truncate flex items-center gap-1">
+                                  <Stethoscope className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                  <span>{structured.doctorName}</span>
+                                </p>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Extracted Allergy Tests preview */}
+                          <div className="mt-3">
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+                              Extracted Test Lines ({testsList.length}):
+                            </span>
+                            {testsList.length > 0 ? (
+                              <div className="flex flex-wrap gap-1">
+                                {testsList.slice(0, 4).map((t, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="px-2 py-0.5 rounded-md bg-teal-50 border border-teal-100 text-teal-800 text-[11px] font-medium"
+                                  >
+                                    {t.allergenName}: <strong>{t.testResult}</strong>
+                                    {t.units ? ` ${t.units}` : ''}
+                                  </span>
+                                ))}
+                                {testsList.length > 4 && (
+                                  <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+                                    +{testsList.length - 4} more
+                                  </span>
+                                )}
+                              </div>
+                            ) : (
+                              <p className="text-xs text-slate-400 italic">
+                                No allergen lines parsed
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Preserved Nulls Notice */}
+                          <div className="mt-3 p-2 rounded-lg bg-slate-50 border border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
+                            <span>Biomarkers not in doc:</span>
+                            <span className="font-mono text-[10px] font-semibold text-slate-700">
+                              saved as null
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Bottom Actions */}
+                        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                          <button
+                            onClick={() => {
+                              setSelectedReportForReview(report);
+                              setIsReviewModalOpen(true);
+                            }}
+                            className="px-3.5 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold transition-colors flex items-center gap-1 shadow-2xs"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>{isVerified ? 'View / Re-verify' : 'Review & Verify'}</span>
+                          </button>
+
+                          <button
+                            onClick={() => openDeleteModal('report', report)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                            title="Delete Document"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 4: PERSONAL PROFILE DETAILS */}
           {activeTab === 'profile' && (
             <div className="max-w-3xl mx-auto space-y-6">
               <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
@@ -944,6 +1269,23 @@ export default function DashboardPage() {
         onConfirm={handleConfirmDelete}
         title={deleteModalState.title}
         loading={deleteModalState.loading}
+      />
+
+      {/* Intelligent OCR Report Upload and Verification Modals */}
+      <ReportUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onUploadSuccess={handleUploadSuccess}
+      />
+
+      <ReportReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => {
+          setIsReviewModalOpen(false);
+          setSelectedReportForReview(null);
+        }}
+        report={selectedReportForReview}
+        onConfirmedSaved={handleReportConfirmed}
       />
     </div>
   );

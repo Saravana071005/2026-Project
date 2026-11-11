@@ -3,10 +3,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { connectDB } from './config/db.js';
+import { requireDbConnection } from './middleware/dbCheckMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import allergyRoutes from './routes/allergyRoutes.js';
 import medicalTestRoutes from './routes/medicalTestRoutes.js';
+import medicalReportRoutes from './routes/medicalReportRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -14,13 +16,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
+// Connect to MongoDB (non-blocking)
 connectDB();
 
 // CORS configuration - support local dev and production client URL (strip trailing slashes)
 const configuredClientUrls = (process.env.CLIENT_URL || '')
   .split(',')
-  .map((url) => url.trim().replace(/\/$/, ''))
+  .map((url) => url.trim().replace(/\/+$/, ''))
   .filter(Boolean);
 
 const defaultOrigins = [
@@ -36,10 +38,18 @@ const allowedOrigins = [...new Set([...defaultOrigins, ...configuredClientUrls])
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps, curl, or Postman)
+      // Allow requests with no origin (mobile apps, curl, server-to-server, Render health checks)
       if (!origin) return callback(null, true);
-      const normalizedOrigin = origin.replace(/\/$/, '');
-      if (allowedOrigins.indexOf(normalizedOrigin) !== -1 || process.env.NODE_ENV !== 'production') {
+
+      const normalizedOrigin = origin.replace(/\/+$/, '');
+
+      // Allow if explicitly configured, in development mode, or matching Render domains
+      const isAllowed =
+        allowedOrigins.includes(normalizedOrigin) ||
+        process.env.NODE_ENV !== 'production' ||
+        normalizedOrigin.endsWith('.onrender.com');
+
+      if (isAllowed) {
         return callback(null, true);
       }
       return callback(new Error(`CORS policy does not allow access from origin: ${origin}`));
@@ -51,7 +61,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health check handler for Render and load balancers
+// Health check handler for Render and monitoring
 const healthCheckHandler = (req, res) => {
   const isDbConnected = mongoose.connection.readyState === 1;
   const dbStatusMap = {
@@ -62,7 +72,8 @@ const healthCheckHandler = (req, res) => {
   };
   const dbState = dbStatusMap[mongoose.connection.readyState] || 'unknown';
 
-  res.status(isDbConnected ? 200 : 503).json({
+  // Return HTTP 200 so Render health check probes succeed while exposing exact state
+  res.status(200).json({
     status: isDbConnected ? 'ok' : 'degraded',
     service: 'Food Allergy Detection System API',
     database: `MongoDB (${dbState})`,
@@ -74,11 +85,12 @@ const healthCheckHandler = (req, res) => {
 app.get('/health', healthCheckHandler);
 app.get('/api/health', healthCheckHandler);
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/allergies', allergyRoutes);
-app.use('/api/medical-tests', medicalTestRoutes);
+// API Routes protected by database readiness check
+app.use('/api/auth', requireDbConnection, authRoutes);
+app.use('/api/user', requireDbConnection, userRoutes);
+app.use('/api/allergies', requireDbConnection, allergyRoutes);
+app.use('/api/medical-tests', requireDbConnection, medicalTestRoutes);
+app.use('/api/medical-reports', requireDbConnection, medicalReportRoutes);
 
 // 404 handler for unknown routes
 app.use((req, res) => {

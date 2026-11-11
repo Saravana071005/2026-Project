@@ -101,11 +101,19 @@ export default function RegisterPage({ setActivePage }) {
         setActivePage('dashboard');
       }, 1000);
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          err.response?.data?.errors?.[0]?.message ||
-          'Registration failed. Please verify your details.'
-      );
+      const specificFieldErr = err.response?.data?.errors?.[0]?.message;
+      const serverMsg = err.response?.data?.message;
+      if (specificFieldErr) {
+        setError(specificFieldErr);
+      } else if (serverMsg) {
+        setError(serverMsg);
+      } else if (err.code === 'ERR_NETWORK' || !err.response) {
+        setError(
+          'Cannot connect to backend server. Please verify your network connection or ensure the backend service on Render is active.'
+        );
+      } else {
+        setError('Registration failed. Please verify your details and try again.');
+      }
     } finally {
       setLoading(false);
     }
