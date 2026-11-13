@@ -313,7 +313,7 @@ export function extractDoctorName(text, lines) {
  * Extract General Measurements (Blood Pressure, Blood Sugar, Cholesterol, Total IgE)
  * If absent, must return null (Strict Requirement #5)
  */
-export function extractGeneralMeasurements(text, lines) {
+export function extractGeneralMeasurements(text, _lines) {
   const result = {
     bloodPressure: null,
     bloodSugar: null,
@@ -389,9 +389,6 @@ export function extractClinicalStatus(text) {
 export function extractAllergyTests(text, lines) {
   const extractedTests = [];
   const processedAllergens = new Set();
-
-  // Pattern for numerical results: preserves decimals (e.g. 24.6, 0.18, 7.5, <0.35, >100)
-  const resultValueRegex = /(?:[<>]=?\s*)?\d+(?:\.\d+)?/;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -582,7 +579,7 @@ export function extractAllergyTests(text, lines) {
  * Main Document Understanding Function
  * Ingests raw OCR output and constructs structured, confidence-annotated medical document data.
  */
-export function analyzeMedicalDocument(rawText, metadata = {}) {
+export function analyzeMedicalDocument(rawText, _metadata = {}) {
   const text = rawText || '';
   const lines = normalizeTextLines(text);
 

@@ -23,6 +23,8 @@ const COMMON_UNITS = [
   'Other / None',
 ];
 
+const TODAY_DATE_STRING = new Date().toISOString().split('T')[0];
+
 export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData }) {
   const [allergenName, setAllergenName] = useState('');
   const [testType, setTestType] = useState('Skin Prick Test (SPT)');
@@ -58,7 +60,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
     } else {
       setAllergenName('');
       setTestType('Skin Prick Test (SPT)');
-      setTestDate(new Date().toISOString().split('T')[0]);
+      setTestDate(TODAY_DATE_STRING);
       setTestResult('');
       setUnits('mm wheal diameter (Skin Prick)');
       setIsDoctorConfirmedDiagnosis(false);
@@ -227,7 +229,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
               <input
                 type="date"
                 required
-                max={new Date().toISOString().split('T')[0]}
+                max={TODAY_DATE_STRING}
                 value={testDate}
                 onChange={(e) => setTestDate(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-slate-900 text-sm shadow-xs"

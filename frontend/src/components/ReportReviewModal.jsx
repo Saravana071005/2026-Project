@@ -19,8 +19,6 @@ import {
   ChevronUp,
   FileText,
   Building2,
-  Stethoscope,
-  Calendar,
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -35,15 +33,7 @@ const TEST_TYPES = [
   'Other',
 ];
 
-const COMMON_UNITS = [
-  'kUA/L (Specific IgE)',
-  'mm wheal diameter (Skin Prick)',
-  'IU/mL (Total IgE)',
-  'Index / Ratio',
-  'Positive / Negative qualitative',
-  'grams consumed (Food Challenge)',
-  'Other / None',
-];
+const TODAY_DATE_STRING = new Date().toISOString().split('T')[0];
 
 export default function ReportReviewModal({
   isOpen,
@@ -51,13 +41,10 @@ export default function ReportReviewModal({
   report,
   onConfirmedSaved,
 }) {
-  if (!isOpen || !report) return null;
-
   // Extracted Data Form State
-  const structured = report.structuredExtractedData || {};
   const [clinicOrLabName, setClinicOrLabName] = useState('');
   const [doctorName, setDoctorName] = useState('');
-  const [testDate, setTestDate] = useState('');
+  const [testDate, setTestDate] = useState(TODAY_DATE_STRING);
   const [clinicalDiagnosisStatus, setClinicalDiagnosisStatus] = useState(
     'Recorded Test Result (Not yet confirmed)'
   );
@@ -86,13 +73,14 @@ export default function ReportReviewModal({
 
   // Initialize fields on mount / report change
   useEffect(() => {
-    if (report) {
+    if (report && report.structuredExtractedData) {
+      const structured = report.structuredExtractedData;
       setClinicOrLabName(structured.clinicOrLabName || '');
       setDoctorName(structured.doctorName || '');
       setTestDate(
         structured.testDate
           ? new Date(structured.testDate).toISOString().split('T')[0]
-          : new Date().toISOString().split('T')[0]
+          : TODAY_DATE_STRING
       );
       setClinicalDiagnosisStatus(
         structured.clinicalDiagnosisStatus || 'Recorded Test Result (Not yet confirmed)'
@@ -125,15 +113,18 @@ export default function ReportReviewModal({
   // Fetch document file securely via authenticated stream
   useEffect(() => {
     let active = true;
+    let objectUrl = null;
+
     const fetchFile = async () => {
+      if (!report || !report._id) return;
       setLoadingFile(true);
       try {
         const res = await api.get(`/medical-reports/${report._id}/file`, {
           responseType: 'blob',
         });
         if (active) {
-          const url = URL.createObjectURL(res.data);
-          setFileBlobUrl(url);
+          objectUrl = URL.createObjectURL(res.data);
+          setFileBlobUrl(objectUrl);
         }
       } catch (err) {
         console.warn('Could not load report file blob:', err.message);
@@ -142,15 +133,13 @@ export default function ReportReviewModal({
       }
     };
 
-    if (report && report._id) {
-      fetchFile();
-    }
+    fetchFile();
 
     return () => {
       active = false;
-      if (fileBlobUrl) URL.revokeObjectURL(fileBlobUrl);
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [report._id]);
+  }, [report]);
 
   // Test field modifiers
   const updateTest = (index, field, value) => {
@@ -276,7 +265,9 @@ export default function ReportReviewModal({
     }
   };
 
-  const isPdf = report.fileType === 'application/pdf';
+  const isPdf = report?.fileType === 'application/pdf';
+
+  if (!isOpen || !report) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4">
@@ -452,7 +443,7 @@ export default function ReportReviewModal({
                   </label>
                   <input
                     type="date"
-                    max={new Date().toISOString().split('T')[0]}
+                    max={TODAY_DATE_STRING}
                     value={testDate}
                     onChange={(e) => setTestDate(e.target.value)}
                     className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"

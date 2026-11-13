@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import MedicalTestRecord from '../models/MedicalTestRecord.js';
 
 /**
@@ -128,6 +129,14 @@ export const createMedicalTest = async (req, res) => {
 export const updateMedicalTest = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid medical test record ID format.',
+      });
+    }
+
     const {
       allergenName,
       testType,
@@ -205,6 +214,13 @@ export const updateMedicalTest = async (req, res) => {
 export const deleteMedicalTest = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid medical test record ID format.',
+      });
+    }
 
     // Strict ownership check
     const medicalTest = await MedicalTestRecord.findOneAndDelete({

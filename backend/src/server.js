@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import path from 'path';
+import fs from 'fs';
 import { connectDB } from './config/db.js';
 import { requireDbConnection } from './middleware/dbCheckMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
@@ -92,7 +94,28 @@ app.use('/api/allergies', requireDbConnection, allergyRoutes);
 app.use('/api/medical-tests', requireDbConnection, medicalTestRoutes);
 app.use('/api/medical-reports', requireDbConnection, medicalReportRoutes);
 
-// 404 handler for unknown routes
+// Serve static frontend files if built (for monolithic or production single-service hosting)
+const candidateDistPaths = [
+  path.resolve(process.cwd(), '../frontend/dist'),
+  path.resolve(process.cwd(), 'frontend/dist'),
+  path.resolve(process.cwd(), 'dist'),
+];
+const distPath = candidateDistPaths.find((p) => fs.existsSync(p));
+
+if (distPath) {
+  console.log(`[Static Serving] Serving production frontend build from: ${distPath}`);
+  app.use(express.static(distPath));
+
+  // SPA fallback: All non-API GET requests serve frontend index.html
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    return res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
+
+// 404 handler for unknown routes (strictly for unhandled API or non-GET requests)
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -101,7 +124,7 @@ app.use((req, res) => {
 });
 
 // Global error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('[Global Error Handler]:', err.message);
 
   if (err.name === 'ValidationError') {

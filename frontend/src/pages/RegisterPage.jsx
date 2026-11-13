@@ -11,11 +11,12 @@ import {
   Sparkles,
   AlertCircle,
   CheckCircle,
-  Database,
   ArrowRight,
 } from 'lucide-react';
 import { calculateAge } from '../utils/ageCalculator';
 import { useAuth } from '../context/AuthContext';
+
+const TODAY_DATE_STRING = new Date().toISOString().split('T')[0];
 
 export default function RegisterPage({ setActivePage }) {
   const { register } = useAuth();
@@ -199,7 +200,7 @@ export default function RegisterPage({ setActivePage }) {
                 <input
                   type="date"
                   required
-                  max={new Date().toISOString().split('T')[0]}
+                  max={TODAY_DATE_STRING}
                   value={dob}
                   onChange={handleDobChange}
                   className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs"

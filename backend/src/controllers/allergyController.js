@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import AllergyRecord from '../models/AllergyRecord.js';
 
 /**
@@ -83,6 +84,14 @@ export const createAllergy = async (req, res) => {
 export const updateAllergy = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid allergy record ID format.',
+      });
+    }
+
     const {
       allergenName,
       allergenCategory,
@@ -141,6 +150,13 @@ export const updateAllergy = async (req, res) => {
 export const deleteAllergy = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid allergy record ID format.',
+      });
+    }
 
     // Strict ownership verification
     const allergy = await AllergyRecord.findOneAndDelete({

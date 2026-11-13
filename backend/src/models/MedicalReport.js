@@ -180,7 +180,7 @@ const medicalReportSchema = new mongoose.Schema(
     },
     userVerificationStatus: {
       type: String,
-      enum: ['unverified', 'verified_and_saved', 'rejected'],
+      enum: ['unverified', 'verified', 'verified_and_saved', 'rejected'],
       default: 'unverified',
       index: true,
     },

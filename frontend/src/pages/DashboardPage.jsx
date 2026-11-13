@@ -7,18 +7,14 @@ import {
   Edit2,
   Trash2,
   Search,
-  Filter,
-  Activity,
   Calendar,
   AlertTriangle,
   Stethoscope,
   MapPin,
   Mail,
   CheckCircle2,
-  Clock,
   Sparkles,
   Info,
-  ShieldCheck,
   RefreshCw,
   UploadCloud,
   FileText,
@@ -36,7 +32,7 @@ import ReportUploadModal from '../components/ReportUploadModal';
 import ReportReviewModal from '../components/ReportReviewModal';
 
 export default function DashboardPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   // Active Tab
   const [activeTab, setActiveTab] = useState('allergies'); // 'allergies' | 'tests' | 'reports' | 'profile'
@@ -972,7 +968,10 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {filteredReports.map((report) => {
                     const isPdf = report.fileType === 'application/pdf';
-                    const isVerified = report.userVerificationStatus === 'verified';
+                    const isVerified =
+                      report.userVerificationStatus === 'verified' ||
+                      report.userVerificationStatus === 'verified_and_saved' ||
+                      report.processingStatus === 'confirmed';
                     const structured = report.structuredExtractedData || {};
                     const testsList = structured.allergyTests || [];
 

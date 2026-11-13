@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { ShieldCheck, User, LogOut, Activity, Database, FileText } from 'lucide-react';
+import { ShieldCheck, LogOut, Activity, Database } from 'lucide-react';
 
 export default function Navbar({ activePage, setActivePage }) {
   const { user, isAuthenticated, logout } = useAuth();

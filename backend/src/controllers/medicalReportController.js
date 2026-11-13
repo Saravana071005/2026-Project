@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import mongoose from 'mongoose';
 import multer from 'multer';
 import MedicalReport from '../models/MedicalReport.js';
 import MedicalTestRecord from '../models/MedicalTestRecord.js';
@@ -151,6 +152,13 @@ export const getReportById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid report ID format.',
+      });
+    }
+
     // Strict ownership verification
     const report = await MedicalReport.findOne({
       _id: id,
@@ -184,6 +192,13 @@ export const getReportById = async (req, res) => {
 export const getReportFile = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid report ID format.',
+      });
+    }
 
     // Strict ownership check
     const report = await MedicalReport.findOne({
@@ -227,6 +242,13 @@ export const getReportFile = async (req, res) => {
 export const reprocessReport = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid report ID format.',
+      });
+    }
 
     const report = await MedicalReport.findOne({
       _id: id,
@@ -281,6 +303,14 @@ export const reprocessReport = async (req, res) => {
 export const confirmReportData = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid report ID format.',
+      });
+    }
+
     const {
       tests,
       clinicOrLabName,
@@ -343,10 +373,19 @@ export const confirmReportData = async (req, res) => {
       savedTestRecords.push(newTest);
     }
 
-    // Update report verification state
+    // Update report verification state & persist verified clinic/doctor values
     report.userVerificationStatus = 'verified_and_saved';
     report.processingStatus = 'confirmed';
     report.relatedMedicalTestRecordIds = savedTestRecords.map((t) => t._id);
+    if (!report.structuredExtractedData) {
+      report.structuredExtractedData = {};
+    }
+    if (clinicOrLabName !== undefined) {
+      report.structuredExtractedData.clinicOrLabName = clinicOrLabName.trim();
+    }
+    if (doctorName !== undefined) {
+      report.structuredExtractedData.doctorName = doctorName.trim();
+    }
     await report.save();
 
     return res.status(200).json({
@@ -372,6 +411,13 @@ export const confirmReportData = async (req, res) => {
 export const deleteReport = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid report ID format.',
+      });
+    }
 
     const report = await MedicalReport.findOne({
       _id: id,

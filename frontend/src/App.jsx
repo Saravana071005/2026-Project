@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -6,48 +6,87 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
+import NotFoundPage from './pages/NotFoundPage';
+
+/**
+ * Cleanly map browser pathname to an application view.
+ * Handles trailing slashes, root URL, and unknown routes.
+ */
+function getPageFromPath(pathname) {
+  if (!pathname) return 'home';
+  // Strip trailing slashes and normalize
+  const cleanPath = pathname.replace(/\/+$/, '') || '/';
+  if (cleanPath === '/' || cleanPath === '') return 'home';
+  if (cleanPath === '/login') return 'login';
+  if (cleanPath === '/register') return 'register';
+  if (cleanPath === '/dashboard') return 'dashboard';
+  return 'not_found';
+}
 
 function AppContent() {
   const { isAuthenticated, loading } = useAuth();
-  const [activePage, setActivePage] = useState('home');
 
-  useEffect(() => {
-    // Check initial pathname or query
-    const path = window.location.pathname;
-    if (path === '/login') setActivePage('login');
-    else if (path === '/register') setActivePage('register');
-    else if (path === '/dashboard') setActivePage('dashboard');
-    else setActivePage('home');
-  }, []);
+  // Initialize activePage synchronously from window.location.pathname to avoid render flickers
+  const [activePage, setActivePage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return getPageFromPath(window.location.pathname);
+    }
+    return 'home';
+  });
 
-  // Update browser history title and path
-  const handlePageChange = (newPage) => {
-    setActivePage(newPage);
-    const newPath = newPage === 'home' ? '/' : `/${newPage}`;
-    window.history.pushState(null, '', newPath);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // Navigate function: updates active page and manages HTML5 History API
+  const handlePageChange = useCallback(
+    (newPage, options = {}) => {
+      const { replace = false } = options;
 
-  // Listen to browser back/forward buttons
+      // Prevent redundant history entries if already on the requested page
+      if (newPage === activePage && !replace) {
+        return;
+      }
+
+      setActivePage(newPage);
+
+      let targetPath = '/';
+      if (newPage === 'login') targetPath = '/login';
+      else if (newPage === 'register') targetPath = '/register';
+      else if (newPage === 'dashboard') targetPath = '/dashboard';
+      else if (newPage === 'not_found') targetPath = window.location.pathname;
+
+      if (replace || window.location.pathname === targetPath) {
+        window.history.replaceState({ page: newPage }, '', targetPath);
+      } else {
+        window.history.pushState({ page: newPage }, '', targetPath);
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    [activePage]
+  );
+
+  // Listen to browser popstate (Back / Forward navigation)
   useEffect(() => {
     const handlePopState = () => {
-      const path = window.location.pathname;
-      if (path === '/login') setActivePage('login');
-      else if (path === '/register') setActivePage('register');
-      else if (path === '/dashboard') setActivePage('dashboard');
-      else setActivePage('home');
+      const page = getPageFromPath(window.location.pathname);
+      setActivePage(page);
     };
+
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // If user becomes authenticated and is on login/register, transition to dashboard
+  // Handle authenticated user on login/register pages: redirect to dashboard with replaceState
   useEffect(() => {
-    if (isAuthenticated && (activePage === 'login' || activePage === 'register')) {
-      setActivePage('dashboard');
-      window.history.pushState(null, '', '/dashboard');
+    if (!loading && isAuthenticated && (activePage === 'login' || activePage === 'register')) {
+      handlePageChange('dashboard', { replace: true });
     }
-  }, [isAuthenticated, activePage]);
+  }, [isAuthenticated, activePage, loading, handlePageChange]);
+
+  // Handle unauthenticated user accessing protected dashboard: redirect to login with replaceState
+  useEffect(() => {
+    if (!loading && !isAuthenticated && activePage === 'dashboard') {
+      handlePageChange('login', { replace: true });
+    }
+  }, [isAuthenticated, activePage, loading, handlePageChange]);
 
   if (loading) {
     return (
@@ -70,13 +109,8 @@ function AppContent() {
         {activePage === 'home' && <HomePage setActivePage={handlePageChange} />}
         {activePage === 'login' && <LoginPage setActivePage={handlePageChange} />}
         {activePage === 'register' && <RegisterPage setActivePage={handlePageChange} />}
-        {activePage === 'dashboard' && (
-          isAuthenticated ? (
-            <DashboardPage />
-          ) : (
-            <LoginPage setActivePage={handlePageChange} />
-          )
-        )}
+        {activePage === 'dashboard' && isAuthenticated && <DashboardPage />}
+        {activePage === 'not_found' && <NotFoundPage setActivePage={handlePageChange} />}
       </main>
 
       <Footer />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, Database, Heart, Lock } from 'lucide-react';
+import { ShieldAlert, Database, Lock } from 'lucide-react';
 
 export default function Footer() {
   return (

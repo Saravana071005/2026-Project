@@ -6,7 +6,6 @@ import {
   Database,
   Lock,
   ArrowRight,
-  ClipboardList,
   Sparkles,
   HeartPulse,
   Award,
