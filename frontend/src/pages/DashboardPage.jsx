@@ -30,6 +30,8 @@ import {
   FlaskConical,
   Utensils,
   Microscope,
+  TrendingUp,
+  Bot,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -40,6 +42,15 @@ import ProfileEditModal from '../components/ProfileEditModal';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import ReportUploadModal from '../components/ReportUploadModal';
 import ReportReviewModal from '../components/ReportReviewModal';
+import FoodEntryModal from '../components/FoodEntryModal';
+import SymptomEntryModal from '../components/SymptomEntryModal';
+import AIAnalysisDetailModal from '../components/AIAnalysisDetailModal';
+import EmergencyAlertBanner from '../components/EmergencyAlertBanner';
+import DailyFoodDiaryView from '../components/DailyFoodDiaryView';
+import SymptomJournalView from '../components/SymptomJournalView';
+import AIAnalysisView from '../components/AIAnalysisView';
+import HistoryAndPatternsView from '../components/HistoryAndPatternsView';
+import AIHealthAssistantView from '../components/AIHealthAssistantView';
 import {
   SUPPORTED_TEST_TYPES_LIST,
   TEST_SCHEMAS,
@@ -326,13 +337,21 @@ function TestSpecificParametersView({ test }) {
 export default function DashboardPage() {
   const { user } = useAuth();
 
-  // Active Tab
-  const [activeTab, setActiveTab] = useState('allergies'); // 'allergies' | 'tests' | 'reports' | 'profile'
+  // Active Tab: allergies | tests | diary | symptoms | analysis | history | assistant | reports | profile
+  const [activeTab, setActiveTab] = useState('allergies');
 
   // Data States
   const [allergies, setAllergies] = useState([]);
   const [medicalTests, setMedicalTests] = useState([]);
   const [reports, setReports] = useState([]);
+  const [foodEntries, setFoodEntries] = useState([]);
+  const [symptoms, setSymptoms] = useState([]);
+  const [analyses, setAnalyses] = useState([]);
+  const [dietMonitoring, setDietMonitoring] = useState(null);
+  const [patterns, setPatterns] = useState(null);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatLoading, setChatLoading] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [toastMessage, setToastMessage] = useState('');
@@ -347,6 +366,15 @@ export default function DashboardPage() {
 
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const [editingTest, setEditingTest] = useState(null);
+
+  const [isFoodModalOpen, setIsFoodModalOpen] = useState(false);
+  const [editingFood, setEditingFood] = useState(null);
+
+  const [isSymptomModalOpen, setIsSymptomModalOpen] = useState(false);
+  const [editingSymptom, setEditingSymptom] = useState(null);
+
+  const [selectedAnalysis, setSelectedAnalysis] = useState(null);
+  const [isAnalysisDetailOpen, setIsAnalysisDetailOpen] = useState(false);
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
@@ -364,7 +392,7 @@ export default function DashboardPage() {
 
   const [deleteModalState, setDeleteModalState] = useState({
     isOpen: false,
-    type: null, // 'allergy' | 'test' | 'report'
+    type: null, // 'allergy' | 'test' | 'report' | 'food' | 'symptom' | 'analysis'
     id: null,
     title: '',
     loading: false,
@@ -375,14 +403,37 @@ export default function DashboardPage() {
     setLoading(true);
     setError('');
     try {
-      const [allergiesRes, testsRes, reportsRes] = await Promise.all([
+      const [
+        allergiesRes,
+        testsRes,
+        reportsRes,
+        foodRes,
+        symptomsRes,
+        analysesRes,
+        dietRes,
+        patternsRes,
+        chatRes,
+      ] = await Promise.allSettled([
         api.get('/allergies'),
         api.get('/medical-tests'),
         api.get('/medical-reports'),
+        api.get('/food-diary'),
+        api.get('/symptoms'),
+        api.get('/ai-analysis/history'),
+        api.get('/ai-analysis/diet-monitoring'),
+        api.get('/ai-analysis/patterns'),
+        api.get('/ai-chat/history'),
       ]);
-      setAllergies(allergiesRes.data.data || []);
-      setMedicalTests(testsRes.data.data || []);
-      setReports(reportsRes.data.data || []);
+
+      if (allergiesRes.status === 'fulfilled') setAllergies(allergiesRes.value.data.data || []);
+      if (testsRes.status === 'fulfilled') setMedicalTests(testsRes.value.data.data || []);
+      if (reportsRes.status === 'fulfilled') setReports(reportsRes.value.data.data || []);
+      if (foodRes.status === 'fulfilled') setFoodEntries(foodRes.value.data.data || []);
+      if (symptomsRes.status === 'fulfilled') setSymptoms(symptomsRes.value.data.data || []);
+      if (analysesRes.status === 'fulfilled') setAnalyses(analysesRes.value.data.data || []);
+      if (dietRes.status === 'fulfilled') setDietMonitoring(dietRes.value.data.data || null);
+      if (patternsRes.status === 'fulfilled') setPatterns(patternsRes.value.data.data || null);
+      if (chatRes.status === 'fulfilled') setChatMessages(chatRes.value.data.data || []);
     } catch (err) {
       console.error('Failed to load records:', err);
       setError('Could not load records from MongoDB Atlas. Please check your connection.');
@@ -428,6 +479,109 @@ export default function DashboardPage() {
     }
   };
 
+  // Food diary callbacks
+  const handleFoodSaved = (savedFood, isEdit) => {
+    if (isEdit) {
+      setFoodEntries((prev) =>
+        prev.map((f) => (f._id === savedFood._id ? savedFood : f))
+      );
+      showToast('Food intake diary record updated successfully.');
+    } else {
+      setFoodEntries((prev) => [savedFood, ...prev]);
+      showToast('New food intake entry logged to diary.');
+    }
+    api.get('/ai-analysis/diet-monitoring').then((r) => setDietMonitoring(r.data.data)).catch(() => {});
+    api.get('/ai-analysis/patterns').then((r) => setPatterns(r.data.data)).catch(() => {});
+  };
+
+  // Symptom callbacks
+  const handleSymptomSaved = (savedSymptom, isEdit) => {
+    if (isEdit) {
+      setSymptoms((prev) =>
+        prev.map((s) => (s._id === savedSymptom._id ? savedSymptom : s))
+      );
+      showToast('Symptom & reaction record updated.');
+    } else {
+      setSymptoms((prev) => [savedSymptom, ...prev]);
+      showToast('New symptom reaction logged.');
+    }
+    if (savedSymptom.isEmergencyAlertTriggered) {
+      showToast('EMERGENCY: Immediate medical attention advised!');
+    }
+    api.get('/ai-analysis/patterns').then((r) => setPatterns(r.data.data)).catch(() => {});
+  };
+
+  const handleLogSymptomForFood = (food) => {
+    setEditingSymptom({
+      foodEntryId: food._id,
+      foodConsumed: food.foodName,
+      consumptionTime: food.consumptionTime,
+    });
+    setIsSymptomModalOpen(true);
+  };
+
+  // AI Analysis callbacks
+  const handleRunAnalysis = async (userPrompt = '') => {
+    try {
+      const res = await api.post('/ai-analysis/analyze', { prompt: userPrompt });
+      const record = res.data.data?.analysisRecord;
+      if (record) {
+        setAnalyses((prev) => [record, ...prev]);
+        setSelectedAnalysis(record);
+        setIsAnalysisDetailOpen(true);
+        showToast('Clinical AI Analysis generated successfully!');
+      }
+    } catch (err) {
+      console.error('AI Analysis failed:', err);
+      showToast(err.response?.data?.message || 'Failed to generate AI analysis.');
+    }
+  };
+
+  // AI Chat callbacks
+  const handleSendMessage = async (text) => {
+    if (!text.trim()) return;
+    const optimisticMsg = {
+      role: 'user',
+      content: text,
+      createdAt: new Date().toISOString(),
+    };
+    setChatMessages((prev) => [...prev, optimisticMsg]);
+    setChatLoading(true);
+
+    try {
+      const res = await api.post('/ai-chat/message', { message: text });
+      const replyData = res.data.data;
+      const assistantMsg = {
+        role: 'assistant',
+        content: replyData.reply,
+        emergencyAlert: replyData.emergencyAlert,
+        createdAt: new Date().toISOString(),
+      };
+      setChatMessages((prev) => [...prev, assistantMsg]);
+    } catch (err) {
+      console.error('Chat error:', err);
+      const errorMsg = {
+        role: 'assistant',
+        content: 'I apologize, but I could not connect to the medical AI assistant. Please check your network connection.',
+        createdAt: new Date().toISOString(),
+      };
+      setChatMessages((prev) => [...prev, errorMsg]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  const handleClearChat = async () => {
+    try {
+      await api.delete('/ai-chat/history');
+      setChatMessages([]);
+      showToast('Chat conversation cleared.');
+    } catch (err) {
+      console.error('Failed to clear chat:', err);
+      showToast('Failed to clear chat.');
+    }
+  };
+
   // Profile update callback
   const handleProfileUpdated = () => {
     showToast('Personal profile updated successfully.');
@@ -460,6 +614,9 @@ export default function DashboardPage() {
     if (type === 'allergy') title = `Delete Allergy: ${item.allergenName}`;
     else if (type === 'test') title = `Delete Test: ${item.allergenName} (${item.testType})`;
     else if (type === 'report') title = `Delete Report Document: ${item.originalFileName}`;
+    else if (type === 'food') title = `Delete Food Diary Entry: ${item.foodName}`;
+    else if (type === 'symptom') title = `Delete Symptom Record: ${item.symptomName}`;
+    else if (type === 'analysis') title = `Delete Clinical Analysis Report: ${item.executiveSummary?.assessmentTitle || 'Report'}`;
 
     setDeleteModalState({
       isOpen: true,
@@ -487,6 +644,18 @@ export default function DashboardPage() {
         await api.delete(`/medical-reports/${id}`);
         setReports((prev) => prev.filter((r) => r._id !== id));
         showToast('Medical report and document file deleted from storage.');
+      } else if (type === 'food') {
+        await api.delete(`/food-diary/${id}`);
+        setFoodEntries((prev) => prev.filter((f) => f._id !== id));
+        showToast('Food intake diary entry deleted.');
+      } else if (type === 'symptom') {
+        await api.delete(`/symptoms/${id}`);
+        setSymptoms((prev) => prev.filter((s) => s._id !== id));
+        showToast('Symptom journal record deleted.');
+      } else if (type === 'analysis') {
+        await api.delete(`/ai-analysis/${id}`);
+        setAnalyses((prev) => prev.filter((a) => a._id !== id));
+        showToast('AI analysis report deleted.');
       }
       setDeleteModalState({ isOpen: false, type: null, id: null, title: '', loading: false });
     } catch (err) {
@@ -497,11 +666,20 @@ export default function DashboardPage() {
   };
 
   // Computed metrics
-  const confirmedDiagnosesCount =
+  const _confirmedDiagnosesCount =
     allergies.filter((a) => a.diagnosisType === 'Doctor-Confirmed Diagnosis').length +
     medicalTests.filter((t) => t.isDoctorConfirmedDiagnosis).length;
 
   const severeRiskCount = allergies.filter((a) => a.severity.includes('Severe')).length;
+
+  // Emergency Safety Red Flags calculation
+  const emergencySymptoms = symptoms.filter(
+    (s) =>
+      s.isEmergencyAlertTriggered ||
+      s.symptomSeverity === 'Life-Threatening / Emergency' ||
+      s.symptomSeverity === 'Severe'
+  );
+  const emergencyAnalyses = analyses.filter((a) => a.emergencyWarning?.isEmergency);
 
   // Filtered Allergies
   const filteredAllergies = allergies.filter((a) => {
@@ -611,17 +789,30 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick Action Buttons on Banner */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             <button
-              onClick={() => setIsProfileModalOpen(true)}
-              className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition-all border border-white/20 flex items-center gap-1.5 shadow-xs"
+              onClick={() => {
+                setEditingFood(null);
+                setIsFoodModalOpen(true);
+              }}
+              className="px-3.5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
             >
-              <Edit2 className="w-3.5 h-3.5" />
-              <span>Edit Profile</span>
+              <Utensils className="w-3.5 h-3.5" />
+              <span>Log Meal</span>
+            </button>
+            <button
+              onClick={() => {
+                setEditingSymptom(null);
+                setIsSymptomModalOpen(true);
+              }}
+              className="px-3.5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+            >
+              <Activity className="w-3.5 h-3.5" />
+              <span>Record Symptom</span>
             </button>
             <button
               onClick={() => setIsUploadModalOpen(true)}
-              className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
             >
               <UploadCloud className="w-4 h-4 text-slate-900" />
               <span>Scan Report (OCR)</span>
@@ -631,20 +822,27 @@ export default function DashboardPage() {
                 setEditingAllergy(null);
                 setIsAllergyModalOpen(true);
               }}
-              className="px-4 py-2.5 rounded-xl bg-white text-teal-900 hover:bg-teal-50 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-white text-teal-900 hover:bg-teal-50 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
             >
               <Plus className="w-4 h-4 text-teal-700" />
-              <span>Add Food Allergy</span>
+              <span>Add Allergy</span>
             </button>
             <button
               onClick={() => {
                 setEditingTest(null);
                 setIsTestModalOpen(true);
               }}
-              className="px-4 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-900 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-900 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
             >
               <Plus className="w-4 h-4 text-slate-900" />
-              <span>Add Medical Test</span>
+              <span>Add Test</span>
+            </button>
+            <button
+              onClick={() => setIsProfileModalOpen(true)}
+              className="px-3 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition-all border border-white/20 flex items-center gap-1 shadow-xs"
+            >
+              <Edit2 className="w-3.5 h-3.5" />
+              <span>Edit Profile</span>
             </button>
           </div>
         </div>
@@ -653,75 +851,98 @@ export default function DashboardPage() {
         <div className="absolute right-0 bottom-0 translate-x-12 translate-y-12 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
       </div>
 
-      {/* Stats Cards Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      {/* Global Emergency Alert Banner (Zero Latency) */}
+      <EmergencyAlertBanner
+        emergencySymptoms={emergencySymptoms}
+        emergencyAnalyses={emergencyAnalyses}
+        onNavigateToSymptoms={() => setActiveTab('symptoms')}
+      />
+
+      {/* Stats Cards Row (6 KPI Metrics) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {/* Total Allergies */}
-        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
-            <ShieldAlert className="w-5 h-5" />
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+            <ShieldAlert className="w-4 h-4" />
           </div>
           <div>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              Food Allergies
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              Allergies
             </p>
-            <h3 className="text-xl font-black text-slate-900">{allergies.length}</h3>
-            <p className="text-[10px] text-teal-600 font-medium">Recorded in MongoDB</p>
+            <h3 className="text-lg font-black text-slate-900">{allergies.length}</h3>
+            <p className="text-[9px] text-teal-600 font-medium">Recorded</p>
           </div>
         </div>
 
         {/* Medical Tests */}
-        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center shrink-0">
-            <FileCheck className="w-5 h-5" />
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center shrink-0">
+            <FileCheck className="w-4 h-4" />
           </div>
           <div>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              Medical Tests
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              Lab Tests
             </p>
-            <h3 className="text-xl font-black text-slate-900">{medicalTests.length}</h3>
-            <p className="text-[10px] text-cyan-600 font-medium">Lab & SPT Reports</p>
+            <h3 className="text-lg font-black text-slate-900">{medicalTests.length}</h3>
+            <p className="text-[9px] text-cyan-600 font-medium">sIgE / SPT</p>
           </div>
         </div>
 
-        {/* Confirmed Diagnoses */}
-        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-5 h-5" />
+        {/* Daily Food Intake Entries */}
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+            <Utensils className="w-4 h-4" />
           </div>
           <div>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              Doctor-Confirmed
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              Food Diary
             </p>
-            <h3 className="text-xl font-black text-slate-900">{confirmedDiagnosesCount}</h3>
-            <p className="text-[10px] text-emerald-600 font-medium">Physician Verified</p>
+            <h3 className="text-lg font-black text-slate-900">{foodEntries.length}</h3>
+            <p className="text-[9px] text-emerald-600 font-medium">Meals Logged</p>
+          </div>
+        </div>
+
+        {/* Reported Symptoms */}
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
+            <Activity className="w-4 h-4" />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              Symptoms
+            </p>
+            <h3 className="text-lg font-black text-slate-900">{symptoms.length}</h3>
+            <p className="text-[9px] text-rose-600 font-medium">Episodes</p>
+          </div>
+        </div>
+
+        {/* AI Analyses */}
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0">
+            <Sparkles className="w-4 h-4" />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              AI Analyses
+            </p>
+            <h3 className="text-lg font-black text-slate-900">{analyses.length}</h3>
+            <p className="text-[9px] text-indigo-600 font-medium">Clinical Reports</p>
           </div>
         </div>
 
         {/* Severe Risks */}
-        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-5 h-5" />
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-red-50 text-red-700 flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-4 h-4" />
           </div>
           <div>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              Severe / Anaphylaxis
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              Severe Alerts
             </p>
-            <h3 className="text-xl font-black text-slate-900">{severeRiskCount}</h3>
-            <p className="text-[10px] text-rose-600 font-medium">EpiPen Action Level</p>
-          </div>
-        </div>
-
-        {/* Scanned Lab Reports */}
-        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3 col-span-2 sm:col-span-1">
-          <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-            <UploadCloud className="w-5 h-5" />
-          </div>
-          <div>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              Scanned Reports
-            </p>
-            <h3 className="text-xl font-black text-slate-900">{reports.length}</h3>
-            <p className="text-[10px] text-amber-600 font-medium">OCR Extracted</p>
+            <h3 className="text-lg font-black text-rose-600">
+              {severeRiskCount + emergencySymptoms.length}
+            </h3>
+            <p className="text-[9px] text-rose-600 font-medium">Action Level</p>
           </div>
         </div>
       </div>
@@ -729,54 +950,122 @@ export default function DashboardPage() {
       {/* Tabs & Search Header */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-3">
-          {/* Navigation Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+          {/* 9 Navigation Tabs */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
             <button
               onClick={() => setActiveTab('allergies')}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                 activeTab === 'allergies'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <ShieldAlert className="w-4 h-4" />
-              <span>Recorded Food Allergies ({allergies.length})</span>
+              <span>Allergies ({allergies.length})</span>
             </button>
 
             <button
               onClick={() => setActiveTab('tests')}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                 activeTab === 'tests'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <FileCheck className="w-4 h-4" />
-              <span>Medical Test Records ({medicalTests.length})</span>
+              <span>Medical Tests ({medicalTests.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('diary')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+                activeTab === 'diary'
+                  ? 'bg-teal-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <Utensils className="w-4 h-4" />
+              <span>Food Diary ({foodEntries.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('symptoms')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+                activeTab === 'symptoms'
+                  ? 'bg-teal-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <Activity className="w-4 h-4" />
+              <span>Symptoms ({symptoms.length})</span>
+              {emergencySymptoms.length > 0 && (
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveTab('analysis')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+                activeTab === 'analysis'
+                  ? 'bg-teal-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>AI Analysis ({analyses.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('history')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+                activeTab === 'history'
+                  ? 'bg-teal-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <TrendingUp className="w-4 h-4" />
+              <span>History & Patterns</span>
+              {patterns?.repeatedAssociations?.length > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400 text-slate-950 font-black">
+                  {patterns.repeatedAssociations.length}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveTab('assistant')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+                activeTab === 'assistant'
+                  ? 'bg-teal-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <Bot className="w-4 h-4" />
+              <span>AI Assistant</span>
             </button>
 
             <button
               onClick={() => setActiveTab('reports')}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                 activeTab === 'reports'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <UploadCloud className="w-4 h-4" />
-              <span>Scanned Documents ({reports.length})</span>
+              <span>Documents ({reports.length})</span>
             </button>
 
             <button
               onClick={() => setActiveTab('profile')}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                 activeTab === 'profile'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <User className="w-4 h-4" />
-              <span>Personal Profile Panel</span>
+              <span>Profile</span>
             </button>
           </div>
 
@@ -792,7 +1081,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Search & Filters (Shown on allergies and tests tabs) */}
-        {activeTab !== 'profile' && (
+        {(activeTab === 'allergies' || activeTab === 'tests') && (
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
               <input
@@ -1765,10 +2054,110 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
+
+          {/* TAB 5: DAILY FOOD INTAKE DIARY */}
+          {activeTab === 'diary' && (
+            <DailyFoodDiaryView
+              foodEntries={foodEntries}
+              onOpenAddModal={() => {
+                setEditingFood(null);
+                setIsFoodModalOpen(true);
+              }}
+              onOpenEditModal={(entry) => {
+                setEditingFood(entry);
+                setIsFoodModalOpen(true);
+              }}
+              onDeleteEntry={(entry) => openDeleteModal('food', entry)}
+              onLogSymptomForFood={handleLogSymptomForFood}
+            />
+          )}
+
+          {/* TAB 6: SYMPTOM & REACTION JOURNAL */}
+          {activeTab === 'symptoms' && (
+            <SymptomJournalView
+              symptoms={symptoms}
+              onOpenAddModal={() => {
+                setEditingSymptom(null);
+                setIsSymptomModalOpen(true);
+              }}
+              onOpenEditModal={(entry) => {
+                setEditingSymptom(entry);
+                setIsSymptomModalOpen(true);
+              }}
+              onDeleteEntry={(entry) => openDeleteModal('symptom', entry)}
+            />
+          )}
+
+          {/* TAB 7: AI FOOD ANALYSIS & DIET MONITOR */}
+          {activeTab === 'analysis' && (
+            <AIAnalysisView
+              analyses={analyses}
+              dietMonitoring={dietMonitoring}
+              onRunAnalysis={handleRunAnalysis}
+              onOpenDetailModal={(report) => {
+                setSelectedAnalysis(report);
+                setIsAnalysisDetailOpen(true);
+              }}
+              onDeleteAnalysis={(report) => openDeleteModal('analysis', report)}
+              loading={loading}
+            />
+          )}
+
+          {/* TAB 8: STATISTICAL PATTERNS & HISTORY */}
+          {activeTab === 'history' && (
+            <HistoryAndPatternsView
+              patterns={patterns}
+              foodEntries={foodEntries}
+              symptoms={symptoms}
+              allergies={allergies}
+              medicalTests={medicalTests}
+            />
+          )}
+
+          {/* TAB 9: AI HEALTH ASSISTANT CHAT */}
+          {activeTab === 'assistant' && (
+            <AIHealthAssistantView
+              user={user}
+              chatMessages={chatMessages}
+              onSendMessage={handleSendMessage}
+              onClearChat={handleClearChat}
+              loading={chatLoading}
+            />
+          )}
         </>
       )}
 
       {/* Modals */}
+      <FoodEntryModal
+        isOpen={isFoodModalOpen}
+        onClose={() => {
+          setIsFoodModalOpen(false);
+          setEditingFood(null);
+        }}
+        onSaved={handleFoodSaved}
+        initialData={editingFood}
+      />
+
+      <SymptomEntryModal
+        isOpen={isSymptomModalOpen}
+        onClose={() => {
+          setIsSymptomModalOpen(false);
+          setEditingSymptom(null);
+        }}
+        onSaved={handleSymptomSaved}
+        initialData={editingSymptom}
+        recentFoods={foodEntries.slice(0, 20)}
+      />
+
+      <AIAnalysisDetailModal
+        isOpen={isAnalysisDetailOpen}
+        onClose={() => {
+          setIsAnalysisDetailOpen(false);
+          setSelectedAnalysis(null);
+        }}
+        analysis={selectedAnalysis}
+      />
+
       <AllergyModal
         isOpen={isAllergyModalOpen}
         onClose={() => setIsAllergyModalOpen(false)}

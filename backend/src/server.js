@@ -11,6 +11,10 @@ import userRoutes from './routes/userRoutes.js';
 import allergyRoutes from './routes/allergyRoutes.js';
 import medicalTestRoutes from './routes/medicalTestRoutes.js';
 import medicalReportRoutes from './routes/medicalReportRoutes.js';
+import foodDiaryRoutes from './routes/foodDiaryRoutes.js';
+import symptomRoutes from './routes/symptomRoutes.js';
+import aiAnalysisRoutes from './routes/aiAnalysisRoutes.js';
+import aiChatRoutes from './routes/aiChatRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -93,6 +97,10 @@ app.use('/api/user', requireDbConnection, userRoutes);
 app.use('/api/allergies', requireDbConnection, allergyRoutes);
 app.use('/api/medical-tests', requireDbConnection, medicalTestRoutes);
 app.use('/api/medical-reports', requireDbConnection, medicalReportRoutes);
+app.use('/api/food-diary', requireDbConnection, foodDiaryRoutes);
+app.use('/api/symptoms', requireDbConnection, symptomRoutes);
+app.use('/api/ai-analysis', requireDbConnection, aiAnalysisRoutes);
+app.use('/api/ai-chat', requireDbConnection, aiChatRoutes);
 
 // Serve static frontend files if built (for monolithic or production single-service hosting)
 const candidateDistPaths = [
@@ -147,9 +155,11 @@ app.use((err, req, res, _next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`[Server] Food Allergy Detection Backend running on port ${PORT}`);
-  console.log(`[Server] Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`[Server] Food Allergy Detection Backend running on port ${PORT}`);
+    console.log(`[Server] Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
 
 export default app;
