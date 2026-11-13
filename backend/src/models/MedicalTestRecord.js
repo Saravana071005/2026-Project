@@ -25,7 +25,10 @@ const medicalTestRecordSchema = new mongoose.Schema(
           'Oral Food Challenge (OFC)',
           'Patch Test',
           'Total IgE Test',
+          'Total Serum IgE',
           'Component-Resolved Diagnostics (CRD)',
+          'Basophil Activation Test (BAT)',
+          'Intradermal Test (Not Recommended)',
           'Doctor Clinical Evaluation / Prescription',
           'Other',
         ],
@@ -102,6 +105,53 @@ const medicalTestRecordSchema = new mongoose.Schema(
       trim: true,
       default: '',
       maxlength: [150, 'Clinic or lab name cannot exceed 150 characters'],
+    },
+    // Dynamic Test-Specific Medical Questionnaire Fields
+    testCategory: {
+      type: String,
+      enum: [
+        'specific_ige',
+        'skin_prick',
+        'total_ige',
+        'crd',
+        'oral_challenge',
+        'bat',
+        'patch_test',
+        'intradermal',
+        'other',
+      ],
+      default: 'other',
+      index: true,
+    },
+    testSpecificParameters: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
+    parameterStatus: {
+      type: Map,
+      of: String, // 'extracted' | 'not_mentioned' | 'needs_review' | 'user_verified'
+      default: {},
+    },
+    parameterConfidence: {
+      type: Map,
+      of: Number, // 0 to 100
+      default: {},
+    },
+    customParameters: [
+      {
+        key: { type: String, trim: true },
+        value: { type: String, trim: true },
+        unit: { type: String, trim: true, default: '' },
+        _id: false,
+      },
+    ],
+    originalExtractedValues: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null, // Preserves raw OCR output for auditing
+    },
+    clinicalWarningAcknowledged: {
+      type: Boolean,
+      default: false,
     },
   },
   {

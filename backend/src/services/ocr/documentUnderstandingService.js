@@ -1,3 +1,5 @@
+import { getTestSchemaByIdOrName, TEST_SCHEMAS } from '../../config/testSchemas.js';
+
 /**
  * Intelligent Document Understanding & Medical Entity Extraction Engine
  * 
@@ -383,10 +385,376 @@ export function extractClinicalStatus(text) {
 }
 
 /**
+ * Detect Document Test Modality / Type from raw text and structure
+ */
+export function detectDocumentTestType(text, _lines = []) {
+  const lower = (text || '').toLowerCase();
+  const scores = {
+    skin_prick: 0,
+    crd: 0,
+    oral_challenge: 0,
+    total_ige: 0,
+    bat: 0,
+    patch_test: 0,
+    intradermal: 0,
+    specific_ige: 0,
+  };
+
+  // 1. Skin Prick Test heuristics
+  if (/\b(?:skin\s*prick|spt|prick\s*test)\b/i.test(lower)) scores.skin_prick += 45;
+  if (/\b(?:wheal|flare|wheal\s*diameter)\b/i.test(lower)) scores.skin_prick += 30;
+  if (/\b(?:histamine(?:\s*control)?|negative\s*control|saline\s*control)\b/i.test(lower)) scores.skin_prick += 30;
+  if (/\b\d+(?:\.\d+)?\s*mm\s*wheal\b/i.test(lower)) scores.skin_prick += 25;
+
+  // 2. CRD (Component-Resolved Diagnostics) heuristics
+  if (/\b(?:component[- ]resolved|crd|molecular\s*allergen|recombinant\s*allergen)\b/i.test(lower)) scores.crd += 45;
+  if (/\b(?:ara\s*h\s*[1-9]|bos\s*d\s*[1-9]|gal\s*d\s*[1-9]|cor\s*a\s*[1-9]|jug\s*r\s*[1-9]|ana\s*o\s*[1-9])\b/i.test(lower)) scores.crd += 40;
+  if (/\b(?:storage\s*protein|pr-10|profilin|lipid\s*transfer\s*protein|ltp)\b/i.test(lower)) scores.crd += 25;
+
+  // 3. Oral Food Challenge heuristics
+  if (/\b(?:oral\s*food\s*challenge|ofc|food\s*challenge)\b/i.test(lower)) scores.oral_challenge += 45;
+  if (/\b(?:cumulative\s*dose|dose\s*administered|challenge\s*protocol|provocation)\b/i.test(lower)) scores.oral_challenge += 30;
+  if (/\b(?:tolerated|positive\s*reaction|stopping\s*criteria)\b/i.test(lower)) scores.oral_challenge += 25;
+
+  // 4. Total IgE heuristics
+  if (/\b(?:total\s*ige|serum\s*total\s*ige|total\s*immunoglobulin\s*e)\b/i.test(lower)) scores.total_ige += 50;
+  if (/\b(?:iu\/ml|ku\/l)\b/i.test(lower) && !/\b(?:kua\/l)\b/i.test(lower)) scores.total_ige += 20;
+
+  // 5. Basophil Activation Test (BAT) heuristics
+  if (/\b(?:basophil\s*activation|bat\s*test|flow\s*cytometry)\b/i.test(lower)) scores.bat += 45;
+  if (/\b(?:cd63|cd203c|activated\s*basophils|stimulation\s*index)\b/i.test(lower)) scores.bat += 40;
+
+  // 6. Patch Test heuristics
+  if (/\b(?:patch\s*test|atopy\s*patch|finn\s*chamber)\b/i.test(lower)) scores.patch_test += 45;
+  if (/\b(?:48\s*hours?|72\s*hours?|icdrg|erythema\s*and\s*papules)\b/i.test(lower)) scores.patch_test += 30;
+
+  // 7. Intradermal Test heuristics
+  if (/\b(?:intradermal|intracutaneous|idt)\b/i.test(lower)) scores.intradermal += 45;
+
+  // 8. Specific IgE Blood Test heuristics
+  if (/\b(?:specific\s*ige|sige|immunocap|immuno-cap)\b/i.test(lower)) scores.specific_ige += 40;
+  if (/\b(?:kua\/l|kua)\b/i.test(lower)) scores.specific_ige += 30;
+  if (/\b(?:class\s*[0-6]|ige\s*class)\b/i.test(lower)) scores.specific_ige += 25;
+
+  // Find modality with maximum score
+  let bestCategory = 'specific_ige';
+  let maxScore = 0;
+  for (const [cat, score] of Object.entries(scores)) {
+    if (score > maxScore) {
+      maxScore = score;
+      bestCategory = cat;
+    }
+  }
+
+  const schema = TEST_SCHEMAS[bestCategory] || TEST_SCHEMAS.specific_ige;
+  return {
+    category: bestCategory,
+    testCategory: bestCategory,
+    name: schema.standardTestTypeName,
+    testType: schema.standardTestTypeName,
+    score: maxScore,
+    confidence: maxScore > 0 ? Math.min(1.0, maxScore / 100) : 0,
+    allScores: scores,
+  };
+}
+
+/**
+ * Builds dynamic test-specific parameter values, status mappings, and confidence ratings
+ * strictly aligned with the schema defined in testSchemas.js
+ */
+export function buildTestSpecificParameters(category, item, testResult, units, referenceRange, blockText, wholeText, context = {}) {
+  const schema = TEST_SCHEMAS[category] || TEST_SCHEMAS.specific_ige;
+  const params = {};
+  const status = {};
+  const confidence = {};
+
+  for (const field of schema.fields) {
+    let val = null;
+    let fieldStatus = 'not_mentioned';
+    let fieldConf = 0;
+
+    switch (field.key) {
+      case 'allergenName':
+      case 'foodTested':
+      case 'allergenTested':
+        val = item.name;
+        fieldStatus = 'extracted';
+        fieldConf = 95;
+        break;
+
+      case 'specificIgEValue':
+        val = testResult !== 'needs_review' ? testResult : null;
+        fieldStatus = testResult !== 'needs_review' ? 'extracted' : 'needs_review';
+        fieldConf = testResult !== 'needs_review' ? 92 : 40;
+        break;
+
+      case 'whealDiameter':
+        val = testResult !== 'needs_review' ? testResult : null;
+        fieldStatus = testResult !== 'needs_review' ? 'extracted' : 'needs_review';
+        fieldConf = testResult !== 'needs_review' ? 90 : 40;
+        break;
+
+      case 'negativeControl':
+      case 'negativeControlWheal': {
+        const negMatch = (wholeText || '').match(/(?:negative\s*control|saline\s*control|neg(?:ative)?\.?\s*control|saline)[:\s]+(\d+(?:\.\d+)?)(?:\s*mm)?/i);
+        if (negMatch && negMatch[1]) {
+          val = negMatch[1];
+          fieldStatus = 'extracted';
+          fieldConf = 90;
+        } else {
+          val = null;
+          fieldStatus = 'not_mentioned';
+          fieldConf = 0;
+        }
+        break;
+      }
+
+      case 'histamineControl':
+      case 'positiveControlWheal': {
+        const histMatch = (wholeText || '').match(/(?:histamine\s*(?:control|positive)?|pos(?:itive)?\.?\s*control)[:\s]+(\d+(?:\.\d+)?)(?:\s*mm)?/i);
+        if (histMatch && histMatch[1]) {
+          val = histMatch[1];
+          fieldStatus = 'extracted';
+          fieldConf = 90;
+        } else {
+          val = null;
+          fieldStatus = 'not_mentioned';
+          fieldConf = 0;
+        }
+        break;
+      }
+
+      case 'flareDiameter': {
+        const flareMatch = blockText.match(/(?:flare(?:\s*diameter)?|erythema)[:\s]+(\d+(?:\.\d+)?)(?:\s*mm)?/i);
+        if (flareMatch && flareMatch[1]) {
+          val = flareMatch[1];
+          fieldStatus = 'extracted';
+          fieldConf = 85;
+        }
+        break;
+      }
+
+      case 'netDifference': {
+        const wheal = parseFloat(testResult);
+        if (!isNaN(wheal)) {
+          val = (wheal - 0.0).toFixed(1);
+          fieldStatus = 'extracted';
+          fieldConf = 90;
+        }
+        break;
+      }
+
+      case 'units':
+      case 'doseUnit':
+        val = units || field.default || null;
+        fieldStatus = val ? 'extracted' : 'not_mentioned';
+        fieldConf = val ? 90 : 0;
+        break;
+
+      case 'referenceInterval':
+      case 'referenceThreshold':
+        val = referenceRange || null;
+        fieldStatus = val ? 'extracted' : 'not_mentioned';
+        fieldConf = val ? 85 : 0;
+        break;
+
+      case 'igeClass': {
+        const classMatch = blockText.match(/\b(?:class|class\s*band)[:\s]*([0-6]|IV|III|II|I|V|VI)\b/i);
+        if (classMatch && classMatch[1]) {
+          val = `Class ${classMatch[1].toUpperCase()}`;
+          fieldStatus = 'extracted';
+          fieldConf = 88;
+        }
+        break;
+      }
+
+      case 'componentName': {
+        const compMatch = item.name.match(/\((?:r)?([A-Za-z]+\s*[a-z]\s*\d+)\)/) || item.name.match(/\b([A-Za-z]+\s*[a-z]\s*\d+)\b/);
+        if (compMatch && compMatch[1]) {
+          val = compMatch[1];
+          fieldStatus = 'extracted';
+          fieldConf = 95;
+        } else {
+          val = item.name;
+          fieldStatus = 'extracted';
+          fieldConf = 80;
+        }
+        break;
+      }
+
+      case 'componentType': {
+        if (/ara h 2|ara h 1|ara h 3|ara h 6|ana o 3|cor a 9|cor a 14/i.test(item.name)) {
+          val = 'Storage Protein (High systemic risk - e.g. 2S albumin, 7S/11S globulin)';
+          fieldStatus = 'extracted';
+          fieldConf = 90;
+        } else if (/ara h 8|bet v 1|cor a 1/i.test(item.name)) {
+          val = 'PR-10 / Pollen-related (Cross-reactive, heat-labile - e.g. Bet v 1 homolog)';
+          fieldStatus = 'extracted';
+          fieldConf = 90;
+        } else if (/bos d 8/i.test(item.name)) {
+          val = 'Casein (Heat stable dairy component - Bos d 8)';
+          fieldStatus = 'extracted';
+          fieldConf = 95;
+        }
+        break;
+      }
+
+      case 'doseAdministered': {
+        const doseMatch = blockText.match(/(?:dose|amount|cumulative)[:\s]+(\d+(?:\.\d+)?(?:\s*(?:g|mg|grams?))?)/i);
+        if (doseMatch && doseMatch[1]) {
+          val = doseMatch[1];
+          fieldStatus = 'extracted';
+          fieldConf = 85;
+        }
+        break;
+      }
+
+      case 'clinicalOutcome': {
+        if (/\b(?:tolerated|negative\s*challenge|passed)\b/i.test(wholeText)) {
+          val = 'Negative (Tolerated - Full serving consumed without reaction)';
+          fieldStatus = 'extracted';
+          fieldConf = 90;
+        } else if (/\b(?:reaction|positive\s*challenge|stopped\s*due\s*to\s*symptoms)\b/i.test(wholeText)) {
+          val = 'Positive (Allergic Reaction triggered - Met stopping criteria)';
+          fieldStatus = 'extracted';
+          fieldConf = 90;
+        }
+        break;
+      }
+
+      case 'observedSymptoms': {
+        const sympMatch = wholeText.match(/(?:symptoms?|reaction\s*observed|reactions?)[:\s]+([^.\n\r]+)/i);
+        if (sympMatch && sympMatch[1]) {
+          val = sympMatch[1].trim();
+          fieldStatus = 'extracted';
+          fieldConf = 85;
+        }
+        break;
+      }
+
+      case 'doctorInterpretation':
+      case 'doctorConclusion': {
+        if (category === 'skin_prick') {
+          const wheal = parseFloat(testResult);
+          val = !isNaN(wheal) && wheal >= 3.0
+            ? 'Positive Sensitization (Wheal >= 3mm over control)'
+            : 'Negative (Wheal < 3mm over control)';
+          fieldStatus = 'extracted';
+          fieldConf = 85;
+        }
+        break;
+      }
+
+      case 'readingTime': {
+        if (/\b72\s*h(?:ours?)?\b/i.test(wholeText)) {
+          val = '72 hours (Day 3 reading)';
+          fieldStatus = 'extracted';
+          fieldConf = 90;
+        } else if (/\b48\s*h(?:ours?)?\b/i.test(wholeText)) {
+          val = '48 hours (Chamber removal)';
+          fieldStatus = 'extracted';
+          fieldConf = 90;
+        }
+        break;
+      }
+
+      case 'skinReactionFindings': {
+        const gradeMatch = wholeText.match(/\b(\+\+\+|\+\+|\+|\?|-|IR)\b/);
+        if (gradeMatch && gradeMatch[1]) {
+          val = gradeMatch[1];
+          fieldStatus = 'extracted';
+          fieldConf = 85;
+        }
+        break;
+      }
+
+      case 'totalIgEValue': {
+        val = testResult !== 'needs_review' ? testResult : null;
+        fieldStatus = val ? 'extracted' : 'needs_review';
+        fieldConf = val ? 90 : 40;
+        break;
+      }
+
+      case 'elevationStatus': {
+        const numeric = parseFloat(testResult);
+        if (!isNaN(numeric)) {
+          val = numeric > 100 ? 'Elevated above Reference Range' : 'Within Normal Reference Interval';
+          fieldStatus = 'extracted';
+          fieldConf = 85;
+        }
+        break;
+      }
+
+      case 'activatedBasophilPercent': {
+        const batMatch = blockText.match(/(\d+(?:\.\d+)?)\s*%/);
+        if (batMatch && batMatch[1]) {
+          val = `${batMatch[1]}%`;
+          fieldStatus = 'extracted';
+          fieldConf = 88;
+        }
+        break;
+      }
+
+      case 'cd63Result': {
+        const cd63Match = blockText.match(/(?:cd63)[:\s]+(\d+(?:\.\d+)?(?:\s*%)?)/i);
+        if (cd63Match && cd63Match[1]) {
+          val = cd63Match[1];
+          fieldStatus = 'extracted';
+          fieldConf = 88;
+        }
+        break;
+      }
+
+      case 'cd203cResult': {
+        const cd203Match = blockText.match(/(?:cd203c?)[:\s]+(\d+(?:\.\d+)?(?:\s*%)?)/i);
+        if (cd203Match && cd203Match[1]) {
+          val = cd203Match[1];
+          fieldStatus = 'extracted';
+          fieldConf = 88;
+        }
+        break;
+      }
+
+      case 'clinicOrLabName':
+      case 'laboratoryName':
+        val = context.clinicOrLabName || null;
+        fieldStatus = val ? 'extracted' : 'not_mentioned';
+        fieldConf = val ? 85 : 0;
+        break;
+
+      case 'testDate':
+      case 'applicationDate':
+        val = context.testDate ? (context.testDate instanceof Date ? context.testDate.toISOString().split('T')[0] : String(context.testDate)) : null;
+        fieldStatus = val ? 'extracted' : 'not_mentioned';
+        fieldConf = val ? 90 : 0;
+        break;
+
+      default:
+        val = null;
+        fieldStatus = 'not_mentioned';
+        fieldConf = 0;
+    }
+
+    params[field.key] = val;
+    status[field.key] = fieldStatus;
+    confidence[field.key] = fieldConf;
+  }
+
+  return {
+    params,
+    status,
+    confidence,
+    testSpecificParameters: params,
+    parameterStatus: status,
+    parameterConfidence: confidence,
+  };
+}
+
+/**
  * Intelligent Extraction of Food Allergy Diagnostic Tests
  * Handles tabular reports, multi-column blocks, key-value rows, wheal diameters, and IgE titers
  */
-export function extractAllergyTests(text, lines) {
+export function extractAllergyTests(text, lines, targetCategory = null, context = {}) {
   const extractedTests = [];
   const processedAllergens = new Set();
 
@@ -537,16 +905,46 @@ export function extractAllergyTests(text, lines) {
         // Mark allergen as processed to avoid duplicates
         processedAllergens.add(item.name.toLowerCase());
 
+        const activeCategory = targetCategory || (
+          testType === 'Skin Prick Test (SPT)' ? 'skin_prick' :
+          testType === 'Component-Resolved Diagnostics (CRD)' ? 'crd' :
+          testType === 'Oral Food Challenge (OFC)' ? 'oral_challenge' :
+          testType === 'Total IgE Test' ? 'total_ige' :
+          testType === 'Patch Test' ? 'patch_test' : 'specific_ige'
+        );
+
+        const specificParamsObj = buildTestSpecificParameters(
+          activeCategory,
+          item,
+          testResult,
+          units,
+          referenceRange,
+          blockText,
+          text,
+          context
+        );
+
         extractedTests.push({
           allergenName: item.name,
           allergenCategory: item.category,
           testType,
+          testCategory: activeCategory,
           testResult,
           units,
           referenceRange,
           confidence,
           confidenceScore,
           notes,
+          testSpecificParameters: specificParamsObj.params,
+          parameterStatus: specificParamsObj.status,
+          parameterConfidence: specificParamsObj.confidence,
+          customParameters: [],
+          originalExtractedValues: {
+            testResult,
+            units,
+            referenceRange,
+            ...specificParamsObj.params,
+          },
           selected: true,
         });
       }
@@ -557,16 +955,41 @@ export function extractAllergyTests(text, lines) {
   if (extractedTests.length === 0) {
     const genericTestMatch = text.match(/(?:specific\s*ige|total\s*ige|allergy\s*test|skin\s*prick)[:\s]+([^,\n\r]+)/i);
     if (genericTestMatch && genericTestMatch[1]) {
+      const activeCategory = targetCategory || 'specific_ige';
+      const fallbackItem = { name: 'General Allergen Panel', category: 'Other Food' };
+      const fallbackResult = genericTestMatch[1].trim().substring(0, 50);
+      const specificParamsObj = buildTestSpecificParameters(
+        activeCategory,
+        fallbackItem,
+        fallbackResult,
+        'kUA/L',
+        null,
+        text,
+        text,
+        context
+      );
+
       extractedTests.push({
-        allergenName: 'General Allergen Panel',
-        allergenCategory: 'Other Food',
+        allergenName: fallbackItem.name,
+        allergenCategory: fallbackItem.category,
         testType: 'Specific IgE Blood Test',
-        testResult: genericTestMatch[1].trim().substring(0, 50),
+        testCategory: activeCategory,
+        testResult: fallbackResult,
         units: 'kUA/L',
         referenceRange: null,
         confidence: 'needs_review',
         confidenceScore: 50,
         notes: 'Unlabeled allergy test detected. Please verify allergen and result.',
+        testSpecificParameters: specificParamsObj.params,
+        parameterStatus: specificParamsObj.status,
+        parameterConfidence: specificParamsObj.confidence,
+        customParameters: [],
+        originalExtractedValues: {
+          testResult: fallbackResult,
+          units: 'kUA/L',
+          referenceRange: null,
+          ...specificParamsObj.params,
+        },
         selected: true,
       });
     }
@@ -579,29 +1002,59 @@ export function extractAllergyTests(text, lines) {
  * Main Document Understanding Function
  * Ingests raw OCR output and constructs structured, confidence-annotated medical document data.
  */
-export function analyzeMedicalDocument(rawText, _metadata = {}) {
+export function analyzeMedicalDocument(rawText, metadata = {}) {
   const text = rawText || '';
   const lines = normalizeTextLines(text);
 
-  // 1. Extract Facility / Lab Name
+  // 1. Detect Document Modality / Test Type
+  const detection = detectDocumentTestType(text, lines);
+  const detectedCategory = detection.category;
+  const detectedTestTypeName = detection.name;
+
+  // 2. Resolve User Selection vs Detected Type
+  let targetCategory = detectedCategory;
+  let testTypeMismatch = false;
+  let testMismatchDetails = null;
+
+  if (metadata.selectedTestType) {
+    const selectedSchema = getTestSchemaByIdOrName(metadata.selectedTestType);
+    if (selectedSchema && selectedSchema.id !== detectedCategory && detection.score >= 35) {
+      testTypeMismatch = true;
+      testMismatchDetails = {
+        selectedCategory: selectedSchema.id,
+        selectedName: selectedSchema.name,
+        detectedCategory: detectedCategory,
+        detectedName: detectedTestTypeName,
+        message: `You selected "${selectedSchema.name}", but document features indicate a "${detectedTestTypeName}".`,
+      };
+      targetCategory = selectedSchema.id;
+    } else if (selectedSchema) {
+      targetCategory = selectedSchema.id;
+    }
+  }
+
+  // 3. Extract Facility / Lab Name
   const clinicOrLabName = extractClinicOrLab(text, lines);
 
-  // 2. Extract Doctor Name
+  // 4. Extract Doctor Name
   const doctorName = extractDoctorName(text, lines);
 
-  // 3. Extract Test Date
+  // 5. Extract Test Date
   const testDate = extractDateFromText(text) || new Date();
 
-  // 4. Extract Clinical Confirmation Status
+  // 6. Extract Clinical Confirmation Status
   const clinicalDiagnosisStatus = extractClinicalStatus(text);
 
-  // 5. Extract General Measurements (Absent = null)
+  // 7. Extract General Measurements (Absent = null)
   const generalMeasurements = extractGeneralMeasurements(text, lines);
 
-  // 6. Extract Allergy Diagnostic Tests
-  const allergyTests = extractAllergyTests(text, lines);
+  // 8. Extract Allergy Diagnostic Tests
+  const allergyTests = extractAllergyTests(text, lines, targetCategory, {
+    clinicOrLabName,
+    testDate,
+  });
 
-  // 7. Calculate Field Confidence Map
+  // 9. Calculate Field Confidence Map
   const fieldConfidence = new Map();
 
   fieldConfidence.set('clinicOrLabName', {
@@ -636,6 +1089,10 @@ export function analyzeMedicalDocument(rawText, _metadata = {}) {
 
   return {
     extractedAt: new Date(),
+    detectedTestType: detectedTestTypeName,
+    selectedTestType: metadata.selectedTestType || null,
+    testTypeMismatch,
+    testMismatchDetails,
     clinicOrLabName,
     doctorName,
     doctorNotes: null,

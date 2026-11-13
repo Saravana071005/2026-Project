@@ -73,11 +73,15 @@ export async function processMedicalDocument(filePath, fileType, options = {}) {
 
   // Run Intelligent Document Understanding
   console.log(`[OCR Manager] Analyzing medical document layout and clinical entities (${rawText.length} chars extracted)...`);
-  const analysisResult = analyzeMedicalDocument(rawText);
+  const analysisResult = analyzeMedicalDocument(rawText, options);
 
   return {
     rawText,
     ocrEngine,
+    selectedTestType: options.selectedTestType || null,
+    detectedTestType: analysisResult.detectedTestType || 'Specific IgE Blood Test',
+    testTypeMismatch: Boolean(analysisResult.testTypeMismatch),
+    testMismatchDetails: analysisResult.testMismatchDetails || null,
     structuredData: {
       extractedAt: analysisResult.extractedAt,
       clinicOrLabName: analysisResult.clinicOrLabName,
@@ -88,6 +92,10 @@ export async function processMedicalDocument(filePath, fileType, options = {}) {
       clinicalDiagnosisStatus: analysisResult.clinicalDiagnosisStatus,
       allergyTests: analysisResult.allergyTests,
       generalMeasurements: analysisResult.generalMeasurements,
+      detectedTestType: analysisResult.detectedTestType,
+      selectedTestType: options.selectedTestType || null,
+      testTypeMismatch: Boolean(analysisResult.testTypeMismatch),
+      testMismatchDetails: analysisResult.testMismatchDetails || null,
     },
     fieldConfidence: analysisResult.fieldConfidence,
   };

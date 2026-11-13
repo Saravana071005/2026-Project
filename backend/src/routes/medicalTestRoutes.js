@@ -2,6 +2,7 @@ import express from 'express';
 import { body } from 'express-validator';
 import {
   getMedicalTests,
+  getTestSchemas,
   createMedicalTest,
   updateMedicalTest,
   deleteMedicalTest,
@@ -10,6 +11,9 @@ import { protect } from '../middleware/authMiddleware.js';
 import { handleValidationErrors } from '../middleware/validateMiddleware.js';
 
 const router = express.Router();
+
+// Public educational schemas
+router.get('/schemas', getTestSchemas);
 
 const medicalTestValidation = [
   body('allergenName')

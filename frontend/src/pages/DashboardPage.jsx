@@ -20,6 +20,16 @@ import {
   FileText,
   Eye,
   Building2,
+  BookOpen,
+  ChevronDown,
+  ChevronUp,
+  AlertCircle,
+  Activity,
+  Droplet,
+  Layers,
+  FlaskConical,
+  Utensils,
+  Microscope,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -30,6 +40,288 @@ import ProfileEditModal from '../components/ProfileEditModal';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import ReportUploadModal from '../components/ReportUploadModal';
 import ReportReviewModal from '../components/ReportReviewModal';
+import {
+  SUPPORTED_TEST_TYPES_LIST,
+  TEST_SCHEMAS,
+  getTestSchemaByIdOrName,
+} from '../config/testSchemas';
+
+function getCategoryIcon(id) {
+  switch (id) {
+    case 'specific_ige':
+      return Activity;
+    case 'skin_prick':
+      return Droplet;
+    case 'total_ige':
+      return FlaskConical;
+    case 'crd':
+      return Layers;
+    case 'oral_challenge':
+      return Utensils;
+    case 'bat':
+      return Microscope;
+    case 'patch_test':
+      return FileCheck;
+    case 'intradermal':
+      return AlertTriangle;
+    default:
+      return Activity;
+  }
+}
+
+function TestSpecificParametersView({ test }) {
+  const schema = getTestSchemaByIdOrName(test.testCategory || test.testType);
+  const params = test.testSpecificParameters || {};
+  const customParams = test.customParameters || [];
+
+  const hasSpecificParams = Object.keys(params).some(
+    (k) => params[k] !== undefined && params[k] !== null && params[k] !== ''
+  );
+
+  if (!hasSpecificParams && (!customParams || customParams.length === 0)) {
+    return null;
+  }
+
+  return (
+    <div className="mt-3.5 pt-3.5 border-t border-slate-100 space-y-2.5">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+          <span>Test-Specific Diagnostic Parameters</span>
+          <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[10px]">
+            {schema.shortName}
+          </span>
+        </span>
+        {test.ocrExtracted && (
+          <span className="text-[10px] text-teal-700 font-semibold flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-teal-600" />
+            Structured Schema
+          </span>
+        )}
+      </div>
+
+      {/* Grid of parameters */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+        {/* SPT Specific */}
+        {schema.id === 'skin_prick' && (
+          <>
+            {params.negativeControlWheal !== undefined && params.negativeControlWheal !== null && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Neg Control (Saline)</span>
+                <span className="font-bold text-slate-800">{params.negativeControlWheal}</span>
+              </div>
+            )}
+            {params.positiveControlWheal !== undefined && params.positiveControlWheal !== null && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Pos Control (Histamine)</span>
+                <span className="font-bold text-slate-800">{params.positiveControlWheal}</span>
+              </div>
+            )}
+            {params.netDifference !== undefined && params.netDifference !== null && (
+              <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900">
+                <span className="text-[10px] text-emerald-800 uppercase font-bold block">Net Wheal (Difference)</span>
+                <span className="font-extrabold text-emerald-950">{params.netDifference}</span>
+              </div>
+            )}
+            {params.testSite && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Test Site</span>
+                <span className="font-semibold text-slate-800">{params.testSite}</span>
+              </div>
+            )}
+            {params.prickMethod && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Prick Method</span>
+                <span className="font-semibold text-slate-800">{params.prickMethod}</span>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Specific IgE */}
+        {schema.id === 'specific_ige' && (
+          <>
+            {params.igeClass && params.igeClass !== 'Not reported' && (
+              <div className="p-2 rounded-lg bg-blue-50 border border-blue-200 text-blue-900">
+                <span className="text-[10px] text-blue-700 uppercase font-bold block">IgE Class</span>
+                <span className="font-bold text-blue-950">{params.igeClass}</span>
+              </div>
+            )}
+            {params.assayPlatform && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Assay Platform</span>
+                <span className="font-semibold text-slate-800">{params.assayPlatform}</span>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Total IgE */}
+        {schema.id === 'total_ige' && (
+          <>
+            {params.ageReferenceInterval && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Age Ref Interval</span>
+                <span className="font-semibold text-slate-800">{params.ageReferenceInterval}</span>
+              </div>
+            )}
+            {params.totalIgEElevated && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Atopy Status</span>
+                <span className="font-semibold text-slate-800">{params.totalIgEElevated}</span>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Component-Resolved Diagnostics */}
+        {schema.id === 'crd' && (
+          <>
+            {params.componentName && (
+              <div className="p-2 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-950">
+                <span className="text-[10px] text-indigo-700 uppercase font-bold block">Component</span>
+                <span className="font-extrabold text-indigo-950">{params.componentName}</span>
+              </div>
+            )}
+            {params.proteinFamily && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Protein Family</span>
+                <span className="font-semibold text-slate-800">{params.proteinFamily}</span>
+              </div>
+            )}
+            {params.clinicalSignificanceCategory && (
+              <div className="p-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 col-span-2 sm:col-span-1">
+                <span className="text-[10px] text-amber-800 uppercase font-bold block">Clinical Risk</span>
+                <span className="font-bold text-amber-950">{params.clinicalSignificanceCategory}</span>
+              </div>
+            )}
+            {params.wholeExtractIgE && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Whole Extract IgE</span>
+                <span className="font-semibold text-slate-800">{params.wholeExtractIgE}</span>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Oral Food Challenge */}
+        {schema.id === 'oral_challenge' && (
+          <>
+            {params.challengeType && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Protocol</span>
+                <span className="font-bold text-slate-800">{params.challengeType}</span>
+              </div>
+            )}
+            {params.cumulativeDose && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Cumulative Dose</span>
+                <span className="font-bold text-slate-800">{params.cumulativeDose}</span>
+              </div>
+            )}
+            {params.challengeOutcome && (
+              <div className="p-2 rounded-lg bg-purple-50 border border-purple-200 text-purple-900">
+                <span className="text-[10px] text-purple-700 uppercase font-bold block">Outcome</span>
+                <span className="font-extrabold text-purple-950">{params.challengeOutcome}</span>
+              </div>
+            )}
+            {params.foodMatrix && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Food Matrix</span>
+                <span className="font-semibold text-slate-800">{params.foodMatrix}</span>
+              </div>
+            )}
+            {params.clinicalSetting && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Clinical Setting</span>
+                <span className="font-semibold text-slate-800">{params.clinicalSetting}</span>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* BAT */}
+        {schema.id === 'bat' && (
+          <>
+            {params.activationMarker && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Activation Marker</span>
+                <span className="font-bold text-slate-800">{params.activationMarker}</span>
+              </div>
+            )}
+            {params.percentBasophilsActivated && (
+              <div className="p-2 rounded-lg bg-violet-50 border border-violet-200 text-violet-950">
+                <span className="text-[10px] text-violet-800 uppercase font-bold block">% Activation</span>
+                <span className="font-extrabold text-violet-950">{params.percentBasophilsActivated}</span>
+              </div>
+            )}
+            {params.stimulationThreshold && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Threshold</span>
+                <span className="font-semibold text-slate-800">{params.stimulationThreshold}</span>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Patch Test */}
+        {schema.id === 'patch_test' && (
+          <>
+            {params.readingTimePoint && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Reading Time</span>
+                <span className="font-bold text-slate-800">{params.readingTimePoint}</span>
+              </div>
+            )}
+            {params.erythemaGrade && (
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                <span className="text-[10px] text-slate-500 uppercase font-bold block">Erythema Grade</span>
+                <span className="font-semibold text-slate-800">{params.erythemaGrade}</span>
+              </div>
+            )}
+            {params.morphologicResponse && (
+              <div className="p-2 rounded-lg bg-teal-50 border border-teal-200 text-teal-950">
+                <span className="text-[10px] text-teal-800 uppercase font-bold block">Morphology</span>
+                <span className="font-bold text-teal-950">{params.morphologicResponse}</span>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Intradermal */}
+        {schema.id === 'intradermal' && (
+          <div className="col-span-2 sm:col-span-3 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-900 text-xs flex items-start gap-2">
+            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold block">Non-Recommended Test Modality</span>
+              <span className="text-[11px] text-rose-800">
+                Educational guidelines discourage intradermal food testing due to high false-positive rate and systemic reaction risk.
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Custom Parameters */}
+      {customParams && customParams.length > 0 && (
+        <div className="pt-1.5">
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            Custom Clinical Parameters:
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {customParams.map((cp, idx) => (
+              <span
+                key={idx}
+                className="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-medium"
+              >
+                <strong className="text-slate-900">{cp.key}:</strong> {cp.value} {cp.unit}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -62,6 +354,13 @@ export default function DashboardPage() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedReportForReview, setSelectedReportForReview] = useState(null);
+
+  // Dynamic Diagnostic Modality & Educational Explorer state
+  const [testCategoryFilter, setTestCategoryFilter] = useState('ALL');
+  const [isEducationalExplorerOpen, setIsEducationalExplorerOpen] = useState(false);
+  const [activeEducationalCategory, setActiveEducationalCategory] = useState('specific_ige');
+  const [testModalDefaultCategory, setTestModalDefaultCategory] = useState(null);
+  const [uploadModalInitialTestType, setUploadModalInitialTestType] = useState('');
 
   const [deleteModalState, setDeleteModalState] = useState({
     isOpen: false,
@@ -214,13 +513,30 @@ export default function DashboardPage() {
     return matchesSearch && matchesSeverity;
   });
 
-  // Filtered Medical Tests
+  // Filtered Medical Tests with Dynamic Modality Category Filter and Parameter Search
   const filteredTests = medicalTests.filter((t) => {
-    return (
-      t.allergenName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.testType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (t.clinicOrLabName && t.clinicOrLabName.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    const term = searchTerm.toLowerCase();
+    const allergenMatch = t.allergenName?.toLowerCase().includes(term);
+    const testTypeMatch = t.testType?.toLowerCase().includes(term);
+    const clinicMatch = t.clinicOrLabName && t.clinicOrLabName.toLowerCase().includes(term);
+    const notesMatch = t.doctorNotes && t.doctorNotes.toLowerCase().includes(term);
+    const componentMatch = t.testSpecificParameters?.componentName?.toLowerCase().includes(term);
+    const proteinMatch = t.testSpecificParameters?.proteinFamily?.toLowerCase().includes(term);
+    const matchesSearch =
+      !searchTerm ||
+      allergenMatch ||
+      testTypeMatch ||
+      clinicMatch ||
+      notesMatch ||
+      componentMatch ||
+      proteinMatch;
+
+    const matchesCategory =
+      testCategoryFilter === 'ALL' ||
+      t.testCategory === testCategoryFilter ||
+      (t.testType && getTestSchemaByIdOrName(t.testType).id === testCategoryFilter);
+
+    return matchesSearch && matchesCategory;
   });
 
   // Filtered Medical Reports (OCR Documents)
@@ -506,6 +822,26 @@ export default function DashboardPage() {
                 </select>
               </div>
             )}
+
+            {activeTab === 'tests' && (
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  Modality:
+                </span>
+                <select
+                  value={testCategoryFilter}
+                  onChange={(e) => setTestCategoryFilter(e.target.value)}
+                  className="px-3 py-1.5 rounded-lg border border-slate-300 text-xs text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                >
+                  <option value="ALL">All Diagnostic Modalities</option>
+                  {SUPPORTED_TEST_TYPES_LIST.map((schema) => (
+                    <option key={schema.id} value={schema.id}>
+                      {schema.shortName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -708,26 +1044,51 @@ export default function DashboardPage() {
           {/* TAB 2: MEDICAL TEST RECORDS */}
           {activeTab === 'tests' && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-bold text-slate-900">
                     Medical Test Reports & Lab Prescriptions
                   </h3>
                   <p className="text-xs text-slate-500">
-                    Skin Prick Tests (SPT), Specific IgE Blood Tests, Oral Food Challenges (OFC)
+                    Dynamic questionnaires & multi-modality OCR for 8 recognized food allergy test types
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <button
-                    onClick={() => setIsUploadModalOpen(true)}
+                    onClick={() => setIsEducationalExplorerOpen((prev) => !prev)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 shadow-xs ${
+                      isEducationalExplorerOpen
+                        ? 'bg-teal-50 border-teal-300 text-teal-800'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <BookOpen className="w-4 h-4 text-teal-600" />
+                    <span>Educational Guidelines</span>
+                    <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-teal-100 text-teal-800 font-extrabold">
+                      8 Tests
+                    </span>
+                    {isEducationalExplorerOpen ? (
+                      <ChevronUp className="w-3.5 h-3.5 text-teal-600" />
+                    ) : (
+                      <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setUploadModalInitialTestType('');
+                      setIsUploadModalOpen(true);
+                    }}
                     className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 transition-all"
                   >
                     <UploadCloud className="w-4 h-4" />
                     <span>Scan Lab Report (OCR)</span>
                   </button>
+
                   <button
                     onClick={() => {
                       setEditingTest(null);
+                      setTestModalDefaultCategory(null);
                       setIsTestModalOpen(true);
                     }}
                     className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 text-white text-xs font-bold hover:from-cyan-700 hover:to-teal-700 shadow-xs flex items-center gap-1.5 transition-all"
@@ -737,6 +1098,171 @@ export default function DashboardPage() {
                   </button>
                 </div>
               </div>
+
+              {/* Educational Knowledge Base Drawer / Explorer */}
+              {isEducationalExplorerOpen && (
+                <div className="p-5 rounded-3xl bg-gradient-to-br from-slate-50 via-teal-50/20 to-cyan-50/30 border border-teal-100 shadow-xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-teal-100/70 pb-3">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-teal-600 text-white">
+                          Clinical Knowledge Base
+                        </span>
+                        <h4 className="font-extrabold text-slate-900 text-sm sm:text-base">
+                          Food Allergy Diagnostic Test Modalities & Guidelines
+                        </h4>
+                      </div>
+                      <p className="text-xs text-slate-600 mt-0.5">
+                        Sourced directly from AAAAI / EAACI / NIAID educational consensus. Review clinical interpretation, documented parameters, and log records.
+                      </p>
+                    </div>
+                    <span className="text-[11px] text-teal-800 font-semibold bg-teal-100/80 px-2.5 py-1 rounded-lg self-start sm:self-auto">
+                      Reference Guide Active
+                    </span>
+                  </div>
+
+                  {/* Modality Horizontal Selector Tabs */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5">
+                    {SUPPORTED_TEST_TYPES_LIST.map((schema) => {
+                      const Icon = getCategoryIcon(schema.id);
+                      const isSelected = activeEducationalCategory === schema.id;
+                      return (
+                        <button
+                          key={schema.id}
+                          onClick={() => setActiveEducationalCategory(schema.id)}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
+                            isSelected
+                              ? 'bg-teal-700 text-white shadow-xs'
+                              : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                          }`}
+                        >
+                          <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-teal-200' : 'text-slate-500'}`} />
+                          <span>{schema.shortName}</span>
+                          {!schema.isRecommendedForFoodAllergy && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" title="Not Recommended" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Active Modality Educational Card */}
+                  {(() => {
+                    const schema = TEST_SCHEMAS[activeEducationalCategory] || TEST_SCHEMAS.specific_ige;
+                    const Icon = getCategoryIcon(schema.id);
+                    return (
+                      <div className="p-5 rounded-2xl bg-white border border-teal-100 shadow-2xs space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0 mt-0.5">
+                              <Icon className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h5 className="font-extrabold text-slate-900 text-base">
+                                  {schema.name}
+                                </h5>
+                                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700">
+                                  {schema.category}
+                                </span>
+                              </div>
+                              <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                                {schema.description}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {schema.isRecommendedForFoodAllergy ? (
+                              <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                Recommended Modality
+                              </span>
+                            ) : (
+                              <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-1">
+                                <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+                                Not Recommended for Food Allergy
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Clinical Significance Box */}
+                        <div
+                          className={`p-3.5 rounded-xl border text-xs leading-relaxed ${
+                            !schema.isRecommendedForFoodAllergy
+                              ? 'bg-rose-50 border-rose-200 text-rose-950'
+                              : 'bg-amber-50/80 border-amber-200 text-amber-950'
+                          }`}
+                        >
+                          <div className="flex items-center gap-1.5 font-bold mb-1">
+                            <AlertCircle className="w-4 h-4 text-amber-700 shrink-0" />
+                            <span>Clinical Significance & Diagnostic Caveats:</span>
+                          </div>
+                          <p>{schema.clinicalSignificance}</p>
+                        </div>
+
+                        {/* Documented Fields & Parameters Extracted */}
+                        <div>
+                          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                            Documented Questionnaire & OCR Extraction Fields:
+                          </p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            {schema.fields.map((f) => (
+                              <div
+                                key={f.key}
+                                className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs"
+                              >
+                                <span className="font-bold text-slate-800 block">
+                                  {f.label}
+                                  {f.required && <span className="text-rose-500 ml-0.5">*</span>}
+                                </span>
+                                <span className="text-[11px] text-slate-500 block mt-0.5">
+                                  {f.helpText}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Quick Action Footer */}
+                        <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <div className="text-[11px] text-slate-500">
+                            <strong>Default Units:</strong> {schema.defaultUnits || 'None'} |{' '}
+                            <strong>Supervised Setting:</strong>{' '}
+                            {schema.requiresMedicalSupervision ? 'Required (Clinic / Hospital)' : 'Not Mandatory'}
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => {
+                                setUploadModalInitialTestType(schema.standardTestTypeName);
+                                setIsUploadModalOpen(true);
+                              }}
+                              className="px-3 py-1.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-bold transition-colors flex items-center gap-1"
+                            >
+                              <UploadCloud className="w-3.5 h-3.5 text-amber-600" />
+                              <span>Scan {schema.shortName} Report</span>
+                            </button>
+
+                            <button
+                              onClick={() => {
+                                setEditingTest(null);
+                                setTestModalDefaultCategory(schema.id);
+                                setIsTestModalOpen(true);
+                              }}
+                              className="px-3.5 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition-colors flex items-center gap-1 shadow-xs"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                              <span>Log {schema.shortName}</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
 
               {/* Clinical distinction guidance box */}
               <div className="p-4 rounded-2xl bg-sky-50 border border-sky-200 text-sky-900 text-xs flex items-start gap-3">
@@ -855,6 +1381,9 @@ export default function DashboardPage() {
                             {test.clinicOrLabName}
                           </p>
                         )}
+
+                        {/* Test-Specific Parameters Card */}
+                        <TestSpecificParametersView test={test} />
 
                         {/* Doctor's Notes */}
                         {test.doctorNotes && (
@@ -1249,9 +1778,14 @@ export default function DashboardPage() {
 
       <MedicalTestModal
         isOpen={isTestModalOpen}
-        onClose={() => setIsTestModalOpen(false)}
+        onClose={() => {
+          setIsTestModalOpen(false);
+          setEditingTest(null);
+          setTestModalDefaultCategory(null);
+        }}
         onSaved={handleTestSaved}
         initialData={editingTest}
+        defaultCategory={testModalDefaultCategory}
       />
 
       <ProfileEditModal
@@ -1273,8 +1807,12 @@ export default function DashboardPage() {
       {/* Intelligent OCR Report Upload and Verification Modals */}
       <ReportUploadModal
         isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
+        onClose={() => {
+          setIsUploadModalOpen(false);
+          setUploadModalInitialTestType('');
+        }}
         onUploadSuccess={handleUploadSuccess}
+        initialTestType={uploadModalInitialTestType}
       />
 
       <ReportReviewModal

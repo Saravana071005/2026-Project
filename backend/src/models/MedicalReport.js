@@ -47,6 +47,30 @@ const allergyTestItemSchema = new mongoose.Schema(
       trim: true,
       default: null,
     },
+    testCategory: {
+      type: String,
+      default: 'specific_ige',
+    },
+    testSpecificParameters: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
+    parameterStatus: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}, // e.g. { whealDiameter: 'extracted', negativeControl: 'not_mentioned' }
+    },
+    customParameters: [
+      {
+        key: { type: String, trim: true },
+        value: { type: String, trim: true },
+        unit: { type: String, trim: true, default: '' },
+        _id: false,
+      },
+    ],
+    originalExtractedValues: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
     selected: {
       type: Boolean,
       default: true,
@@ -99,6 +123,33 @@ const medicalReportSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    // Dynamic Test-Specific Metadata
+    selectedTestType: {
+      type: String,
+      default: null,
+      index: true,
+    },
+    detectedTestType: {
+      type: String,
+      default: null,
+      index: true,
+    },
+    testTypeMismatch: {
+      type: Boolean,
+      default: false,
+    },
+    testMismatchDetails: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
+    auditTrail: [
+      {
+        timestamp: { type: Date, default: Date.now },
+        action: { type: String, required: true },
+        details: { type: String, default: '' },
+        _id: false,
+      },
+    ],
     structuredExtractedData: {
       extractedAt: {
         type: Date,

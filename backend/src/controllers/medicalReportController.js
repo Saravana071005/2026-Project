@@ -63,6 +63,7 @@ export const uploadMiddleware = multer({
 export const uploadReports = async (req, res) => {
   try {
     const files = req.files || (req.file ? [req.file] : []);
+    const selectedTestType = req.body.selectedTestType || null;
 
     if (!files || files.length === 0) {
       return res.status(400).json({
@@ -81,6 +82,7 @@ export const uploadReports = async (req, res) => {
         fileType: file.mimetype,
         fileSize: file.size,
         filePath: file.path,
+        selectedTestType,
         processingStatus: 'processing',
         userVerificationStatus: 'unverified',
       });
@@ -89,11 +91,15 @@ export const uploadReports = async (req, res) => {
 
       // Trigger OCR & Intelligent Document Understanding
       try {
-        const ocrResult = await processMedicalDocument(file.path, file.mimetype);
+        const ocrResult = await processMedicalDocument(file.path, file.mimetype, { selectedTestType });
         newReport.ocrExtractedText = ocrResult.rawText;
         newReport.ocrEngine = ocrResult.ocrEngine;
         newReport.structuredExtractedData = ocrResult.structuredData;
         newReport.fieldConfidence = ocrResult.fieldConfidence;
+        newReport.selectedTestType = ocrResult.selectedTestType;
+        newReport.detectedTestType = ocrResult.detectedTestType;
+        newReport.testTypeMismatch = ocrResult.testTypeMismatch;
+        newReport.testMismatchDetails = ocrResult.testMismatchDetails;
         newReport.processingStatus = 'processed';
       } catch (ocrErr) {
         console.error(`[OCR Extraction Error on ${file.originalname}]:`, ocrErr);
@@ -272,11 +278,16 @@ export const reprocessReport = async (req, res) => {
     report.processingStatus = 'processing';
     await report.save();
 
-    const ocrResult = await processMedicalDocument(report.filePath, report.fileType);
+    const selectedTestType = req.body?.selectedTestType || report.selectedTestType || null;
+    const ocrResult = await processMedicalDocument(report.filePath, report.fileType, { selectedTestType });
     report.ocrExtractedText = ocrResult.rawText;
     report.ocrEngine = ocrResult.ocrEngine;
     report.structuredExtractedData = ocrResult.structuredData;
     report.fieldConfidence = ocrResult.fieldConfidence;
+    report.selectedTestType = ocrResult.selectedTestType;
+    report.detectedTestType = ocrResult.detectedTestType;
+    report.testTypeMismatch = ocrResult.testTypeMismatch;
+    report.testMismatchDetails = ocrResult.testMismatchDetails;
     report.processingStatus = 'processed';
     report.errorMessage = '';
 
@@ -351,6 +362,7 @@ export const confirmReportData = async (req, res) => {
         userId: req.user._id,
         allergenName: item.allergenName.trim(),
         testType: item.testType || 'Specific IgE Blood Test',
+        testCategory: item.testCategory || 'specific_ige',
         testDate: parsedDate,
         testResult: item.testResult.trim(),
         units: item.units ? item.units.trim() : '',
@@ -365,6 +377,12 @@ export const confirmReportData = async (req, res) => {
         doctorNotes: doctorNotes ? doctorNotes.trim() : item.notes || '',
         recordedReactionDetails: item.recordedReactionDetails || '',
         clinicOrLabName: clinicOrLabName ? clinicOrLabName.trim() : '',
+        testSpecificParameters: item.testSpecificParameters || {},
+        parameterStatus: item.parameterStatus || {},
+        parameterConfidence: item.parameterConfidence || {},
+        customParameters: Array.isArray(item.customParameters) ? item.customParameters : [],
+        originalExtractedValues: item.originalExtractedValues || null,
+        clinicalWarningAcknowledged: Boolean(item.clinicalWarningAcknowledged),
         reportId: report._id,
         ocrExtracted: true,
       });
@@ -386,6 +404,14 @@ export const confirmReportData = async (req, res) => {
     if (doctorName !== undefined) {
       report.structuredExtractedData.doctorName = doctorName.trim();
     }
+    if (!report.auditTrail) {
+      report.auditTrail = [];
+    }
+    report.auditTrail.push({
+      timestamp: new Date(),
+      action: 'USER_CONFIRMED_DATA',
+      details: `User verified and saved ${savedTestRecords.length} medical test record(s).`,
+    });
     await report.save();
 
     return res.status(200).json({

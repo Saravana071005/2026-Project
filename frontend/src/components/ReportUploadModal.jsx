@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   X,
   UploadCloud,
@@ -11,6 +11,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import api from '../services/api';
+import { SUPPORTED_TEST_TYPES_LIST } from '../config/testSchemas';
 
 const ALLOWED_MIME_TYPES = [
   'image/jpeg',
@@ -21,9 +22,10 @@ const ALLOWED_MIME_TYPES = [
 ];
 const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB
 
-export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess }) {
+export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, initialTestType = '' }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
+  const [selectedTestType, setSelectedTestType] = useState(initialTestType);
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [progressStage, setProgressStage] = useState('');
@@ -31,6 +33,12 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess }) 
 
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedTestType(initialTestType || '');
+    }
+  }, [isOpen, initialTestType]);
 
   if (!isOpen) return null;
 
@@ -114,6 +122,9 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess }) 
     selectedFiles.forEach((file) => {
       formData.append('files', file);
     });
+    if (selectedTestType) {
+      formData.append('selectedTestType', selectedTestType);
+    }
 
     try {
       // Simulate realistic stage indicators for user feedback
@@ -181,6 +192,31 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess }) 
               <span>{error}</span>
             </div>
           )}
+
+          {/* Test Modality Target Selector */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+              <span>Target Test Type (Optional):</span>
+              <span className="text-[11px] text-teal-600 font-normal lowercase">
+                {selectedTestType ? 'Targeted extraction active' : 'Auto-detect active'}
+              </span>
+            </label>
+            <select
+              value={selectedTestType}
+              onChange={(e) => setSelectedTestType(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-teal-500 bg-white text-slate-800 shadow-xs"
+            >
+              <option value="">✨ Auto-Detect Test Modality from Document Layout</option>
+              {SUPPORTED_TEST_TYPES_LIST.map((schema) => (
+                <option key={schema.id} value={schema.id}>
+                  {schema.name} ({schema.category})
+                </option>
+              ))}
+            </select>
+            <p className="text-[11px] text-slate-500">
+              Select your specific test to optimize extraction parameters, or leave on Auto-Detect.
+            </p>
+          </div>
 
           {/* Drag & Drop Zone */}
           <div

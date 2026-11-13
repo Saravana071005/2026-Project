@@ -19,19 +19,15 @@ import {
   ChevronUp,
   FileText,
   Building2,
+  Sparkles,
+  ArrowRightLeft,
 } from 'lucide-react';
 import api from '../services/api';
-
-const TEST_TYPES = [
-  'Specific IgE Blood Test',
-  'Skin Prick Test (SPT)',
-  'Oral Food Challenge (OFC)',
-  'Patch Test',
-  'Total IgE Test',
-  'Component-Resolved Diagnostics (CRD)',
-  'Doctor Clinical Evaluation / Prescription',
-  'Other',
-];
+import {
+  TEST_SCHEMAS,
+  SUPPORTED_TEST_TYPES_LIST,
+  getTestSchemaByIdOrName,
+} from '../config/testSchemas';
 
 const TODAY_DATE_STRING = new Date().toISOString().split('T')[0];
 
@@ -55,8 +51,11 @@ export default function ReportReviewModal({
   const [cholesterol, setCholesterol] = useState(null);
   const [totalIgE, setTotalIgE] = useState(null);
 
-  // Extracted Allergy Tests
+  // Extracted Allergy Tests with dynamic test-specific parameters
   const [tests, setTests] = useState([]);
+
+  // Active Modality Mismatch State
+  const [mismatchDismissed, setMismatchDismissed] = useState(false);
 
   // Raw OCR text preview accordion
   const [showRawText, setShowRawText] = useState(false);
@@ -92,21 +91,35 @@ export default function ReportReviewModal({
       setCholesterol(vitals.cholesterol || null);
       setTotalIgE(vitals.totalIgE || null);
 
-      const initialTests = (structured.allergyTests || []).map((t, idx) => ({
-        id: t._id || `test_${idx}_${Date.now()}`,
-        allergenName: t.allergenName || '',
-        allergenCategory: t.allergenCategory || 'Other Food',
-        testType: t.testType || 'Specific IgE Blood Test',
-        testResult: t.testResult || '',
-        units: t.units || 'kUA/L',
-        referenceRange: t.referenceRange || '',
-        confidence: t.confidence || 'needs_review',
-        confidenceScore: t.confidenceScore || 50,
-        notes: t.notes || '',
-        selected: t.selected !== false,
-      }));
+      const initialTests = (structured.allergyTests || []).map((t, idx) => {
+        const schema = getTestSchemaByIdOrName(t.testCategory || t.testType);
+        return {
+          id: t._id || `test_${idx}_${Date.now()}`,
+          allergenName: t.allergenName || '',
+          allergenCategory: t.allergenCategory || 'Other Food',
+          testType: t.testType || schema.standardTestTypeName,
+          testCategory: t.testCategory || schema.id,
+          testResult: t.testResult || '',
+          units: t.units || schema.defaultUnits || 'kUA/L',
+          referenceRange: t.referenceRange || '',
+          confidence: t.confidence || 'needs_review',
+          confidenceScore: t.confidenceScore || 50,
+          notes: t.notes || '',
+          testSpecificParameters: t.testSpecificParameters || {},
+          parameterStatus: t.parameterStatus || {},
+          parameterConfidence: t.parameterConfidence || {},
+          customParameters: t.customParameters || [],
+          originalExtractedValues: t.originalExtractedValues || {
+            testResult: t.testResult,
+            units: t.units,
+            referenceRange: t.referenceRange,
+          },
+          selected: t.selected !== false,
+        };
+      });
       setTests(initialTests);
     }
+    setMismatchDismissed(false);
     setError('');
   }, [report]);
 
@@ -141,10 +154,112 @@ export default function ReportReviewModal({
     };
   }, [report]);
 
+  // Handle Switch Modality (e.g. from mismatch alert or category change)
+  const handleSwitchModality = (newCategory) => {
+    const targetSchema = TEST_SCHEMAS[newCategory] || TEST_SCHEMAS.specific_ige;
+    setTests((prev) =>
+      prev.map((t) => {
+        const updatedParams = { ...(t.testSpecificParameters || {}) };
+        const updatedStatus = { ...(t.parameterStatus || {}) };
+
+        // Ensure fields for new schema exist or default to null
+        targetSchema.fields.forEach((f) => {
+          if (updatedParams[f.key] === undefined) {
+            updatedParams[f.key] = null;
+            updatedStatus[f.key] = 'not_mentioned';
+          }
+        });
+
+        return {
+          ...t,
+          testType: targetSchema.standardTestTypeName,
+          testCategory: targetSchema.id,
+          units: targetSchema.defaultUnits || t.units,
+          testSpecificParameters: updatedParams,
+          parameterStatus: updatedStatus,
+        };
+      })
+    );
+    setMismatchDismissed(true);
+  };
+
   // Test field modifiers
   const updateTest = (index, field, value) => {
     setTests((prev) =>
       prev.map((t, idx) => (idx === index ? { ...t, [field]: value } : t))
+    );
+  };
+
+  // Modify a test-specific parameter value inside a test item
+  const updateTestSpecificParam = (testIndex, paramKey, value) => {
+    setTests((prev) =>
+      prev.map((t, idx) => {
+        if (idx !== testIndex) return t;
+
+        const updatedParams = { ...(t.testSpecificParameters || {}), [paramKey]: value };
+        const updatedStatus = { ...(t.parameterStatus || {}), [paramKey]: 'user_verified' };
+        const updatedConfidence = { ...(t.parameterConfidence || {}), [paramKey]: 100 };
+
+        // Auto-calculate Net Difference for Skin Prick Test if applicable
+        if (t.testCategory === 'skin_prick' && (paramKey === 'whealDiameter' || paramKey === 'negativeControl')) {
+          const wheal = parseFloat(paramKey === 'whealDiameter' ? value : updatedParams.whealDiameter);
+          const neg = parseFloat(paramKey === 'negativeControl' ? value : updatedParams.negativeControl || '0');
+          if (!isNaN(wheal) && !isNaN(neg)) {
+            updatedParams.netDifference = (wheal - neg).toFixed(1);
+            updatedStatus.netDifference = 'user_verified';
+          }
+        }
+
+        // If updating primary measurement field, sync with testResult
+        let updatedResult = t.testResult;
+        if (paramKey === 'specificIgEValue' || paramKey === 'whealDiameter' || paramKey === 'totalIgEValue') {
+          updatedResult = value;
+        }
+
+        return {
+          ...t,
+          testResult: updatedResult,
+          testSpecificParameters: updatedParams,
+          parameterStatus: updatedStatus,
+          parameterConfidence: updatedConfidence,
+        };
+      })
+    );
+  };
+
+  // Add custom parameter to a test item
+  const addCustomParamToTest = (testIndex) => {
+    setTests((prev) =>
+      prev.map((t, idx) => {
+        if (idx !== testIndex) return t;
+        const currentCustom = Array.isArray(t.customParameters) ? t.customParameters : [];
+        return {
+          ...t,
+          customParameters: [...currentCustom, { key: '', value: '', unit: '' }],
+        };
+      })
+    );
+  };
+
+  const updateCustomParamInTest = (testIndex, paramIndex, field, value) => {
+    setTests((prev) =>
+      prev.map((t, idx) => {
+        if (idx !== testIndex) return t;
+        const updated = (t.customParameters || []).map((p, pIdx) =>
+          pIdx === paramIndex ? { ...p, [field]: value } : p
+        );
+        return { ...t, customParameters: updated };
+      })
+    );
+  };
+
+  const removeCustomParamFromTest = (testIndex, paramIndex) => {
+    setTests((prev) =>
+      prev.map((t, idx) => {
+        if (idx !== testIndex) return t;
+        const updated = (t.customParameters || []).filter((_, pIdx) => pIdx !== paramIndex);
+        return { ...t, customParameters: updated };
+      })
     );
   };
 
@@ -153,19 +268,26 @@ export default function ReportReviewModal({
   };
 
   const addManualTest = () => {
+    const schema = TEST_SCHEMAS.specific_ige;
     setTests((prev) => [
       ...prev,
       {
         id: `manual_${Date.now()}`,
         allergenName: '',
         allergenCategory: 'Peanuts',
-        testType: 'Specific IgE Blood Test',
+        testType: schema.standardTestTypeName,
+        testCategory: schema.id,
         testResult: '',
-        units: 'kUA/L',
+        units: schema.defaultUnits,
         referenceRange: '',
         confidence: 'high',
         confidenceScore: 100,
         notes: 'Manually entered test result',
+        testSpecificParameters: {},
+        parameterStatus: {},
+        parameterConfidence: {},
+        customParameters: [],
+        originalExtractedValues: null,
         selected: true,
       },
     ]);
@@ -181,19 +303,28 @@ export default function ReportReviewModal({
       setClinicOrLabName(newStructured.clinicOrLabName || '');
       setDoctorName(newStructured.doctorName || '');
       setTests(
-        (newStructured.allergyTests || []).map((t, idx) => ({
-          id: t._id || `re_${idx}_${Date.now()}`,
-          allergenName: t.allergenName,
-          allergenCategory: t.allergenCategory || 'Other Food',
-          testType: t.testType || 'Specific IgE Blood Test',
-          testResult: t.testResult,
-          units: t.units || 'kUA/L',
-          referenceRange: t.referenceRange || '',
-          confidence: t.confidence || 'needs_review',
-          confidenceScore: t.confidenceScore || 50,
-          notes: t.notes || '',
-          selected: true,
-        }))
+        (newStructured.allergyTests || []).map((t, idx) => {
+          const schema = getTestSchemaByIdOrName(t.testCategory || t.testType);
+          return {
+            id: t._id || `re_${idx}_${Date.now()}`,
+            allergenName: t.allergenName,
+            allergenCategory: t.allergenCategory || 'Other Food',
+            testType: t.testType || schema.standardTestTypeName,
+            testCategory: t.testCategory || schema.id,
+            testResult: t.testResult,
+            units: t.units || schema.defaultUnits || 'kUA/L',
+            referenceRange: t.referenceRange || '',
+            confidence: t.confidence || 'needs_review',
+            confidenceScore: t.confidenceScore || 50,
+            notes: t.notes || '',
+            testSpecificParameters: t.testSpecificParameters || {},
+            parameterStatus: t.parameterStatus || {},
+            parameterConfidence: t.parameterConfidence || {},
+            customParameters: t.customParameters || [],
+            originalExtractedValues: t.originalExtractedValues || null,
+            selected: true,
+          };
+        })
       );
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to reprocess document.');
@@ -236,12 +367,18 @@ export default function ReportReviewModal({
         allergenName: t.allergenName.trim(),
         allergenCategory: t.allergenCategory,
         testType: t.testType,
+        testCategory: t.testCategory,
         testResult: t.testResult.trim(),
         units: t.units.trim(),
         referenceRange: t.referenceRange.trim(),
         isDoctorConfirmedDiagnosis: clinicalDiagnosisStatus === 'Doctor-Confirmed Diagnosis',
         clinicalDiagnosisStatus,
         notes: t.notes.trim(),
+        testSpecificParameters: t.testSpecificParameters || {},
+        parameterStatus: t.parameterStatus || {},
+        parameterConfidence: t.parameterConfidence || {},
+        customParameters: t.customParameters || [],
+        originalExtractedValues: t.originalExtractedValues || null,
       })),
       generalMeasurements: {
         bloodPressure,
@@ -279,16 +416,21 @@ export default function ReportReviewModal({
               <FileCheck className="w-6 h-6 text-teal-200" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold tracking-tight">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-base sm:text-lg font-bold tracking-tight">
                   Verify Extracted Medical Report Data
                 </h3>
                 <span className="px-2 py-0.5 rounded-md bg-teal-500/30 text-teal-100 text-[11px] font-semibold">
                   OCR Engine: {report.ocrEngine || 'Hybrid'}
                 </span>
+                {report.detectedTestType && (
+                  <span className="px-2 py-0.5 rounded-md bg-cyan-400/20 text-cyan-100 text-[11px] font-bold border border-cyan-300/30">
+                    Detected: {report.detectedTestType}
+                  </span>
+                )}
               </div>
-              <p className="text-xs text-teal-100">
-                Document: <span className="font-mono">{report.originalFileName}</span> &bull; Verify and correct fields before saving to health portal
+              <p className="text-xs text-teal-100 mt-0.5">
+                Document: <span className="font-mono">{report.originalFileName}</span> &bull; Verify extracted values, units, and missing parameters
               </p>
             </div>
           </div>
@@ -301,11 +443,48 @@ export default function ReportReviewModal({
           </button>
         </div>
 
-        {/* Clinical Guardrail Alert Notice */}
+        {/* Test Type Mismatch Alert Banner */}
+        {report.testTypeMismatch && !mismatchDismissed && (
+          <div className="bg-amber-500 text-white px-6 py-3 flex items-center justify-between gap-3 text-xs shrink-0 animate-in slide-in-from-top-2">
+            <div className="flex items-center gap-2.5">
+              <AlertTriangle className="w-5 h-5 text-amber-200 shrink-0" />
+              <div>
+                <p className="font-bold text-sm">Test Modality Mismatch Detected</p>
+                <p className="text-amber-100 text-xs">
+                  {report.testMismatchDetails?.message ||
+                    `You selected "${report.selectedTestType}", but document analysis detected a "${report.detectedTestType}".`}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() =>
+                  handleSwitchModality(
+                    report.testMismatchDetails?.detectedCategory || 'skin_prick'
+                  )
+                }
+                className="px-3 py-1.5 rounded-lg bg-white text-amber-900 font-bold hover:bg-amber-50 text-xs shadow-xs flex items-center gap-1.5 transition-colors"
+              >
+                <ArrowRightLeft className="w-3.5 h-3.5 text-amber-600" />
+                <span>Switch to {report.detectedTestType}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setMismatchDismissed(true)}
+                className="px-2.5 py-1.5 rounded-lg text-amber-200 hover:text-white hover:bg-amber-600/50 transition-colors"
+              >
+                Keep Selected
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Clinical Guardrail Notice */}
         <div className="bg-sky-50 px-6 py-2.5 border-b border-sky-100 flex items-start gap-2.5 text-xs text-sky-950 shrink-0">
           <Info className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
           <p>
-            <strong>Mandatory Verification Guardrail:</strong> OCR extractions are suggestions to assist you. Sensitization results (IgE titers / wheals) are recorded as laboratory observations and do not constitute an automated medical diagnosis. Please inspect against your original document.
+            <strong>Diagnostic Guardrail:</strong> Sensitization results are recorded as laboratory observations. Missing parameters in reports are preserved as <em>null</em>. You can review, correct, or supplement all values before saving.
           </p>
         </div>
 
@@ -361,85 +540,77 @@ export default function ReportReviewModal({
               ) : fileBlobUrl ? (
                 isPdf ? (
                   <iframe
-                    src={`${fileBlobUrl}#view=FitH`}
-                    title="PDF Document"
-                    className="w-full h-full min-h-[460px] rounded-xl border-0"
+                    src={fileBlobUrl}
+                    title="PDF Report Document"
+                    className="w-full h-full min-h-[440px] rounded-xl border-0"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center overflow-auto">
-                    <img
-                      src={fileBlobUrl}
-                      alt="Uploaded Medical Document"
-                      style={{ width: `${zoomLevel}%` }}
-                      className="max-w-none transition-all duration-150 rounded shadow-xs"
-                    />
-                  </div>
+                  <img
+                    src={fileBlobUrl}
+                    alt="Medical Lab Report"
+                    style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: 'top center' }}
+                    className="max-w-full h-auto object-contain rounded-lg transition-transform duration-100"
+                  />
                 )
               ) : (
-                <div className="text-center p-6 text-xs text-slate-400">
-                  <FileText className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-                  <span>Document preview unavailable.</span>
+                <div className="text-center space-y-1 text-xs text-slate-400 p-4">
+                  <FileText className="w-8 h-8 mx-auto text-slate-300" />
+                  <p>Preview stream unavailable.</p>
                 </div>
               )}
             </div>
 
-            {/* Reprocess Document Trigger */}
-            <div className="mt-3 flex items-center justify-between text-xs">
-              <span className="text-[11px] text-slate-500">
-                OCR Status: <strong className="text-teal-700 capitalize">{report.processingStatus}</strong>
-              </span>
+            {/* Document Details Footer */}
+            <div className="mt-3 p-2.5 rounded-xl bg-white border border-slate-200 text-[11px] text-slate-500 flex items-center justify-between">
+              <span>Size: {(report.fileSize / 1024 / 1024).toFixed(2)} MB</span>
+              <span>Type: {report.fileType}</span>
               <button
                 type="button"
                 onClick={handleReprocess}
                 disabled={reprocessing}
-                className="text-xs text-teal-700 hover:text-teal-900 font-semibold flex items-center gap-1 p-1 hover:bg-white rounded transition-colors"
+                className="text-teal-700 hover:text-teal-900 font-bold flex items-center gap-1"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${reprocessing ? 'animate-spin' : ''}`} />
-                <span>{reprocessing ? 'Reprocessing...' : 'Reprocess OCR'}</span>
+                <RefreshCw className={`w-3 h-3 ${reprocessing ? 'animate-spin' : ''}`} />
+                <span>Reprocess OCR</span>
               </button>
             </div>
           </div>
 
-          {/* RIGHT: Structured Verification Form (7 cols) */}
-          <div className="lg:col-span-7 p-4 sm:p-6 space-y-5 overflow-y-auto">
+          {/* RIGHT: Dynamic Test-Specific Verification Editor (7 cols) */}
+          <div className="lg:col-span-7 p-4 sm:p-6 overflow-y-auto space-y-5">
             {error && (
-              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-2.5 animate-in fade-in">
+              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
                 <span>{error}</span>
               </div>
             )}
 
-            {/* SECTION 1: REPORT SOURCE & CLINICAL STATUS */}
+            {/* SECTION 1: REPORT METADATA & FACILITY CARD */}
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4 text-teal-600" />
-                  Testing Facility & Ordering Provider
-                </h4>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
-                  Extracted Header
-                </span>
-              </div>
+              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                <Building2 className="w-4 h-4 text-teal-600" />
+                Facility & Doctor Header
+              </span>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {/* Clinic / Lab Name */}
-                <div className="sm:col-span-2">
+              <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 text-xs">
+                {/* Laboratory / Facility */}
+                <div className="sm:col-span-6">
                   <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                    Laboratory / Clinic Name
+                    Testing Facility / Laboratory Name
                   </label>
                   <input
                     type="text"
                     value={clinicOrLabName}
                     onChange={(e) => setClinicOrLabName(e.target.value)}
-                    placeholder="e.g. Quest Diagnostics, Metro Allergy"
+                    placeholder="e.g. QUEST DIAGNOSTICS IMMUNOLOGY LABORATORY"
                     className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                   />
                 </div>
 
                 {/* Test Date */}
-                <div>
+                <div className="sm:col-span-3">
                   <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                    Date of Test
+                    Report / Test Date
                   </label>
                   <input
                     type="date"
@@ -537,12 +708,16 @@ export default function ReportReviewModal({
                     type="text"
                     value={bloodPressure || ''}
                     onChange={(e) => setBloodPressure(e.target.value || null)}
-                    placeholder="null"
+                    placeholder="Not in report"
                     className="w-full mt-1 font-bold text-slate-800 text-xs border-b border-transparent focus:border-teal-500 focus:outline-none"
                   />
-                  {!bloodPressure && (
-                    <span className="text-[9px] text-amber-700 bg-amber-50 px-1 py-0.5 rounded">
-                      null (absent)
+                  {!bloodPressure ? (
+                    <span className="text-[9px] text-slate-400 bg-slate-100 px-1 py-0.5 rounded font-mono">
+                      null (Not in report)
+                    </span>
+                  ) : (
+                    <span className="text-[9px] text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded">
+                      Extracted
                     </span>
                   )}
                 </div>
@@ -556,12 +731,16 @@ export default function ReportReviewModal({
                     type="text"
                     value={bloodSugar || ''}
                     onChange={(e) => setBloodSugar(e.target.value || null)}
-                    placeholder="null"
+                    placeholder="Not in report"
                     className="w-full mt-1 font-bold text-slate-800 text-xs border-b border-transparent focus:border-teal-500 focus:outline-none"
                   />
-                  {!bloodSugar && (
-                    <span className="text-[9px] text-amber-700 bg-amber-50 px-1 py-0.5 rounded">
-                      null (absent)
+                  {!bloodSugar ? (
+                    <span className="text-[9px] text-slate-400 bg-slate-100 px-1 py-0.5 rounded font-mono">
+                      null (Not in report)
+                    </span>
+                  ) : (
+                    <span className="text-[9px] text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded">
+                      Extracted
                     </span>
                   )}
                 </div>
@@ -575,12 +754,16 @@ export default function ReportReviewModal({
                     type="text"
                     value={cholesterol || ''}
                     onChange={(e) => setCholesterol(e.target.value || null)}
-                    placeholder="null"
+                    placeholder="Not in report"
                     className="w-full mt-1 font-bold text-slate-800 text-xs border-b border-transparent focus:border-teal-500 focus:outline-none"
                   />
-                  {!cholesterol && (
-                    <span className="text-[9px] text-amber-700 bg-amber-50 px-1 py-0.5 rounded">
-                      null (absent)
+                  {!cholesterol ? (
+                    <span className="text-[9px] text-slate-400 bg-slate-100 px-1 py-0.5 rounded font-mono">
+                      null (Not in report)
+                    </span>
+                  ) : (
+                    <span className="text-[9px] text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded">
+                      Extracted
                     </span>
                   )}
                 </div>
@@ -594,27 +777,32 @@ export default function ReportReviewModal({
                     type="text"
                     value={totalIgE || ''}
                     onChange={(e) => setTotalIgE(e.target.value || null)}
-                    placeholder="null"
+                    placeholder="Not in report"
                     className="w-full mt-1 font-bold text-slate-800 text-xs border-b border-transparent focus:border-teal-500 focus:outline-none"
                   />
-                  {!totalIgE && (
-                    <span className="text-[9px] text-amber-700 bg-amber-50 px-1 py-0.5 rounded">
-                      null (absent)
+                  {!totalIgE ? (
+                    <span className="text-[9px] text-slate-400 bg-slate-100 px-1 py-0.5 rounded font-mono">
+                      null (Not in report)
+                    </span>
+                  ) : (
+                    <span className="text-[9px] text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded">
+                      Extracted
                     </span>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* SECTION 3: EXTRACTED ALLERGY DIAGNOSTIC TESTS */}
+            {/* SECTION 3: EXTRACTED TEST-SPECIFIC DIAGNOSTIC ENTITIES */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                    Extracted Food Allergy Diagnostic Tests ({tests.length})
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+                    <span>Dynamic Test-Specific Results ({tests.length})</span>
                   </h4>
                   <p className="text-[11px] text-slate-500">
-                    Review allergen names, numerical decimals, units, and separated reference ranges
+                    Each test displays parameters tailored to its clinical testing modality
                   </p>
                 </div>
                 <button
@@ -640,13 +828,18 @@ export default function ReportReviewModal({
                   </button>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {tests.map((item, idx) => {
+                    const schema = getTestSchemaByIdOrName(item.testCategory || item.testType);
                     const isNeedsReview =
                       item.confidence === 'needs_review' ||
                       item.confidence === 'low' ||
                       !item.testResult ||
                       item.testResult === 'needs_review';
+
+                    const specificParams = item.testSpecificParameters || {};
+                    const paramStatuses = item.parameterStatus || {};
+                    const paramConfidences = item.parameterConfidence || {};
 
                     return (
                       <div
@@ -657,8 +850,8 @@ export default function ReportReviewModal({
                             : 'bg-white border-slate-200 shadow-2xs'
                         }`}
                       >
-                        {/* Top: Selection, Title, Confidence Badge & Delete */}
-                        <div className="flex items-start justify-between gap-2 mb-3">
+                        {/* Top Bar: Checkbox, Name, Schema Badge, Status & Delete */}
+                        <div className="flex items-start justify-between gap-2 mb-3 pb-2.5 border-b border-slate-100">
                           <div className="flex items-center gap-2">
                             <input
                               type="checkbox"
@@ -666,13 +859,18 @@ export default function ReportReviewModal({
                               onChange={(e) => updateTest(idx, 'selected', e.target.checked)}
                               className="w-4 h-4 rounded text-teal-600 focus:ring-teal-500"
                             />
-                            <span className="text-xs font-bold text-slate-800">
-                              Item #{idx + 1}
-                            </span>
+                            <div>
+                              <span className="text-xs font-bold text-slate-900">
+                                #{idx + 1}: {item.allergenName || 'Unlabeled Test Item'}
+                              </span>
+                              <span className="ml-2 px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                                {schema.shortName}
+                              </span>
+                            </div>
                           </div>
 
                           <div className="flex items-center gap-2">
-                            {/* Confidence Badge */}
+                            {/* Confidence Status Badge */}
                             <span
                               className={`px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 ${
                                 item.confidence === 'high'
@@ -691,7 +889,7 @@ export default function ReportReviewModal({
                               {isNeedsReview && <AlertCircle className="w-3 h-3 text-rose-600" />}
                               <span>
                                 {item.confidence === 'high'
-                                  ? 'High Confidence'
+                                  ? 'Extracted (High)'
                                   : item.confidence === 'medium'
                                   ? 'Medium Confidence'
                                   : 'Needs Review'}
@@ -709,101 +907,180 @@ export default function ReportReviewModal({
                           </div>
                         </div>
 
-                        {/* Test Inputs Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 text-xs">
-                          {/* Allergen Name */}
-                          <div className="sm:col-span-5">
+                        {/* Allergen Name and Modality Switcher Row */}
+                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 text-xs mb-3">
+                          <div className="sm:col-span-7">
                             <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                              Tested Allergen / Food Item <span className="text-rose-500">*</span>
+                              Allergen / Food Item <span className="text-rose-500">*</span>
                             </label>
                             <input
                               type="text"
                               required
                               value={item.allergenName}
-                              onChange={(e) => updateTest(idx, 'allergenName', e.target.value)}
-                              placeholder="e.g. Peanut (f13), Shrimp, Cow's Milk"
+                              onChange={(e) => {
+                                updateTest(idx, 'allergenName', e.target.value);
+                                updateTestSpecificParam(idx, 'allergenName', e.target.value);
+                              }}
+                              placeholder="e.g. Peanut, Shrimp, Cow Milk"
                               className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500"
                             />
                           </div>
 
-                          {/* Test Modality */}
-                          <div className="sm:col-span-4">
+                          <div className="sm:col-span-5">
                             <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                              Test Modality
+                              Diagnostic Modality
                             </label>
                             <select
-                              value={item.testType}
-                              onChange={(e) => updateTest(idx, 'testType', e.target.value)}
+                              value={schema.id}
+                              onChange={(e) => {
+                                const newCat = e.target.value;
+                                const newSch = TEST_SCHEMAS[newCat];
+                                updateTest(idx, 'testCategory', newCat);
+                                updateTest(idx, 'testType', newSch.standardTestTypeName);
+                                updateTest(idx, 'units', newSch.defaultUnits);
+                              }}
                               className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                             >
-                              {TEST_TYPES.map((type) => (
-                                <option key={type} value={type}>
-                                  {type}
+                              {SUPPORTED_TEST_TYPES_LIST.map((s) => (
+                                <option key={s.id} value={s.id}>
+                                  {s.shortName}
                                 </option>
                               ))}
                             </select>
                           </div>
+                        </div>
 
-                          {/* Numerical Result (Decimals preserved) */}
-                          <div className="sm:col-span-3">
-                            <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                              Result Value <span className="text-rose-500">*</span>
-                            </label>
-                            <input
-                              type="text"
-                              required
-                              value={item.testResult}
-                              onChange={(e) => updateTest(idx, 'testResult', e.target.value)}
-                              placeholder="e.g. 24.6, 7.5, <0.35"
-                              className={`w-full px-3 py-1.5 rounded-lg border text-xs font-bold ${
-                                isNeedsReview
-                                  ? 'border-rose-400 bg-white text-rose-900 focus:ring-rose-500'
-                                  : 'border-slate-300 text-slate-900 focus:ring-teal-500'
-                              }`}
-                            />
+                        {/* DYNAMIC TEST-SPECIFIC PARAMETERS GRID */}
+                        <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 space-y-2.5 mb-3">
+                          <span className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider">
+                            Documented Parameters for {schema.name}:
+                          </span>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                            {schema.fields
+                              .filter(
+                                (f) =>
+                                  f.key !== 'allergenName' &&
+                                  f.key !== 'foodTested' &&
+                                  f.key !== 'allergenTested' &&
+                                  f.key !== 'testDate'
+                              )
+                              .map((field) => {
+                                const val = specificParams[field.key];
+                                const status = paramStatuses[field.key] || (val ? 'extracted' : 'not_mentioned');
+                                const _conf = paramConfidences[field.key] || 0;
+                                const isNull = val === null || val === undefined || String(val).trim() === '';
+
+                                return (
+                                  <div key={field.key} className="p-2 rounded-lg bg-white border border-slate-200 text-xs space-y-1">
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-[10px] font-bold text-slate-600 truncate" title={field.label}>
+                                        {field.label}
+                                      </span>
+                                      {/* Parameter Status Pill */}
+                                      {status === 'user_verified' ? (
+                                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-teal-100 text-teal-800">
+                                          Verified
+                                        </span>
+                                      ) : status === 'extracted' ? (
+                                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">
+                                          Extracted
+                                        </span>
+                                      ) : status === 'needs_review' ? (
+                                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-100 text-amber-800">
+                                          Review
+                                        </span>
+                                      ) : (
+                                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-slate-100 text-slate-400">
+                                          Not in report
+                                        </span>
+                                      )}
+                                    </div>
+
+                                    {field.type === 'select' ? (
+                                      <select
+                                        value={val || ''}
+                                        onChange={(e) => updateTestSpecificParam(idx, field.key, e.target.value)}
+                                        className="w-full px-2 py-1 rounded border border-slate-200 text-xs bg-white text-slate-800 focus:ring-1 focus:ring-teal-500"
+                                      >
+                                        <option value="">-- Not mentioned in report (null) --</option>
+                                        {field.options.map((opt) => (
+                                          <option key={opt} value={opt}>
+                                            {opt}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    ) : (
+                                      <input
+                                        type="text"
+                                        value={val || ''}
+                                        placeholder={isNull ? 'Not mentioned in report (null)' : field.placeholder}
+                                        onChange={(e) => updateTestSpecificParam(idx, field.key, e.target.value)}
+                                        className={`w-full px-2 py-1 rounded border text-xs focus:ring-1 focus:ring-teal-500 ${
+                                          isNull
+                                            ? 'border-dashed border-slate-300 bg-slate-50 text-slate-400 italic'
+                                            : 'border-slate-200 bg-white text-slate-900 font-semibold'
+                                        }`}
+                                      />
+                                    )}
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
+
+                        {/* CUSTOM PARAMETERS FOR THIS TEST ROW */}
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                              Additional Custom Parameters:
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => addCustomParamToTest(idx)}
+                              className="text-[11px] font-bold text-teal-700 hover:text-teal-900 flex items-center gap-1"
+                            >
+                              <Plus className="w-3 h-3" />
+                              <span>Add Custom Field</span>
+                            </button>
                           </div>
 
-                          {/* Units */}
-                          <div className="sm:col-span-4">
-                            <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                              Result Units
-                            </label>
-                            <input
-                              type="text"
-                              value={item.units}
-                              onChange={(e) => updateTest(idx, 'units', e.target.value)}
-                              placeholder="e.g. kUA/L, mm wheal"
-                              className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500"
-                            />
-                          </div>
-
-                          {/* Reference Range (Separated from result) */}
-                          <div className="sm:col-span-4">
-                            <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                              Reference Interval (Separated)
-                            </label>
-                            <input
-                              type="text"
-                              value={item.referenceRange}
-                              onChange={(e) => updateTest(idx, 'referenceRange', e.target.value)}
-                              placeholder="e.g. < 0.35 kUA/L, 0.0 mm"
-                              className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500"
-                            />
-                          </div>
-
-                          {/* Notes */}
-                          <div className="sm:col-span-4">
-                            <label className="block text-[11px] font-bold text-slate-600 mb-1">
-                              Extraction Notes
-                            </label>
-                            <input
-                              type="text"
-                              value={item.notes || ''}
-                              onChange={(e) => updateTest(idx, 'notes', e.target.value)}
-                              placeholder="Clinical observations or flags"
-                              className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500"
-                            />
-                          </div>
+                          {(item.customParameters || []).length > 0 && (
+                            <div className="space-y-1.5">
+                              {item.customParameters.map((cp, cpIdx) => (
+                                <div key={cpIdx} className="flex items-center gap-2">
+                                  <input
+                                    type="text"
+                                    placeholder="Field name"
+                                    value={cp.key}
+                                    onChange={(e) => updateCustomParamInTest(idx, cpIdx, 'key', e.target.value)}
+                                    className="flex-1 px-2.5 py-1 rounded border border-slate-300 text-xs bg-white"
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Value"
+                                    value={cp.value}
+                                    onChange={(e) => updateCustomParamInTest(idx, cpIdx, 'value', e.target.value)}
+                                    className="w-24 px-2.5 py-1 rounded border border-slate-300 text-xs bg-white"
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Unit"
+                                    value={cp.unit}
+                                    onChange={(e) => updateCustomParamInTest(idx, cpIdx, 'unit', e.target.value)}
+                                    className="w-20 px-2.5 py-1 rounded border border-slate-300 text-xs bg-white"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => removeCustomParamFromTest(idx, cpIdx)}
+                                    className="p-1 text-rose-500 hover:text-rose-700"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
@@ -839,7 +1116,7 @@ export default function ReportReviewModal({
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <ShieldCheck className="w-4 h-4 text-teal-600" />
             <span>
-              Selected tests will be saved permanently to your official health record in MongoDB Atlas.
+              Verified records will be saved to your health portal with original OCR values archived for auditability.
             </span>
           </div>
 
@@ -866,7 +1143,7 @@ export default function ReportReviewModal({
               ) : (
                 <>
                   <Check className="w-4 h-4 stroke-[3]" />
-                  <span>Save Verified Records to Health Portal</span>
+                  <span>Confirm and Save to Health Portal</span>
                 </>
               )}
             </button>

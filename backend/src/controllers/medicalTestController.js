@@ -1,5 +1,18 @@
 import mongoose from 'mongoose';
 import MedicalTestRecord from '../models/MedicalTestRecord.js';
+import { SUPPORTED_TEST_TYPES_LIST, TEST_SCHEMAS, getTestSchemaByIdOrName } from '../config/testSchemas.js';
+
+/**
+ * Retrieve dynamic test schemas and educational guidelines
+ * GET /api/medical-tests/schemas
+ */
+export const getTestSchemas = async (req, res) => {
+  return res.status(200).json({
+    success: true,
+    data: SUPPORTED_TEST_TYPES_LIST,
+    schemas: TEST_SCHEMAS,
+  });
+};
 
 /**
  * Retrieve all medical test records for the authenticated user
@@ -34,14 +47,21 @@ export const createMedicalTest = async (req, res) => {
     const {
       allergenName,
       testType,
+      testCategory,
       testDate,
       testResult,
       units,
+      referenceRange,
       isDoctorConfirmedDiagnosis,
       clinicalDiagnosisStatus,
       doctorNotes,
       recordedReactionDetails,
       clinicOrLabName,
+      testSpecificParameters,
+      parameterStatus,
+      parameterConfidence,
+      customParameters,
+      clinicalWarningAcknowledged,
     } = req.body;
 
     if (!allergenName || !allergenName.trim()) {
@@ -87,14 +107,20 @@ export const createMedicalTest = async (req, res) => {
       });
     }
 
+    // Resolve category from schema if not provided
+    const resolvedSchema = getTestSchemaByIdOrName(testCategory || testType);
+    const resolvedCategory = testCategory || resolvedSchema.id;
+
     // Do not auto-diagnose: preserve user's entered clinical confirmation status
     const medicalTest = new MedicalTestRecord({
       userId: req.user._id,
       allergenName: allergenName.trim(),
       testType: testType.trim(),
+      testCategory: resolvedCategory,
       testDate: parsedDate,
       testResult: testResult.trim(),
       units: units ? units.trim() : '',
+      referenceRange: referenceRange ? referenceRange.trim() : '',
       isDoctorConfirmedDiagnosis: Boolean(isDoctorConfirmedDiagnosis),
       clinicalDiagnosisStatus:
         clinicalDiagnosisStatus ||
@@ -104,6 +130,11 @@ export const createMedicalTest = async (req, res) => {
       doctorNotes: doctorNotes ? doctorNotes.trim() : '',
       recordedReactionDetails: recordedReactionDetails ? recordedReactionDetails.trim() : '',
       clinicOrLabName: clinicOrLabName ? clinicOrLabName.trim() : '',
+      testSpecificParameters: testSpecificParameters || {},
+      parameterStatus: parameterStatus || {},
+      parameterConfidence: parameterConfidence || {},
+      customParameters: Array.isArray(customParameters) ? customParameters : [],
+      clinicalWarningAcknowledged: Boolean(clinicalWarningAcknowledged),
     });
 
     await medicalTest.save();
@@ -140,14 +171,21 @@ export const updateMedicalTest = async (req, res) => {
     const {
       allergenName,
       testType,
+      testCategory,
       testDate,
       testResult,
       units,
+      referenceRange,
       isDoctorConfirmedDiagnosis,
       clinicalDiagnosisStatus,
       doctorNotes,
       recordedReactionDetails,
       clinicOrLabName,
+      testSpecificParameters,
+      parameterStatus,
+      parameterConfidence,
+      customParameters,
+      clinicalWarningAcknowledged,
     } = req.body;
 
     // Strict ownership check
@@ -164,7 +202,13 @@ export const updateMedicalTest = async (req, res) => {
     }
 
     if (allergenName) medicalTest.allergenName = allergenName.trim();
-    if (testType) medicalTest.testType = testType.trim();
+    if (testType) {
+      medicalTest.testType = testType.trim();
+      if (!testCategory) {
+        medicalTest.testCategory = getTestSchemaByIdOrName(testType).id;
+      }
+    }
+    if (testCategory) medicalTest.testCategory = testCategory;
     if (testDate) {
       const parsed = new Date(testDate);
       if (isNaN(parsed.getTime()) || parsed > new Date()) {
@@ -177,6 +221,7 @@ export const updateMedicalTest = async (req, res) => {
     }
     if (testResult) medicalTest.testResult = testResult.trim();
     if (units !== undefined) medicalTest.units = units.trim();
+    if (referenceRange !== undefined) medicalTest.referenceRange = referenceRange.trim();
     if (isDoctorConfirmedDiagnosis !== undefined) {
       medicalTest.isDoctorConfirmedDiagnosis = Boolean(isDoctorConfirmedDiagnosis);
     }
@@ -189,6 +234,21 @@ export const updateMedicalTest = async (req, res) => {
     }
     if (clinicOrLabName !== undefined) {
       medicalTest.clinicOrLabName = clinicOrLabName.trim();
+    }
+    if (testSpecificParameters !== undefined) {
+      medicalTest.testSpecificParameters = testSpecificParameters;
+    }
+    if (parameterStatus !== undefined) {
+      medicalTest.parameterStatus = parameterStatus;
+    }
+    if (parameterConfidence !== undefined) {
+      medicalTest.parameterConfidence = parameterConfidence;
+    }
+    if (customParameters !== undefined) {
+      medicalTest.customParameters = Array.isArray(customParameters) ? customParameters : [];
+    }
+    if (clinicalWarningAcknowledged !== undefined) {
+      medicalTest.clinicalWarningAcknowledged = Boolean(clinicalWarningAcknowledged);
     }
 
     await medicalTest.save();
