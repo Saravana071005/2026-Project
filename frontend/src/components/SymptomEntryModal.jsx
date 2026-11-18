@@ -224,23 +224,23 @@ export default function SymptomEntryModal({
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-8">
         {/* Header */}
-        <div className="p-5 sm:p-6 bg-gradient-to-r from-rose-700 via-rose-800 to-amber-900 text-white flex items-center justify-between">
+        <div className="p-5 sm:p-6 bg-slate-900 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center border border-white/20">
-              <HeartPulse className="w-5 h-5 text-rose-200" />
+            <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center border border-slate-700">
+              <HeartPulse className="w-5 h-5 text-white" />
             </div>
             <div>
               <h3 className="text-lg font-bold">
                 {initialData ? 'Edit Reaction in Journal' : 'Record Symptom / Reaction in Journal'}
               </h3>
-              <p className="text-xs text-rose-100">
+              <p className="text-xs text-slate-300">
                 Log reactions after eating to correlate with food intake and medical test records
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors"
+            className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -279,7 +279,7 @@ export default function SymptomEntryModal({
           {/* Section: Linked Food (Optional) */}
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
             <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-              <Utensils className="w-3.5 h-3.5 text-rose-600" />
+              <Utensils className="w-3.5 h-3.5 text-slate-700" />
               Food Consumed (Select from recent meals or enter manually)
             </label>
 
@@ -293,7 +293,7 @@ export default function SymptomEntryModal({
                     onClick={() => handleSelectRecentFood(f)}
                     className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors shrink-0 ${
                       foodEntryId === f._id
-                        ? 'bg-rose-600 text-white border-rose-600'
+                        ? 'bg-slate-900 text-white border-slate-900'
                         : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
                     }`}
                   >
@@ -308,7 +308,7 @@ export default function SymptomEntryModal({
               value={foodConsumed}
               onChange={(e) => setFoodConsumed(e.target.value)}
               placeholder="e.g. Wheat Dosa, Peanut Butter, or leave empty if unknown"
-              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
             />
             <p className="text-[11px] text-slate-500 italic">
               Note: You can record symptoms even if you are not sure which food caused them.
@@ -333,7 +333,7 @@ export default function SymptomEntryModal({
                   }}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
                     symptomCategory === cat
-                      ? 'bg-rose-700 text-white shadow-xs'
+                      ? 'bg-slate-900 text-white shadow-xs'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
@@ -351,7 +351,7 @@ export default function SymptomEntryModal({
                   onClick={() => setSymptomName(symp)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
                     symptomName === symp
-                      ? 'bg-rose-50 border-rose-500 text-rose-900 shadow-xs'
+                      ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                       : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -374,7 +374,7 @@ export default function SymptomEntryModal({
                   onClick={() => setSymptomSeverity(level)}
                   className={`p-2.5 rounded-xl text-xs font-bold border text-center transition-all ${
                     symptomSeverity === level
-                      ? `${color} ring-2 ring-rose-500 shadow-xs`
+                      ? `${color} ring-2 ring-slate-900 shadow-xs`
                       : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -414,7 +414,7 @@ export default function SymptomEntryModal({
                       onClick={() => toggleAdditionalSymptom(symp)}
                       className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
                         isSelected
-                          ? 'bg-rose-600 text-white border-rose-600'
+                          ? 'bg-slate-900 text-white border-slate-900'
                           : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
                       }`}
                     >
@@ -437,7 +437,7 @@ export default function SymptomEntryModal({
                 required
                 value={symptomDate}
                 onChange={(e) => setSymptomDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
               />
             </div>
 
@@ -451,7 +451,7 @@ export default function SymptomEntryModal({
                 required
                 value={symptomStartTime}
                 onChange={(e) => setSymptomStartTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
               />
             </div>
 
@@ -460,7 +460,7 @@ export default function SymptomEntryModal({
               <select
                 value={onsetInterval}
                 onChange={(e) => setOnsetInterval(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
               >
                 {ONSET_INTERVALS.map((intv) => (
                   <option key={intv} value={intv}>
@@ -480,7 +480,7 @@ export default function SymptomEntryModal({
                 value={symptomDuration}
                 onChange={(e) => setSymptomDuration(e.target.value)}
                 placeholder="e.g. 45 minutes, 2 hours, Still ongoing"
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
               />
             </div>
 
@@ -489,7 +489,7 @@ export default function SymptomEntryModal({
               <select
                 value={treatmentTaken}
                 onChange={(e) => setTreatmentTaken(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
               >
                 {TREATMENTS_LIST.map((t) => (
                   <option key={t} value={t}>
@@ -514,7 +514,7 @@ export default function SymptomEntryModal({
               type="checkbox"
               checked={medicalAttentionRequired}
               onChange={(e) => setMedicalAttentionRequired(e.target.checked)}
-              className="w-4 h-4 text-rose-600 rounded focus:ring-rose-500"
+              className="w-4 h-4 text-slate-900 rounded focus:ring-slate-900"
             />
           </div>
 
@@ -526,7 +526,7 @@ export default function SymptomEntryModal({
                 value={medicalFacilityVisited}
                 onChange={(e) => setMedicalFacilityVisited(e.target.value)}
                 placeholder="e.g. Metro City Emergency Department"
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
               />
             </div>
           )}
@@ -539,7 +539,7 @@ export default function SymptomEntryModal({
               value={additionalNotes}
               onChange={(e) => setAdditionalNotes(e.target.value)}
               placeholder="e.g. Itching began around lips 20 minutes after eating dosa. Spread to forearms with raised hives. Disappeared after 1 hour."
-              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
             />
           </div>
 
@@ -559,7 +559,7 @@ export default function SymptomEntryModal({
               className={`px-6 py-2.5 rounded-xl text-white text-xs font-bold transition-colors flex items-center gap-1.5 shadow-xs disabled:opacity-50 ${
                 isEmergencyActive
                   ? 'bg-red-600 hover:bg-red-700'
-                  : 'bg-rose-600 hover:bg-rose-700'
+                  : 'bg-slate-900 hover:bg-slate-800'
               }`}
             >
               <CheckCircle2 className="w-4 h-4" />

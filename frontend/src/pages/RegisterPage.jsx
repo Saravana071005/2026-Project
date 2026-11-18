@@ -124,16 +124,16 @@ export default function RegisterPage({ setActivePage }) {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="bg-white/95 backdrop-blur-xl rounded-3xl border border-slate-200/80 shadow-2xl overflow-hidden transition-all">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all">
         {/* Header Banner */}
-        <div className="px-8 py-7 bg-gradient-to-r from-teal-700 via-teal-600 to-cyan-600 text-white relative overflow-hidden">
+        <div className="px-8 py-7 bg-slate-900 text-white relative">
           <div className="flex items-center gap-3.5 relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center border border-white/20 shadow-inner">
-              <ShieldCheck className="w-8 h-8 text-teal-100" />
+            <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+              <ShieldCheck className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-black tracking-tight">{t('auth.registerTitle')}</h2>
-              <p className="text-xs text-teal-100 mt-0.5">
+              <h2 className="text-2xl font-bold tracking-tight">{t('auth.registerTitle')}</h2>
+              <p className="text-xs text-slate-300 mt-0.5">
                 {t('auth.registerSubtitle')}
               </p>
             </div>
@@ -143,15 +143,15 @@ export default function RegisterPage({ setActivePage }) {
         {/* Form Container */}
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           {error && (
-            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-3 animate-in fade-in">
+            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-3">
               <AlertCircle className="w-5 h-5 shrink-0 text-rose-600" />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="p-4 rounded-2xl bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold flex items-center gap-3 animate-in fade-in">
-              <CheckCircle className="w-5 h-5 shrink-0 text-teal-600" />
+            <div className="p-4 rounded-xl bg-slate-100 border border-slate-300 text-slate-800 text-xs font-semibold flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 shrink-0 text-slate-900" />
               <span>{success}</span>
             </div>
           )}
@@ -169,9 +169,9 @@ export default function RegisterPage({ setActivePage }) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Eleanor Vance"
-                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs transition-all bg-white"
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 text-sm bg-white"
                 />
-                <User className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
+                <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
               </div>
             </div>
 
@@ -187,9 +187,9 @@ export default function RegisterPage({ setActivePage }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="patient@example.com"
-                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs transition-all bg-white"
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 text-sm bg-white"
                 />
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
               </div>
             </div>
 
@@ -205,7 +205,7 @@ export default function RegisterPage({ setActivePage }) {
                   max={TODAY_DATE_STRING}
                   value={dob}
                   onChange={handleDobChange}
-                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs transition-all bg-white"
+                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-2xs transition-all bg-white"
                 />
                 <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
               </div>
@@ -235,7 +235,7 @@ export default function RegisterPage({ setActivePage }) {
               <select
                 value={sex}
                 onChange={(e) => setSex(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs bg-white"
+                className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-2xs bg-white"
               >
                 <option value="Male">{t('auth.male')}</option>
                 <option value="Female">{t('auth.female')}</option>
@@ -257,7 +257,7 @@ export default function RegisterPage({ setActivePage }) {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder={t('auth.address')}
-                className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs resize-none bg-white"
+                className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-2xs resize-none bg-white"
               />
               <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
             </div>
@@ -276,7 +276,7 @@ export default function RegisterPage({ setActivePage }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 6 characters"
-                  className="w-full pl-9 pr-10 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs bg-white"
+                  className="w-full pl-9 pr-10 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-2xs bg-white"
                 />
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
                 <button
@@ -301,7 +301,7 @@ export default function RegisterPage({ setActivePage }) {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Re-type password"
-                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs bg-white"
+                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-2xs bg-white"
                 />
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
               </div>
@@ -318,7 +318,7 @@ export default function RegisterPage({ setActivePage }) {
               value={foodAllergySummary}
               onChange={(e) => setFoodAllergySummary(e.target.value)}
               placeholder="e.g. Known peanut allergy since age 6; carries Epipen; mild tingling with soy."
-              className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs resize-none bg-white"
+              className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-2xs resize-none bg-white"
             />
           </div>
 
@@ -326,7 +326,7 @@ export default function RegisterPage({ setActivePage }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-xs disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {loading ? (
               <span>{t('auth.savingAtlas')}</span>
@@ -344,7 +344,7 @@ export default function RegisterPage({ setActivePage }) {
             <button
               type="button"
               onClick={() => setActivePage('login')}
-              className="font-bold text-teal-600 hover:text-teal-800 underline ml-1 cursor-pointer"
+              className="font-bold text-slate-900 hover:underline ml-1 cursor-pointer"
             >
               {t('auth.signInHere')}
             </button>

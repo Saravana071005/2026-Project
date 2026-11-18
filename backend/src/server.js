@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { connectDB } from './config/db.js';
 import { requireDbConnection } from './middleware/dbCheckMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
@@ -101,7 +102,9 @@ app.use('/api/symptoms', requireDbConnection, symptomRoutes);
 app.use('/api/ai-analysis', requireDbConnection, aiAnalysisRoutes);
 
 // Serve static frontend files if built (for monolithic or production single-service hosting)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const candidateDistPaths = [
+  path.resolve(__dirname, '../../frontend/dist'),
   path.resolve(process.cwd(), '../frontend/dist'),
   path.resolve(process.cwd(), 'frontend/dist'),
   path.resolve(process.cwd(), 'dist'),

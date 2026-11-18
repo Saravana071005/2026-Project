@@ -29,10 +29,7 @@ export default function EmergencyAlertBanner({
   ];
 
   return (
-    <div className="rounded-3xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white p-5 sm:p-6 shadow-2xl border-2 border-red-400/80 animate-in fade-in slide-in-from-top-4 relative overflow-hidden">
-      {/* Decorative pulsing backdrop element */}
-      <div className="absolute -right-8 -bottom-8 w-48 h-48 rounded-full bg-white/10 blur-xl pointer-events-none animate-pulse" />
-
+    <div className="rounded-3xl bg-red-600 text-white p-5 sm:p-6 shadow-xl border-2 border-red-700 animate-in fade-in slide-in-from-top-4 relative overflow-hidden">
       <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur border border-white/40 flex items-center justify-center shrink-0 shadow-inner">

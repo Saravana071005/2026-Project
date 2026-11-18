@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import User from './src/models/User.js';
 import MedicalReport from './src/models/MedicalReport.js';
 import MedicalTestRecord from './src/models/MedicalTestRecord.js';
@@ -52,7 +53,11 @@ async function runTests() {
 
     // 2. Upload sample report for Alice
     console.log('--- Step 1: Uploading Medical Report for Alice ---');
-    const samplePdfPath = path.resolve('uploads', 'sample-lab-report.pdf');
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    let samplePdfPath = path.resolve(__dirname, 'uploads', 'sample-lab-report.pdf');
+    if (!fs.existsSync(samplePdfPath)) {
+      samplePdfPath = path.resolve(__dirname, '../uploads', 'sample-lab-report.pdf');
+    }
     if (!fs.existsSync(samplePdfPath)) {
       throw new Error(`Sample report file not found at ${samplePdfPath}`);
     }

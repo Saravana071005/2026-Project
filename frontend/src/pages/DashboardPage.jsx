@@ -32,11 +32,10 @@ import {
   Utensils,
   Microscope,
   TrendingUp,
-  Bot,
+  Clock,
   Compass,
   ArrowRight,
   ShieldCheck,
-  HeartPulse,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -55,7 +54,6 @@ import DailyFoodDiaryView from '../components/DailyFoodDiaryView';
 import SymptomJournalView from '../components/SymptomJournalView';
 import HistoryAndPatternsView from '../components/HistoryAndPatternsView';
 import HealthInsightsView from '../components/HealthInsightsView';
-import HumanBody3D from '../components/HumanBody3D';
 import {
   SUPPORTED_TEST_TYPES_LIST,
   TEST_SCHEMAS,
@@ -776,27 +774,27 @@ export default function DashboardPage() {
       )}
 
       {/* Top Banner: Welcome & Quick Demographic Profile */}
-      <div className="rounded-3xl bg-gradient-to-r from-teal-800 via-teal-700 to-cyan-700 text-white p-6 sm:p-8 shadow-xl relative overflow-hidden backdrop-blur">
+      <div className="rounded-2xl bg-slate-900 text-white p-6 sm:p-8 shadow-sm relative overflow-hidden">
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start sm:items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center font-extrabold text-2xl text-teal-100 shadow-inner shrink-0">
+            <div className="w-16 h-16 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-extrabold text-2xl text-white shadow-xs shrink-0">
               {user?.name ? user.name.charAt(0).toUpperCase() : 'P'}
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
                   {t('dashboard.welcomeTitle')}
                 </h1>
-                <span className="px-2.5 py-0.5 rounded-full bg-teal-500/30 border border-teal-300/30 text-teal-100 text-xs font-semibold">
+                <span className="px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold">
                   {t('common.verified')}
                 </span>
               </div>
-              <p className="text-xs text-teal-100 mt-1">
+              <p className="text-xs text-slate-300 mt-1">
                 {t('dashboard.welcomeUser', { name: user?.name || 'Patient' })} • {t('dashboard.welcomeSubtitle')}
               </p>
 
               {/* Demographics Chips */}
-              <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-teal-100">
+              <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-300">
                 <span className="flex items-center gap-1 font-medium">
                   <Calendar className="w-3.5 h-3.5" />
                   {t('common.dob')}: {formatDate(user?.dob, language)} (<strong>{t('common.age')}: {user?.age ?? 'N/A'} {t('common.yearsOld')}</strong>)
@@ -827,7 +825,7 @@ export default function DashboardPage() {
                 setEditingFood(null);
                 setIsFoodModalOpen(true);
               }}
-              className="px-3.5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition-colors border border-slate-700 flex items-center gap-1.5 cursor-pointer"
             >
               <Utensils className="w-3.5 h-3.5" />
               <span>{t('diary.logMeal')}</span>
@@ -837,14 +835,14 @@ export default function DashboardPage() {
                 setEditingSymptom(null);
                 setIsSymptomModalOpen(true);
               }}
-              className="px-3.5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition-colors border border-slate-700 flex items-center gap-1.5 cursor-pointer"
             >
               <Activity className="w-3.5 h-3.5" />
               <span>{t('symptoms.recordSymptom')}</span>
             </button>
             <button
               onClick={() => setIsUploadModalOpen(true)}
-              className="px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-lg bg-white text-slate-900 hover:bg-slate-100 text-xs font-bold transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
             >
               <UploadCloud className="w-4 h-4 text-slate-900" />
               <span>{t('reports.uploadButton')}</span>
@@ -854,31 +852,28 @@ export default function DashboardPage() {
                 setEditingAllergy(null);
                 setIsAllergyModalOpen(true);
               }}
-              className="px-3.5 py-2.5 rounded-xl bg-white text-teal-900 hover:bg-teal-50 text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition-colors border border-slate-700 flex items-center gap-1.5 cursor-pointer"
             >
-              <Plus className="w-4 h-4 text-teal-700" />
+              <Plus className="w-4 h-4" />
               <span>{t('nav.allergies')}</span>
             </button>
             <button
               onClick={() => setIsProfileModalOpen(true)}
-              className="px-3 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition-all border border-white/20 flex items-center gap-1 shadow-xs cursor-pointer"
+              className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition-colors border border-slate-700 flex items-center gap-1 shadow-xs cursor-pointer"
             >
               <Edit2 className="w-3.5 h-3.5" />
               <span>{t('common.edit')}</span>
             </button>
             <button
               onClick={() => handleTabChange('analysis')}
-              className="px-3 py-2.5 rounded-xl bg-teal-400/30 hover:bg-teal-400/40 text-teal-100 text-xs font-bold transition-all border border-teal-300/40 flex items-center gap-1.5 shadow-xs cursor-pointer"
+              className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition-colors border border-slate-700 flex items-center gap-1.5 shadow-xs cursor-pointer"
               title="View Health Insights"
             >
-              <TrendingUp className="w-3.5 h-3.5 text-amber-300" />
+              <TrendingUp className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Health Insights</span>
             </button>
           </div>
         </div>
-
-        {/* Decorative background shape */}
-        <div className="absolute right-0 bottom-0 translate-x-12 translate-y-12 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
       </div>
 
       {/* Global Emergency Alert Banner (Zero Latency) */}
@@ -888,22 +883,22 @@ export default function DashboardPage() {
         onNavigateToSymptoms={() => handleTabChange('symptoms')}
       />
 
-      {/* "What should I do next?" Intelligent Guidance Section */}
-      <div className="p-6 rounded-3xl bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 text-white shadow-xl border border-slate-800 relative overflow-hidden">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+      {/* "What should I do next?" Guidance Section */}
+      <div className="p-6 rounded-2xl bg-slate-50 text-slate-900 border border-slate-200">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-teal-400/20 text-teal-300 border border-teal-400/30 text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1">
-                <Compass className="w-3 h-3 text-teal-400" />
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-800 border border-slate-300 text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1">
+                <Compass className="w-3 h-3 text-slate-700" />
                 <span>{recommendedAction.badge}</span>
               </span>
               <span className="text-xs text-slate-400 font-semibold">•</span>
-              <h3 className="text-sm font-bold text-slate-300">{t('dashboard.whatShouldIDoNext')}</h3>
+              <h3 className="text-sm font-bold text-slate-600">{t('dashboard.whatShouldIDoNext')}</h3>
             </div>
-            <h4 className="text-lg sm:text-xl font-black text-white">
+            <h4 className="text-lg sm:text-xl font-bold text-slate-900">
               {recommendedAction.title}
             </h4>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
               {recommendedAction.desc}
             </p>
           </div>
@@ -911,11 +906,11 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={recommendedAction.action}
-            className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-teal-400 to-cyan-400 hover:from-teal-300 hover:to-cyan-300 text-slate-950 font-black text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2 transition-all self-start md:self-auto cursor-pointer shrink-0"
+            className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm shadow-xs flex items-center justify-center gap-2 transition-all self-start md:self-auto cursor-pointer shrink-0"
           >
-            <RecommendedIcon className="w-4 h-4 text-slate-950" />
+            <RecommendedIcon className="w-4 h-4 text-white" />
             <span>{t('dashboard.takeAction')}</span>
-            <ArrowRight className="w-4 h-4 text-slate-950" />
+            <ArrowRight className="w-4 h-4 text-white" />
           </button>
         </div>
       </div>
@@ -923,8 +918,8 @@ export default function DashboardPage() {
       {/* PART 3: 8 Clear Action Cards Grid */}
       <div className="space-y-4">
         <div>
-          <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-teal-600" />
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-slate-900" />
             <span>{t('dashboard.actionCardsTitle')}</span>
           </h2>
           <p className="text-xs text-slate-500">{t('dashboard.actionCardsSubtitle')}</p>
@@ -935,23 +930,23 @@ export default function DashboardPage() {
           <div
             data-tour="profile"
             onClick={() => handleTabChange('profile')}
-            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+            className={`group p-5 rounded-xl bg-white border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:border-slate-900 ${
               activeTab === 'profile'
-                ? 'border-teal-500 ring-2 ring-teal-400/40 bg-teal-50/30'
-                : 'border-slate-200/80 hover:border-teal-300'
+                ? 'border-slate-900 ring-2 ring-slate-900/20 bg-slate-50/50'
+                : 'border-slate-200'
             }`}
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <User className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <User className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
                 {user?.age ? `${user.age} yrs` : 'Setup'}
               </span>
             </div>
             <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.profileTitle')}</h3>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.profileDesc')}</p>
-            <div className="flex items-center text-xs font-bold text-teal-600 group-hover:text-teal-700">
+            <div className="flex items-center text-xs font-bold text-slate-900">
               <span>{t('common.viewDetails')}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
             </div>
@@ -961,23 +956,23 @@ export default function DashboardPage() {
           <div
             data-tour="allergies"
             onClick={() => handleTabChange('allergies')}
-            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+            className={`group p-5 rounded-xl bg-white border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:border-slate-900 ${
               activeTab === 'allergies'
-                ? 'border-rose-500 ring-2 ring-rose-400/40 bg-rose-50/30'
-                : 'border-slate-200/80 hover:border-rose-300'
+                ? 'border-slate-900 ring-2 ring-slate-900/20 bg-slate-50/50'
+                : 'border-slate-200'
             }`}
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <ShieldAlert className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <ShieldAlert className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
                 {allergies.length} {t('stats.recorded')}
               </span>
             </div>
             <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.allergiesTitle')}</h3>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.allergiesDesc')}</p>
-            <div className="flex items-center text-xs font-bold text-rose-600 group-hover:text-rose-700">
+            <div className="flex items-center text-xs font-bold text-slate-900">
               <span>{t('common.viewDetails')}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
             </div>
@@ -987,19 +982,19 @@ export default function DashboardPage() {
           <div
             data-tour="reports"
             onClick={() => setIsUploadModalOpen(true)}
-            className="group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border border-slate-200/80 hover:border-amber-300 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer relative overflow-hidden"
+            className="group p-5 rounded-xl bg-white border border-slate-200 hover:border-slate-900 shadow-xs transition-all cursor-pointer relative overflow-hidden"
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <UploadCloud className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <UploadCloud className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
                 {reports.length} Docs
               </span>
             </div>
             <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.uploadReportTitle')}</h3>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.uploadReportDesc')}</p>
-            <div className="flex items-center text-xs font-bold text-amber-700 group-hover:text-amber-800">
+            <div className="flex items-center text-xs font-bold text-slate-900">
               <span>{t('reports.uploadButton')}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
             </div>
@@ -1009,23 +1004,23 @@ export default function DashboardPage() {
           <div
             data-tour="tests"
             onClick={() => handleTabChange('tests')}
-            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+            className={`group p-5 rounded-xl bg-white border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:border-slate-900 ${
               activeTab === 'tests'
-                ? 'border-cyan-500 ring-2 ring-cyan-400/40 bg-cyan-50/30'
-                : 'border-slate-200/80 hover:border-cyan-300'
+                ? 'border-slate-900 ring-2 ring-slate-900/20 bg-slate-50/50'
+                : 'border-slate-200'
             }`}
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <FileCheck className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <FileCheck className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
                 {medicalTests.length} Tests
               </span>
             </div>
             <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.testResultsTitle')}</h3>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.testResultsDesc')}</p>
-            <div className="flex items-center text-xs font-bold text-cyan-600 group-hover:text-cyan-700">
+            <div className="flex items-center text-xs font-bold text-slate-900">
               <span>{t('common.viewDetails')}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
             </div>
@@ -1035,23 +1030,23 @@ export default function DashboardPage() {
           <div
             data-tour="diary"
             onClick={() => handleTabChange('diary')}
-            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+            className={`group p-5 rounded-xl bg-white border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:border-slate-900 ${
               activeTab === 'diary'
-                ? 'border-emerald-500 ring-2 ring-emerald-400/40 bg-emerald-50/30'
-                : 'border-slate-200/80 hover:border-emerald-300'
+                ? 'border-slate-900 ring-2 ring-slate-900/20 bg-slate-50/50'
+                : 'border-slate-200'
             }`}
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Utensils className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <Utensils className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
                 {foodEntries.length} {t('stats.mealsLogged')}
               </span>
             </div>
             <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.foodDiaryTitle')}</h3>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.foodDiaryDesc')}</p>
-            <div className="flex items-center text-xs font-bold text-emerald-600 group-hover:text-emerald-700">
+            <div className="flex items-center text-xs font-bold text-slate-900">
               <span>{t('common.viewDetails')}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
             </div>
@@ -1061,49 +1056,49 @@ export default function DashboardPage() {
           <div
             data-tour="symptoms"
             onClick={() => handleTabChange('symptoms')}
-            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+            className={`group p-5 rounded-xl bg-white border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:border-slate-900 ${
               activeTab === 'symptoms'
-                ? 'border-red-500 ring-2 ring-red-400/40 bg-red-50/30'
-                : 'border-slate-200/80 hover:border-red-300'
+                ? 'border-slate-900 ring-2 ring-slate-900/20 bg-slate-50/50'
+                : 'border-slate-200'
             }`}
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Activity className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <Activity className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-800">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
                 {symptoms.length} {t('stats.episodes')}
               </span>
             </div>
             <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.reportSymptomsTitle')}</h3>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.reportSymptomsDesc')}</p>
-            <div className="flex items-center text-xs font-bold text-red-600 group-hover:text-red-700">
+            <div className="flex items-center text-xs font-bold text-slate-900">
               <span>{t('common.viewDetails')}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
-          {/* Card 7: AI Food Analysis */}
+          {/* Card 7: My Health Insights */}
           <div
             data-tour="analysis"
             onClick={() => handleTabChange('analysis')}
-            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+            className={`group p-5 rounded-xl bg-white border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:border-slate-900 ${
               activeTab === 'analysis'
-                ? 'border-indigo-500 ring-2 ring-indigo-400/40 bg-indigo-50/30'
-                : 'border-slate-200/80 hover:border-indigo-300'
+                ? 'border-slate-900 ring-2 ring-slate-900/20 bg-slate-50/50'
+                : 'border-slate-200'
             }`}
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Sparkles className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <TrendingUp className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
                 {analyses.length} Reports
               </span>
             </div>
             <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.aiAnalysisTitle')}</h3>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.aiAnalysisDesc')}</p>
-            <div className="flex items-center text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+            <div className="flex items-center text-xs font-bold text-slate-900">
               <span>{t('common.viewDetails')}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
             </div>
@@ -1113,23 +1108,23 @@ export default function DashboardPage() {
           <div
             data-tour="history"
             onClick={() => handleTabChange('history')}
-            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+            className={`group p-5 rounded-xl bg-white border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:border-slate-900 ${
               activeTab === 'history'
-                ? 'border-purple-500 ring-2 ring-purple-400/40 bg-purple-50/30'
-                : 'border-slate-200/80 hover:border-purple-300'
+                ? 'border-slate-900 ring-2 ring-slate-900/20 bg-slate-50/50'
+                : 'border-slate-200'
             }`}
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <TrendingUp className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <Clock className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
                 {patterns?.repeatedAssociations?.length || 0} Patterns
               </span>
             </div>
             <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.healthHistoryTitle')}</h3>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.healthHistoryDesc')}</p>
-            <div className="flex items-center text-xs font-bold text-purple-600 group-hover:text-purple-700">
+            <div className="flex items-center text-xs font-bold text-slate-900">
               <span>{t('common.viewDetails')}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
             </div>
@@ -1140,88 +1135,88 @@ export default function DashboardPage() {
       {/* Stats Cards Row (6 KPI Metrics) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {/* Total Allergies */}
-        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+        <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
             <ShieldAlert className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               {t('stats.allergies')}
             </p>
-            <h3 className="text-lg font-black text-slate-900">{allergies.length}</h3>
-            <p className="text-[9px] text-teal-600 font-medium">{t('stats.recorded')}</p>
+            <h3 className="text-lg font-bold text-slate-900">{allergies.length}</h3>
+            <p className="text-[9px] text-slate-500 font-medium">{t('stats.recorded')}</p>
           </div>
         </div>
 
         {/* Medical Tests */}
-        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center shrink-0">
+        <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
             <FileCheck className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               {t('stats.labTests')}
             </p>
-            <h3 className="text-lg font-black text-slate-900">{medicalTests.length}</h3>
-            <p className="text-[9px] text-cyan-600 font-medium">{t('stats.sIgeSpt')}</p>
+            <h3 className="text-lg font-bold text-slate-900">{medicalTests.length}</h3>
+            <p className="text-[9px] text-slate-500 font-medium">{t('stats.sIgeSpt')}</p>
           </div>
         </div>
 
         {/* Daily Food Intake Entries */}
-        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+        <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
             <Utensils className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               {t('stats.foodDiary')}
             </p>
-            <h3 className="text-lg font-black text-slate-900">{foodEntries.length}</h3>
-            <p className="text-[9px] text-emerald-600 font-medium">{t('stats.mealsLogged')}</p>
+            <h3 className="text-lg font-bold text-slate-900">{foodEntries.length}</h3>
+            <p className="text-[9px] text-slate-500 font-medium">{t('stats.mealsLogged')}</p>
           </div>
         </div>
 
         {/* Reported Symptoms */}
-        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
+        <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
             <Activity className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               {t('stats.symptoms')}
             </p>
-            <h3 className="text-lg font-black text-slate-900">{symptoms.length}</h3>
-            <p className="text-[9px] text-rose-600 font-medium">{t('stats.episodes')}</p>
+            <h3 className="text-lg font-bold text-slate-900">{symptoms.length}</h3>
+            <p className="text-[9px] text-slate-500 font-medium">{t('stats.episodes')}</p>
           </div>
         </div>
 
         {/* AI Analyses */}
-        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0">
-            <Sparkles className="w-4 h-4" />
+        <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
+            <TrendingUp className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               {t('stats.aiAnalyses')}
             </p>
-            <h3 className="text-lg font-black text-slate-900">{analyses.length}</h3>
-            <p className="text-[9px] text-indigo-600 font-medium">{t('stats.clinicalReports')}</p>
+            <h3 className="text-lg font-bold text-slate-900">{analyses.length}</h3>
+            <p className="text-[9px] text-slate-500 font-medium">{t('stats.clinicalReports')}</p>
           </div>
         </div>
 
         {/* Severe Risks */}
-        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-red-50 text-red-700 flex items-center justify-center shrink-0">
+        <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
             <AlertTriangle className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               {t('stats.severeAlerts')}
             </p>
-            <h3 className="text-lg font-black text-rose-600">
+            <h3 className="text-lg font-bold text-slate-900">
               {severeRiskCount + emergencySymptoms.length}
             </h3>
-            <p className="text-[9px] text-rose-600 font-medium">{t('stats.actionLevel')}</p>
+            <p className="text-[9px] text-slate-500 font-medium">{t('stats.actionLevel')}</p>
           </div>
         </div>
       </div>
@@ -1229,13 +1224,13 @@ export default function DashboardPage() {
       {/* Tabs & Search Header */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-3">
-          {/* 9 Navigation Tabs */}
+          {/* 8 Navigation Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-thin">
             <button
               onClick={() => handleTabChange('allergies')}
               className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'allergies'
-                  ? 'bg-teal-600 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -1247,7 +1242,7 @@ export default function DashboardPage() {
               onClick={() => handleTabChange('tests')}
               className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'tests'
-                  ? 'bg-teal-600 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -1259,7 +1254,7 @@ export default function DashboardPage() {
               onClick={() => handleTabChange('diary')}
               className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'diary'
-                  ? 'bg-teal-600 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -1271,7 +1266,7 @@ export default function DashboardPage() {
               onClick={() => handleTabChange('symptoms')}
               className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'symptoms'
-                  ? 'bg-teal-600 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -1286,7 +1281,7 @@ export default function DashboardPage() {
               onClick={() => handleTabChange('analysis')}
               className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'analysis'
-                  ? 'bg-teal-600 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -1298,36 +1293,24 @@ export default function DashboardPage() {
               onClick={() => handleTabChange('history')}
               className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'history'
-                  ? 'bg-teal-600 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <TrendingUp className="w-4 h-4" />
               <span>{t('nav.history')}</span>
               {patterns?.repeatedAssociations?.length > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400 text-slate-950 font-black">
+                <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200 text-slate-900 font-black">
                   {patterns.repeatedAssociations.length}
                 </span>
               )}
             </button>
 
             <button
-              onClick={() => handleTabChange('body')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
-                activeTab === 'body'
-                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <HeartPulse className="w-4 h-4" />
-              <span>3D Body Map</span>
-            </button>
-
-            <button
               onClick={() => handleTabChange('reports')}
               className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'reports'
-                  ? 'bg-teal-600 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -1339,7 +1322,7 @@ export default function DashboardPage() {
               onClick={() => handleTabChange('profile')}
               className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'profile'
-                  ? 'bg-teal-600 text-white shadow-xs'
+                  ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -1452,7 +1435,7 @@ export default function DashboardPage() {
                     setEditingAllergy(null);
                     setIsAllergyModalOpen(true);
                   }}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-xs font-bold hover:from-teal-700 hover:to-cyan-700 shadow-xs flex items-center gap-1.5 transition-all"
+                  className="px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 shadow-xs flex items-center gap-1.5 transition-all"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Allergy Details</span>
@@ -1659,7 +1642,7 @@ export default function DashboardPage() {
                       setTestModalDefaultCategory(null);
                       setIsTestModalOpen(true);
                     }}
-                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 text-white text-xs font-bold hover:from-cyan-700 hover:to-teal-700 shadow-xs flex items-center gap-1.5 transition-all"
+                    className="px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 shadow-xs flex items-center gap-1.5 transition-all"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add Medical Test</span>
@@ -1669,11 +1652,11 @@ export default function DashboardPage() {
 
               {/* Educational Knowledge Base Drawer / Explorer */}
               {isEducationalExplorerOpen && (
-                <div className="p-5 rounded-3xl bg-gradient-to-br from-slate-50 via-teal-50/20 to-cyan-50/30 border border-teal-100 shadow-xs space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-teal-100/70 pb-3">
+                <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-teal-600 text-white">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-slate-900 text-white">
                           Clinical Knowledge Base
                         </span>
                         <h4 className="font-extrabold text-slate-900 text-sm sm:text-base">
@@ -1684,7 +1667,7 @@ export default function DashboardPage() {
                         Sourced directly from AAAAI / EAACI / NIAID educational consensus. Review clinical interpretation, documented parameters, and log records.
                       </p>
                     </div>
-                    <span className="text-[11px] text-teal-800 font-semibold bg-teal-100/80 px-2.5 py-1 rounded-lg self-start sm:self-auto">
+                    <span className="text-[11px] text-slate-700 font-semibold bg-slate-100 px-2.5 py-1 rounded-lg self-start sm:self-auto">
                       Reference Guide Active
                     </span>
                   </div>
@@ -2019,7 +2002,7 @@ export default function DashboardPage() {
                 </div>
                 <button
                   onClick={() => setIsUploadModalOpen(true)}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-bold hover:from-amber-600 hover:to-amber-700 shadow-xs flex items-center gap-1.5 transition-all self-start sm:self-auto"
+                  className="px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 shadow-xs flex items-center gap-1.5 transition-all self-start sm:self-auto"
                 >
                   <UploadCloud className="w-4 h-4" />
                   <span>Upload & Scan Document</span>
@@ -2390,17 +2373,6 @@ export default function DashboardPage() {
               symptoms={symptoms}
               allergies={allergies}
               medicalTests={medicalTests}
-            />
-          )}
-
-          {/* TAB: INTERACTIVE 3D HUMAN BODY ANATOMY */}
-          {activeTab === 'body' && (
-            <HumanBody3D
-              onSymptomLogged={fetchData}
-              onOpenSymptomModal={(prefill) => {
-                setEditingSymptom(prefill);
-                setIsSymptomModalOpen(true);
-              }}
             />
           )}
         </>

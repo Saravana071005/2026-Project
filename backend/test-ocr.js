@@ -1,4 +1,6 @@
 import assert from 'assert';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import {
   analyzeMedicalDocument,
   extractGeneralMeasurements,
@@ -7,6 +9,8 @@ import {
   ALLERGEN_DICTIONARY,
 } from './src/services/ocr/documentUnderstandingService.js';
 import { parsePdf } from './src/services/ocr/pdfParseService.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 console.log('🧪 Starting Intelligent Medical OCR & Document Understanding Verification Suite...\n');
 
@@ -169,7 +173,8 @@ console.log('✅ Clinical Distinction Rule verified (sensitization != auto-diagn
 // ============================================================================
 console.log('--- Test 6: Digital PDF Document Extraction (pdf-parse) ---');
 try {
-  const pdfOutput = await parsePdf('../Food_Allergy_Detection_System_Complete_Project_Audit.pdf');
+  const pdfPath = path.resolve(__dirname, '../Food_Allergy_Detection_System_Complete_Project_Audit.pdf');
+  const pdfOutput = await parsePdf(pdfPath);
   assert.ok(pdfOutput.rawText.length > 1000, 'PDF text extraction should extract document content');
   assert.ok(pdfOutput.pageCount >= 10, 'PDF page count should be >= 10');
   console.log(`PDF Parsed successfully: ${pdfOutput.rawText.length} characters across ${pdfOutput.pageCount} pages.`);

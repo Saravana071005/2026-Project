@@ -77,7 +77,7 @@ export default function HistoryAndPatternsView({
       {/* Header */}
       <div>
         <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-indigo-600" />
+          <TrendingUp className="w-5 h-5 text-slate-800" />
           <span>Food & Symptom History & Statistical Pattern Analysis</span>
         </h3>
         <p className="text-xs text-slate-500">
@@ -99,7 +99,7 @@ export default function HistoryAndPatternsView({
 
         {repeatedList.length === 0 ? (
           <div className="p-4 rounded-2xl bg-white border border-slate-200 text-xs text-slate-600 flex items-center gap-3 shadow-2xs">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="w-5 h-5 text-slate-800 shrink-0" />
             <div>
               <p className="font-bold text-slate-800">No Repeated Food-Symptom Patterns Detected</p>
               <p className="text-[11px] text-slate-500 mt-0.5">
@@ -112,32 +112,32 @@ export default function HistoryAndPatternsView({
             {repeatedList.map((item, idx) => (
               <div
                 key={idx}
-                className="p-5 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 text-amber-950 space-y-2 shadow-2xs"
+                className="p-5 rounded-2xl bg-slate-50 border border-slate-300 text-slate-900 space-y-2 shadow-2xs"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-0.5">
-                    <span className="px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-950 text-[10px] font-black uppercase tracking-wider">
+                    <span className="px-2 py-0.5 rounded-full bg-slate-200 text-slate-900 text-[10px] font-black uppercase tracking-wider">
                       Pattern Alert • Repeated {item.occurrenceCount} Times
                     </span>
-                    <h5 className="text-base font-extrabold text-amber-950">
+                    <h5 className="text-base font-extrabold text-slate-900">
                       {item.foodName} &rarr; {item.symptomName}
                     </h5>
-                    <p className="text-xs text-amber-800">
+                    <p className="text-xs text-slate-600">
                       Typical onset interval: <strong>{item.typicalOnset}</strong>
                     </p>
                   </div>
 
-                  <span className="px-2.5 py-1 rounded-xl bg-amber-100 text-amber-900 text-xs font-bold border border-amber-300 shrink-0">
+                  <span className="px-2.5 py-1 rounded-xl bg-slate-200 text-slate-900 text-xs font-bold border border-slate-300 shrink-0">
                     {item.occurrenceCount} Occurrences
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-white/80 border border-amber-200 text-xs space-y-1">
-                  <p className="font-bold text-amber-900 flex items-center gap-1.5">
-                    <Info className="w-4 h-4 text-amber-700 shrink-0" />
+                <div className="p-3 rounded-xl bg-white border border-slate-200 text-xs space-y-1">
+                  <p className="font-bold text-slate-900 flex items-center gap-1.5">
+                    <Info className="w-4 h-4 text-slate-700 shrink-0" />
                     <span>Clinical Guidance:</span>
                   </p>
-                  <p className="text-amber-800 leading-relaxed text-[11px]">
+                  <p className="text-slate-600 leading-relaxed text-[11px]">
                     {item.clinicalNote ||
                       'Repeated correlation indicates a reproducible temporal relationship. Share this timeline with your allergist/immunologist for formal diagnostic evaluation (e.g. Skin Prick or Oral Food Challenge). Avoid self-diagnosing or unnecessarily eliminating entire food groups without medical guidance.'}
                   </p>
@@ -156,21 +156,21 @@ export default function HistoryAndPatternsView({
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div className="p-3 rounded-2xl bg-white border border-slate-200 space-y-1">
-            <span className="font-bold text-teal-800 block">Doctor-Confirmed Allergy</span>
+            <span className="font-bold text-slate-900 block">Doctor-Confirmed Allergy</span>
             <p className="text-[11px] text-slate-600 leading-relaxed">
               Diagnosed by a licensed allergist (often via oral food challenge or clinical history + sIgE). Strict avoidance & emergency action plan required.
             </p>
           </div>
 
           <div className="p-3 rounded-2xl bg-white border border-slate-200 space-y-1">
-            <span className="font-bold text-purple-800 block">Sensitization &ne; Allergy</span>
+            <span className="font-bold text-slate-900 block">Sensitization &ne; Allergy</span>
             <p className="text-[11px] text-slate-600 leading-relaxed">
               A positive IgE or SPT result shows biological sensitization (presence of antibodies), NOT necessarily clinical allergy or reaction risk upon ingestion.
             </p>
           </div>
 
           <div className="p-3 rounded-2xl bg-white border border-slate-200 space-y-1">
-            <span className="font-bold text-amber-800 block">Co-occurrence &ne; Causation</span>
+            <span className="font-bold text-slate-900 block">Co-occurrence &ne; Causation</span>
             <p className="text-[11px] text-slate-600 leading-relaxed">
               Eating a food before a symptom does not prove causation. Co-ingredients, hidden spices, cross-contact, and non-allergic factors must be evaluated by a physician.
             </p>
@@ -183,7 +183,7 @@ export default function HistoryAndPatternsView({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
           <div>
             <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-teal-600" />
+              <Clock className="w-4 h-4 text-slate-800" />
               <span>Unified Chronological Timeline (Meals & Symptoms)</span>
             </h4>
             <p className="text-xs text-slate-500">
@@ -207,7 +207,7 @@ export default function HistoryAndPatternsView({
               onClick={() => setTimelineFilter('FOOD')}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 timelineFilter === 'FOOD'
-                  ? 'bg-teal-700 text-white'
+                  ? 'bg-slate-900 text-white'
                   : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
               }`}
             >
@@ -217,7 +217,7 @@ export default function HistoryAndPatternsView({
               onClick={() => setTimelineFilter('SYMPTOM')}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 timelineFilter === 'SYMPTOM'
-                  ? 'bg-rose-700 text-white'
+                  ? 'bg-slate-900 text-white'
                   : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
               }`}
             >
@@ -239,7 +239,7 @@ export default function HistoryAndPatternsView({
                   {/* Timeline dot */}
                   <div
                     className={`absolute -left-6 top-1.5 w-4 h-4 rounded-full border-2 border-white shadow-xs ${
-                      isFood ? 'bg-teal-600' : item.isEmergency ? 'bg-red-600 animate-ping' : 'bg-rose-600'
+                      isFood ? 'bg-slate-900' : item.isEmergency ? 'bg-red-600 animate-ping' : 'bg-slate-600'
                     }`}
                   />
 
@@ -250,7 +250,7 @@ export default function HistoryAndPatternsView({
                         ? 'border-slate-200'
                         : item.isEmergency
                         ? 'border-red-400 bg-red-50/20'
-                        : 'border-rose-200'
+                        : 'border-slate-300'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -259,8 +259,8 @@ export default function HistoryAndPatternsView({
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${
                               isFood
-                                ? 'bg-teal-50 text-teal-800 border border-teal-200'
-                                : 'bg-rose-50 text-rose-800 border border-rose-200'
+                                ? 'bg-slate-100 text-slate-800 border border-slate-200'
+                                : 'bg-slate-100 text-slate-800 border border-slate-200'
                             }`}
                           >
                             {isFood ? 'Meal Logged' : 'Symptom Reported'}

@@ -90,10 +90,10 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center space-y-3">
-          <div className="w-12 h-12 border-4 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-semibold text-slate-700">
+          <div className="w-10 h-10 border-3 border-slate-900 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-xs font-semibold text-slate-600">
             Initializing Food Allergy Detection System...
           </p>
         </div>
@@ -102,7 +102,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col liquid-ambient-bg text-slate-900 font-sans selection:bg-purple-200 selection:text-purple-900">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-slate-200 selection:text-slate-900">
       <Navbar activePage={activePage} setActivePage={handlePageChange} />
 
       <main className="flex-1">

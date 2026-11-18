@@ -2,24 +2,32 @@
 
 :root {
   font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --bg-primary: #ffffff;
+  --bg-surface: #ffffff;
+  --text-primary: #0f172a; /* Deep Navy */
+  --text-secondary: #475569; /* Slate */
+  --border-subtle: #e2e8f0;
+  --navy-primary: #0f172a; /* Deep Navy Blue */
+  --navy-hover: #1e293b;
+  --navy-light: #f1f5f9;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: #ffffff;
   color: #0f172a;
   overflow-x: hidden;
 }
 
 /* Custom scrollbars for clean healthcare UI */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(241, 245, 249, 0.6);
+  background: #f8fafc;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -28,105 +36,114 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a855f7;
+  background: #0f172a;
 }
 
 /* =========================================================================
-   PREMIUM LIQUID GLASS DESIGN SYSTEM
+   MINIMAL TWO-COLOR DESIGN SYSTEM: WHITE & DEEP NAVY BLUE
    ========================================================================= */
 
-/* Ambient Lighting Mesh Background */
-.liquid-ambient-bg {
+/* Clean Minimal Surface */
+.minimal-white-bg {
+  background-color: #ffffff;
+}
+
+/* Minimal Plain White Card with Subtle Navy-Slate Border */
+.app-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+}
+
+.app-card-hover {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+}
+
+.app-card-hover:hover {
+  border-color: #0f172a;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+}
+
+/* Deep Navy Primary Action Button */
+.btn-navy {
+  background-color: #0f172a;
+  color: #ffffff;
+  border: 1px solid #0f172a;
+  font-weight: 700;
+  transition: all 0.15s ease;
+}
+
+.btn-navy:hover {
+  background-color: #1e293b;
+  border-color: #1e293b;
+}
+
+/* Deep Navy Outline / Secondary Action Button */
+.btn-navy-outline {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.btn-navy-outline:hover {
   background-color: #f8fafc;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(233, 213, 255, 0.45) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(207, 250, 254, 0.45) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(252, 231, 243, 0.35) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(224, 231, 255, 0.45) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(243, 232, 255, 0.45) 0px, transparent 50%);
-  background-attachment: fixed;
+  border-color: #0f172a;
+  color: #0f172a;
 }
 
-/* Liquid Glass Translucent Panel */
+/* Backward compatibility mappings for any lingering references */
+.liquid-ambient-bg {
+  background-color: #ffffff;
+}
+
 .liquid-glass {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 
-    0 10px 30px -5px rgba(139, 92, 246, 0.08),
-    0 4px 12px -2px rgba(6, 182, 212, 0.05),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
 }
 
-/* Floating Translucent Liquid Glass Card */
 .liquid-glass-card {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 
-    0 8px 24px -4px rgba(99, 102, 241, 0.08),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
 }
 
 .liquid-glass-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 
-    0 16px 36px -6px rgba(139, 92, 246, 0.16),
-    0 4px 16px -2px rgba(6, 182, 212, 0.1),
-    inset 0 1px 2px 0 rgba(255, 255, 255, 1);
+  border-color: #0f172a;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
 }
 
-/* Glossy Purple Primary Action Button */
 .btn-liquid-purple {
-  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 50%, #6366f1 100%);
+  background-color: #0f172a;
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 6px 18px -2px rgba(124, 58, 237, 0.35),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid #0f172a;
+  font-weight: 700;
+  transition: all 0.15s ease;
 }
 
 .btn-liquid-purple:hover {
-  background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 50%, #4f46e5 100%);
-  box-shadow: 
-    0 10px 24px -2px rgba(124, 58, 237, 0.45),
-    inset 0 1px 2px 0 rgba(255, 255, 255, 0.6);
-  transform: translateY(-1px);
+  background-color: #1e293b;
+  border-color: #1e293b;
 }
 
-/* Glossy Cyan / Turquoise Secondary Action Button */
 .btn-liquid-cyan {
-  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0d9488 100%);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 6px 18px -2px rgba(6, 182, 212, 0.32),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  font-weight: 600;
+  transition: all 0.15s ease;
 }
 
 .btn-liquid-cyan:hover {
-  background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 50%, #14b8a6 100%);
-  box-shadow: 
-    0 10px 24px -2px rgba(6, 182, 212, 0.42),
-    inset 0 1px 2px 0 rgba(255, 255, 255, 0.6);
-  transform: translateY(-1px);
-}
-
-/* Slow rotation animation for 3D body viewer controls */
-@keyframes spinSlow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spinSlow 12s linear infinite;
+  background-color: #f8fafc;
+  border-color: #0f172a;
 }

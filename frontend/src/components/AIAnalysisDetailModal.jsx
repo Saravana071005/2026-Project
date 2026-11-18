@@ -41,22 +41,22 @@ export default function AIAnalysisDetailModal({ isOpen, onClose, analysis }) {
         <div
           className={`p-5 sm:p-6 text-white flex items-center justify-between ${
             isEmergency
-              ? 'bg-gradient-to-r from-red-700 via-rose-800 to-red-900'
-              : 'bg-gradient-to-r from-indigo-800 via-teal-800 to-cyan-900'
+              ? 'bg-rose-900'
+              : 'bg-slate-900'
           }`}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center border border-white/20">
-              <Sparkles className="w-5 h-5 text-teal-200" />
+            <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-lg font-bold">Personalized AI Food & Allergy Analysis</h3>
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/20 text-white">
+                <h3 className="text-lg font-bold">Personalized Health Insights & Clinical Analysis</h3>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-200 border border-slate-700">
                   {analysis.modelUsed || 'Clinical Analysis Engine'}
                 </span>
               </div>
-              <p className="text-xs text-white/80">
+              <p className="text-xs text-slate-300">
                 Generated {formatDate(analysis.createdAt)}
               </p>
             </div>
@@ -65,13 +65,13 @@ export default function AIAnalysisDetailModal({ isOpen, onClose, analysis }) {
             <button
               onClick={handlePrint}
               title="Print Clinical Summary"
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors"
+              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white transition-colors"
             >
               <Printer className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors"
+              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white transition-colors"
             >
               <X className="w-5 h-5" />
             </button>

@@ -6,7 +6,6 @@ import {
   Database,
   Lock,
   ArrowRight,
-  Sparkles,
   HeartPulse,
   UserCheck,
   ShieldAlert,
@@ -16,11 +15,11 @@ import {
   MapPin,
   CheckCircle2,
   ChevronRight,
+  Clock,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import HealthInsightsView from '../components/HealthInsightsView';
-import HumanBody3D from '../components/HumanBody3D';
 import ProfileEditModal from '../components/ProfileEditModal';
 import AllergyModal from '../components/AllergyModal';
 import FoodEntryModal from '../components/FoodEntryModal';
@@ -124,25 +123,21 @@ export default function HomePage({ setActivePage }) {
   })();
 
   // ---------------------------------------------------------------------------
-  // AUTHENTICATED PATIENT WORKSPACE VIEW
+  // AUTHENTICATED PATIENT WORKSPACE VIEW (Minimal White & Deep Navy Blue)
   // ---------------------------------------------------------------------------
   if (isAuthenticated) {
     return (
-      <div className="space-y-10 py-6 sm:py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-in fade-in duration-300">
-        {/* Top Liquid Glass Welcome & Health Status Panel */}
-        <section className="relative rounded-3xl p-6 sm:p-8 liquid-glass overflow-hidden">
-          {/* Ambient Lighting Orbs */}
-          <div className="absolute -top-16 -right-16 w-64 h-64 bg-purple-400/25 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-cyan-400/25 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      <div className="space-y-8 py-6 sm:py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Welcome Section & Patient Overview */}
+        <section className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
             {/* User Demographic Vitals */}
             <div className="flex items-center gap-4 sm:gap-5">
-              <div className="relative">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 text-white flex items-center justify-center font-extrabold text-2xl sm:text-3xl shadow-lg shadow-purple-500/30 border-2 border-white/60">
+              <div className="relative shrink-0">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-extrabold text-2xl sm:text-3xl shadow-xs">
                   {user?.name ? user.name.charAt(0).toUpperCase() : 'P'}
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-xs" title="Verified Active Account">
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-slate-900 border-2 border-white flex items-center justify-center shadow-xs" title="Verified Active Account">
                   <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
@@ -152,12 +147,12 @@ export default function HomePage({ setActivePage }) {
                   <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                     Welcome back, {user?.name ? user.name.split(' ')[0] : 'Patient'}!
                   </h1>
-                  <span className="px-2.5 py-0.5 rounded-full bg-purple-100/90 text-purple-900 text-xs font-bold border border-purple-200">
+                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-900 text-xs font-bold border border-slate-200">
                     Patient Portal
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                  Your health journey starts here. Real-time food allergy detection, AI diet monitoring & OCR clinical reports.
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Your health journey starts here. Real-time food allergy detection, daily diet diary & medical OCR reports.
                 </p>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 pt-1">
                   <span><strong>Age:</strong> {user?.age ?? 'N/A'} yrs</span>
@@ -173,15 +168,15 @@ export default function HomePage({ setActivePage }) {
             </div>
 
             {/* Profile Completion Card & Quick Edit */}
-            <div className="w-full lg:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-4 bg-white/60 backdrop-blur p-4 rounded-2xl border border-white/80 shadow-xs shrink-0">
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 shrink-0">
               <div className="space-y-1.5 min-w-[180px]">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-700">Health Profile Completion</span>
-                  <span className="font-extrabold text-purple-700">{completionScore}%</span>
+                  <span className="font-bold text-slate-700">Profile Completion</span>
+                  <span className="font-extrabold text-slate-900">{completionScore}%</span>
                 </div>
-                <div className="w-full h-2 bg-slate-200/80 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-purple-600 to-cyan-500 rounded-full transition-all duration-500"
+                    className="h-full bg-slate-900 rounded-full transition-all duration-500"
                     style={{ width: `${completionScore}%` }}
                   />
                 </div>
@@ -195,7 +190,7 @@ export default function HomePage({ setActivePage }) {
               <button
                 type="button"
                 onClick={() => setIsProfileModalOpen(true)}
-                className="px-4 py-2.5 rounded-xl text-xs font-bold btn-liquid-purple shadow-xs shrink-0 flex items-center justify-center gap-1.5"
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 shadow-xs shrink-0 flex items-center justify-center gap-1.5 transition-colors"
               >
                 <UserCheck className="w-4 h-4" />
                 <span>Edit Profile</span>
@@ -204,15 +199,15 @@ export default function HomePage({ setActivePage }) {
           </div>
 
           {/* Quick Metrics Strip */}
-          <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-6 border-t border-slate-200/60">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-6 border-t border-slate-100">
             {/* Metric 1: Confirmed Allergies */}
             <div
               onClick={() => navigateToDashboardTab('allergies')}
-              className="p-3.5 rounded-2xl bg-white/70 hover:bg-white/95 border border-white/80 shadow-2xs cursor-pointer transition-all hover:scale-[1.02]"
+              className="p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200 cursor-pointer transition-all"
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Confirmed Allergies</span>
-                <ShieldAlert className="w-4 h-4 text-rose-600" />
+                <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Confirmed Allergies</span>
+                <ShieldAlert className="w-4 h-4 text-slate-900" />
               </div>
               <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 {stats.confirmedAllergies.length}
@@ -227,11 +222,11 @@ export default function HomePage({ setActivePage }) {
             {/* Metric 2: Medical Tests */}
             <div
               onClick={() => navigateToDashboardTab('tests')}
-              className="p-3.5 rounded-2xl bg-white/70 hover:bg-white/95 border border-white/80 shadow-2xs cursor-pointer transition-all hover:scale-[1.02]"
+              className="p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200 cursor-pointer transition-all"
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Diagnostic Tests</span>
-                <FileCheck className="w-4 h-4 text-purple-600" />
+                <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Diagnostic Tests</span>
+                <FileCheck className="w-4 h-4 text-slate-900" />
               </div>
               <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 {stats.testsCount}
@@ -246,11 +241,11 @@ export default function HomePage({ setActivePage }) {
             {/* Metric 3: Today's Meals */}
             <div
               onClick={() => navigateToDashboardTab('diary')}
-              className="p-3.5 rounded-2xl bg-white/70 hover:bg-white/95 border border-white/80 shadow-2xs cursor-pointer transition-all hover:scale-[1.02]"
+              className="p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200 cursor-pointer transition-all"
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Today's Meals</span>
-                <Utensils className="w-4 h-4 text-emerald-600" />
+                <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Today's Meals</span>
+                <Utensils className="w-4 h-4 text-slate-900" />
               </div>
               <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 {stats.todayMealsCount}
@@ -263,11 +258,11 @@ export default function HomePage({ setActivePage }) {
             {/* Metric 4: Recent Symptoms */}
             <div
               onClick={() => navigateToDashboardTab('symptoms')}
-              className="p-3.5 rounded-2xl bg-white/70 hover:bg-white/95 border border-white/80 shadow-2xs cursor-pointer transition-all hover:scale-[1.02]"
+              className="p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200 cursor-pointer transition-all"
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Reported Reactions</span>
-                <HeartPulse className="w-4 h-4 text-amber-600" />
+                <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Reported Reactions</span>
+                <HeartPulse className="w-4 h-4 text-slate-900" />
               </div>
               <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 {stats.recentSymptomsCount}
@@ -279,76 +274,76 @@ export default function HomePage({ setActivePage }) {
           </div>
         </section>
 
-        {/* 8 Prominent Liquid Glass Action Cards Section */}
+        {/* 8 Core Features Grid - Reorganized Homepage */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                Quick Action Health Center
+                Health Center Directory
               </h2>
               <p className="text-xs sm:text-sm text-slate-600">
-                Direct access to all 8 core patient tools and medical monitoring services
+                Quick access to all 8 core clinical features and patient management tools
               </p>
             </div>
             <button
               onClick={() => setActivePage('dashboard')}
-              className="text-xs font-bold text-purple-700 hover:text-purple-900 flex items-center gap-1 transition-colors"
+              className="text-xs font-bold text-slate-900 hover:text-slate-700 flex items-center gap-1 transition-colors"
             >
               <span>Open Full Dashboard</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            {/* Card 1: My Profile */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Card 1: User Profile */}
             <div
               onClick={() => setIsProfileModalOpen(true)}
-              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-purple-600 text-white flex items-center justify-center shadow-md shadow-violet-500/25 group-hover:scale-110 transition-transform">
-                  <UserCheck className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                  <UserCheck className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-100 text-violet-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
                   Profile
                 </span>
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-purple-700 transition-colors">
-                  1. My Health Profile
+                <h3 className="font-bold text-slate-900 text-sm mb-1">
+                  1. User Profile
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Update demographics, date of birth, emergency details, and language preference.
+                  Update demographics, date of birth, emergency contact, and language preference.
                 </p>
               </div>
-              <div className="text-[11px] font-bold text-purple-600 flex items-center gap-1">
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
                 <span>Edit Profile</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
-            {/* Card 2: My Food Allergies */}
+            {/* Card 2: Food Allergy Records */}
             <div
               onClick={() => navigateToDashboardTab('allergies')}
-              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-purple-500/25 group-hover:scale-110 transition-transform">
-                  <ShieldAlert className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                  <ShieldAlert className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
                   {stats.allergiesCount} Records
                 </span>
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-purple-700 transition-colors">
-                  2. My Food Allergies
+                <h3 className="font-bold text-slate-900 text-sm mb-1">
+                  2. Food Allergy Records
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Document verified food allergens, severity classification, and doctor notes.
+                  Document confirmed and suspected food allergens, severity levels, and doctor notes.
                 </p>
               </div>
-              <div className="text-[11px] font-bold text-purple-600 flex items-center gap-1">
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
                 <span>View Allergies</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -357,52 +352,52 @@ export default function HomePage({ setActivePage }) {
             {/* Card 3: Medical Test Reports */}
             <div
               onClick={() => navigateToDashboardTab('tests')}
-              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 group-hover:scale-110 transition-transform">
-                  <FileCheck className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                  <FileCheck className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
                   Diagnostic
                 </span>
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-indigo-700 transition-colors">
+                <h3 className="font-bold text-slate-900 text-sm mb-1">
                   3. Medical Test Reports
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Review Skin Prick Tests (SPT), Specific IgE titers, and Component Resolved lab data.
+                  Review Skin Prick Tests (SPT), Specific IgE antibody levels, and lab parameters.
                 </p>
               </div>
-              <div className="text-[11px] font-bold text-indigo-600 flex items-center gap-1">
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
                 <span>Inspect Tests</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
-            {/* Card 4: Upload New Report */}
+            {/* Card 4: OCR Report Upload */}
             <div
               onClick={() => setIsUploadModalOpen(true)}
-              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48 border-cyan-300/60"
+              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-600 to-teal-600 text-white flex items-center justify-center shadow-md shadow-cyan-500/25 group-hover:scale-110 transition-transform">
-                  <UploadCloud className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                  <UploadCloud className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
                   OCR Scanner
                 </span>
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-cyan-700 transition-colors">
-                  4. Upload New Report
+                <h3 className="font-bold text-slate-900 text-sm mb-1">
+                  4. OCR Report Upload
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Upload PDF or laboratory photos for intelligent OCR extraction and verification.
+                  Upload PDF or laboratory image reports for deterministic OCR extraction and verification.
                 </p>
               </div>
-              <div className="text-[11px] font-bold text-cyan-700 flex items-center gap-1">
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
                 <span>Upload & Extract</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -411,25 +406,25 @@ export default function HomePage({ setActivePage }) {
             {/* Card 5: Daily Food Diary */}
             <div
               onClick={() => navigateToDashboardTab('diary')}
-              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/25 group-hover:scale-110 transition-transform">
-                  <Utensils className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                  <Utensils className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
                   {stats.todayMealsCount} Today
                 </span>
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-emerald-700 transition-colors">
+                <h3 className="font-bold text-slate-900 text-sm mb-1">
                   5. Daily Food Diary
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Log daily meals, recipes, and ingredients with real-time pre-check allergen warnings.
                 </p>
               </div>
-              <div className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
                 <span>Log Meals</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -438,25 +433,25 @@ export default function HomePage({ setActivePage }) {
             {/* Card 6: Symptom Tracker */}
             <div
               onClick={() => navigateToDashboardTab('symptoms')}
-              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-rose-600 text-white flex items-center justify-center shadow-md shadow-amber-500/25 group-hover:scale-110 transition-transform">
-                  <HeartPulse className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                  <HeartPulse className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
                   Reactions
                 </span>
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-amber-700 transition-colors">
+                <h3 className="font-bold text-slate-900 text-sm mb-1">
                   6. Symptom Tracker
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Record hives, oral tingling, or gastrointestinal events linked to specific meals.
+                  Record hives, oral tingling, or digestive symptoms linked to specific meals.
                 </p>
               </div>
-              <div className="text-[11px] font-bold text-amber-700 flex items-center gap-1">
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
                 <span>Track Symptoms</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -465,52 +460,52 @@ export default function HomePage({ setActivePage }) {
             {/* Card 7: My Health Insights */}
             <div
               onClick={() => navigateToDashboardTab('analysis')}
-              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-fuchsia-600 to-purple-600 text-white flex items-center justify-center shadow-md shadow-fuchsia-500/25 group-hover:scale-110 transition-transform">
-                  <TrendingUp className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                  <TrendingUp className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-fuchsia-100 text-fuchsia-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
                   Insights
                 </span>
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-fuchsia-700 transition-colors">
+                <h3 className="font-bold text-slate-900 text-sm mb-1">
                   7. My Health Insights
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Deterministic clinical cross-matching, missing information audits & statistical recurrence.
+                  Deterministic allergen cross-matching, missing information audits & statistical recurrence.
                 </p>
               </div>
-              <div className="text-[11px] font-bold text-fuchsia-700 flex items-center gap-1">
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
                 <span>View Insights</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
-            {/* Card 8: Health History & Trends */}
+            {/* Card 8: Medical History */}
             <div
               onClick={() => navigateToDashboardTab('history')}
-              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-600 text-white flex items-center justify-center shadow-md shadow-purple-500/25 group-hover:scale-110 transition-transform">
-                  <TrendingUp className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                  <Clock className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
-                  Patterns
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                  Timeline
                 </span>
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-purple-700 transition-colors">
-                  8. Health History
+                <h3 className="font-bold text-slate-900 text-sm mb-1">
+                  8. Medical History
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Discover repeated food-symptom pairs and review chronological clinical timelines.
+                  Discover repeated food-symptom pairs and review chronological medical reaction history.
                 </p>
               </div>
-              <div className="text-[11px] font-bold text-purple-600 flex items-center gap-1">
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
                 <span>Explore Patterns</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -519,7 +514,7 @@ export default function HomePage({ setActivePage }) {
         </section>
 
         {/* My Health Insights Section on Homepage */}
-        <section id="homepage-health-insights">
+        <section id="homepage-health-insights" className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
           <HealthInsightsView
             user={user}
             allergies={stats.rawAllergies || []}
@@ -528,17 +523,6 @@ export default function HomePage({ setActivePage }) {
             symptoms={stats.rawSymptoms || []}
             onRefresh={loadUserStats}
             onNavigateTab={navigateToDashboardTab}
-          />
-        </section>
-
-        {/* Interactive 3D Human Body Anatomy Visualization Section */}
-        <section id="homepage-3d-body">
-          <HumanBody3D
-            onSymptomLogged={loadUserStats}
-            onOpenSymptomModal={(prefill) => {
-              setSymptomModalPrefill(prefill);
-              setIsSymptomModalOpen(true);
-            }}
           />
         </section>
 
@@ -600,18 +584,18 @@ export default function HomePage({ setActivePage }) {
   }
 
   // ---------------------------------------------------------------------------
-  // PUBLIC / UNTOUCHED VISITOR LANDING VIEW (Liquid Glass Redesign)
+  // PUBLIC / VISITOR LANDING VIEW (Minimal White & Deep Navy Blue)
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-16 pb-16">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-16 md:py-24 liquid-ambient-bg">
+      <section className="bg-white pt-12 pb-16 md:py-24 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto space-y-6">
             {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-100/90 border border-purple-200/80 text-purple-900 text-xs font-semibold shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-              <span>{t('home.heroPill')} • Liquid Glass Edition</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold">
+              <ShieldCheck className="w-3.5 h-3.5 text-slate-900" />
+              <span>{t('home.heroPill')}</span>
             </div>
 
             {/* Main Headline */}
@@ -625,17 +609,17 @@ export default function HomePage({ setActivePage }) {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
               <button
                 onClick={() => setActivePage('register')}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold btn-liquid-purple shadow-lg flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl font-bold bg-slate-900 text-white hover:bg-slate-800 transition-colors shadow-xs flex items-center justify-center gap-2"
               >
                 <span>{t('home.registerNewAccount')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setActivePage('login')}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold btn-liquid-cyan shadow-md flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl font-bold bg-white text-slate-900 border border-slate-300 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
               >
                 <span>{t('home.patientLogin')}</span>
               </button>
@@ -644,17 +628,17 @@ export default function HomePage({ setActivePage }) {
             {/* Trust Badges */}
             <div className="pt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
               <span className="flex items-center gap-1.5 font-medium">
-                <Database className="w-4 h-4 text-purple-600" />
+                <Database className="w-4 h-4 text-slate-700" />
                 MongoDB Atlas Cloud
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5 font-medium">
-                <Lock className="w-4 h-4 text-cyan-600" />
+                <Lock className="w-4 h-4 text-slate-700" />
                 Bcrypt Hashed & JWT Secured
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5 font-medium">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <ShieldCheck className="w-4 h-4 text-slate-700" />
                 Intelligent OCR & Clinical ML Engine
               </span>
             </div>
@@ -662,21 +646,9 @@ export default function HomePage({ setActivePage }) {
         </div>
       </section>
 
-      {/* Interactive 3D Anatomy Preview on Landing Page */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <HumanBody3D
-          onSymptomLogged={() => {
-            setActivePage('login');
-          }}
-          onOpenSymptomModal={() => {
-            setActivePage('login');
-          }}
-        />
-      </section>
-
       {/* Workflow Steps Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-10">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
             {t('home.howItWorks')}
           </h2>
@@ -686,32 +658,32 @@ export default function HomePage({ setActivePage }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="liquid-glass-card p-6 rounded-3xl">
-            <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 font-bold flex items-center justify-center mb-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center mb-4 text-sm">
               01
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step1Title')}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">{t('home.step1Desc')}</p>
           </div>
 
-          <div className="liquid-glass-card p-6 rounded-3xl">
-            <div className="w-10 h-10 rounded-2xl bg-cyan-100 text-cyan-700 font-bold flex items-center justify-center mb-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center mb-4 text-sm">
               02
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step2Title')}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">{t('home.step2Desc')}</p>
           </div>
 
-          <div className="liquid-glass-card p-6 rounded-3xl">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center mb-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center mb-4 text-sm">
               03
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step3Title')}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">{t('home.step3Desc')}</p>
           </div>
 
-          <div className="liquid-glass-card p-6 rounded-3xl">
-            <div className="w-10 h-10 rounded-2xl bg-fuchsia-100 text-fuchsia-700 font-bold flex items-center justify-center mb-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center mb-4 text-sm">
               04
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step4Title')}</h3>
