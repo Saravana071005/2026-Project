@@ -6,7 +6,6 @@ import MedicalTestRecord from './src/models/MedicalTestRecord.js';
 import DailyFoodEntry from './src/models/DailyFoodEntry.js';
 import SymptomRecord from './src/models/SymptomRecord.js';
 import AIAnalysisRecord from './src/models/AIAnalysisRecord.js';
-import AIChatMessage from './src/models/AIChatMessage.js';
 import { generateToken } from './src/middleware/authMiddleware.js';
 import { checkEmergencySafety } from './src/services/ai/medicalSafetyEngine.js';
 import { evaluateFoodSafety } from './src/services/ai/dietMonitoringService.js';
@@ -624,40 +623,44 @@ async function runAIDietMonitoringTests() {
     }
 
     // -------------------------------------------------------------
-    // AI HEALTH ASSISTANT CHAT VERIFICATION
+    // AI CHAT DECOMMISSIONING & HEALTH INSIGHTS VERIFICATION
     // -------------------------------------------------------------
     console.log('\n=============================================================');
-    console.log('AI Health Assistant Chat: Context Grounding & Safety Guardrails');
+    console.log('AI Chat Decommissioning & Deterministic Health Insights Verification');
     console.log('=============================================================');
 
-    // Normal query grounded in user profile
+    // 1. Confirm /api/ai-chat endpoints are completely removed (return 404)
     const chatRes1 = await fetch(`${BASE_URL}/ai-chat/message`, {
       method: 'POST',
       headers: headersA,
       body: JSON.stringify({ message: 'I ate wheat dosa today. What should I know?' }),
     });
-    const chatData1 = await chatRes1.json();
-    console.log('✅ 10.1 Chat query response:');
-    console.log('   - Reply preview:', chatData1.data.reply.slice(0, 150) + '...');
-    console.log('   - User context recognized:', chatData1.data.reply.toLowerCase().includes('wheat'));
-
-    if (!chatData1.data.reply.toLowerCase().includes('wheat')) {
-      throw new Error('AI Chat Failed: Did not acknowledge patient wheat allergy!');
+    console.log('✅ 10.1 POST /api/ai-chat/message status:', chatRes1.status);
+    if (chatRes1.status !== 404) {
+      throw new Error(`AI Chat endpoint still active! Expected 404, got ${chatRes1.status}`);
     }
 
-    // Emergency query in chat
-    const chatRes2 = await fetch(`${BASE_URL}/ai-chat/message`, {
+    const chatRes2 = await fetch(`${BASE_URL}/ai-chat/history`, {
+      headers: headersA,
+    });
+    console.log('✅ 10.2 GET /api/ai-chat/history status:', chatRes2.status);
+    if (chatRes2.status !== 404) {
+      throw new Error(`AI Chat history endpoint still active! Expected 404, got ${chatRes2.status}`);
+    }
+
+    // 2. Confirm deterministic health insights analysis works without conversational LLM
+    const insightsRes = await fetch(`${BASE_URL}/ai-analysis/analyze`, {
       method: 'POST',
       headers: headersA,
-      body: JSON.stringify({ message: 'My throat is swelling and I cannot breathe after eating!' }),
     });
-    const chatData2 = await chatRes2.json();
-    console.log('✅ 10.2 Chat emergency detection:');
-    console.log('   - Emergency alert triggered:', chatData2.data.emergencyAlert.isEmergency);
-    console.log('   - Immediate 911 advisory provided:', chatData2.data.reply.includes('911') || chatData2.data.reply.includes('emergency'));
+    const insightsData = await insightsRes.json();
+    console.log('✅ 10.3 POST /api/ai-analysis/analyze status:', insightsRes.status);
+    console.log('   - Success flag:', insightsData.success);
+    console.log('   - Analysis observations count:', insightsData.data?.observations?.length || 0);
+    console.log('   - Sensitization vs clinical allergy handled:', !!insightsData.data?.sensitizationNotes);
 
-    if (!chatData2.data.emergencyAlert.isEmergency) {
-      throw new Error('AI Chat Failed: Emergency words did not trigger emergencyAlert in chat!');
+    if (!insightsData.success || !insightsData.data) {
+      throw new Error('Deterministic Health Insights analysis failed!');
     }
 
     // Cleanup test users
@@ -665,7 +668,6 @@ async function runAIDietMonitoringTests() {
     await DailyFoodEntry.deleteMany({ userId: { $in: [userA._id, userB._id] } });
     await SymptomRecord.deleteMany({ userId: { $in: [userA._id, userB._id] } });
     await AIAnalysisRecord.deleteMany({ userId: { $in: [userA._id, userB._id] } });
-    await AIChatMessage.deleteMany({ userId: { $in: [userA._id, userB._id] } });
     await AllergyRecord.deleteMany({ userId: { $in: [userA._id, userB._id] } });
     await MedicalTestRecord.deleteMany({ userId: { $in: [userA._id, userB._id] } });
     await User.deleteMany({ _id: { $in: [userA._id, userB._id] } });

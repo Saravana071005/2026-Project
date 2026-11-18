@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
-import HomepageAIAssistant from '../components/HomepageAIAssistant';
+import HealthInsightsView from '../components/HealthInsightsView';
 import HumanBody3D from '../components/HumanBody3D';
 import ProfileEditModal from '../components/ProfileEditModal';
 import AllergyModal from '../components/AllergyModal';
@@ -83,6 +83,10 @@ export default function HomePage({ setActivePage }) {
         todayMealsCount: foods.length,
         recentSymptomsCount: symptoms.length,
         latestReport: reports.length > 0 ? reports[0] : null,
+        rawAllergies: allergies,
+        rawTests: tests,
+        rawFoods: foods,
+        rawSymptoms: symptoms,
         loading: false,
       });
     } catch {
@@ -458,25 +462,25 @@ export default function HomePage({ setActivePage }) {
               </div>
             </div>
 
-            {/* Card 7: AI Food Analysis */}
+            {/* Card 7: My Health Insights */}
             <div
               onClick={() => navigateToDashboardTab('analysis')}
               className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
             >
               <div className="flex items-start justify-between">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-fuchsia-600 to-purple-600 text-white flex items-center justify-center shadow-md shadow-fuchsia-500/25 group-hover:scale-110 transition-transform">
-                  <Sparkles className="w-6 h-6" />
+                  <TrendingUp className="w-6 h-6" />
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-fuchsia-100 text-fuchsia-800">
-                  AI Grounded
+                  Insights
                 </span>
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-fuchsia-700 transition-colors">
-                  7. AI Food Analysis
+                  7. My Health Insights
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Structured 9-part clinical risk evaluations correlating food, lab results & symptoms.
+                  Deterministic clinical cross-matching, missing information audits & statistical recurrence.
                 </p>
               </div>
               <div className="text-[11px] font-bold text-fuchsia-700 flex items-center gap-1">
@@ -514,9 +518,17 @@ export default function HomePage({ setActivePage }) {
           </div>
         </section>
 
-        {/* Dedicated AI Assistant Embedded Directly on the Homepage */}
-        <section id="homepage-ai-assistant">
-          <HomepageAIAssistant user={user} />
+        {/* My Health Insights Section on Homepage */}
+        <section id="homepage-health-insights">
+          <HealthInsightsView
+            user={user}
+            allergies={stats.rawAllergies || []}
+            medicalTests={stats.rawTests || []}
+            foodEntries={stats.rawFoods || []}
+            symptoms={stats.rawSymptoms || []}
+            onRefresh={loadUserStats}
+            onNavigateTab={navigateToDashboardTab}
+          />
         </section>
 
         {/* Interactive 3D Human Body Anatomy Visualization Section */}
@@ -643,7 +655,7 @@ export default function HomePage({ setActivePage }) {
               <span>•</span>
               <span className="flex items-center gap-1.5 font-medium">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                Multi-Provider AI (Gemini & OpenAI)
+                Intelligent OCR & Clinical ML Engine
               </span>
             </div>
           </div>

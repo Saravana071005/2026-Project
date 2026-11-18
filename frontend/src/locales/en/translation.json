@@ -44,9 +44,9 @@
     "tests": "Medical Tests",
     "diary": "Daily Food Diary",
     "symptoms": "Symptom Tracker",
-    "analysis": "AI Food Analysis",
+    "analysis": "My Health Insights",
     "history": "History & Patterns",
-    "assistant": "AI Assistant",
+    "assistant": "My Health Insights",
     "reports": "Documents",
     "login": "Login",
     "register": "Register Account",
@@ -103,8 +103,8 @@
       "foodDiaryDesc": "Track daily meals, detailed ingredients, and preparation methods.",
       "reportSymptomsTitle": "6. Report Symptoms",
       "reportSymptomsDesc": "Log adverse reactions with instant zero-latency emergency triage.",
-      "aiAnalysisTitle": "7. AI Food Analysis",
-      "aiAnalysisDesc": "Synthesize medical profile, meals, and symptoms with clinical AI.",
+      "aiAnalysisTitle": "7. My Health Insights",
+      "aiAnalysisDesc": "Deterministic clinical cross-matching, missing information audits & statistical recurrence.",
       "healthHistoryTitle": "8. My Health History",
       "healthHistoryDesc": "Explore statistical patterns and repeated meal-symptom timelines."
     }

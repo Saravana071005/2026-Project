@@ -14,7 +14,6 @@ import medicalReportRoutes from './routes/medicalReportRoutes.js';
 import foodDiaryRoutes from './routes/foodDiaryRoutes.js';
 import symptomRoutes from './routes/symptomRoutes.js';
 import aiAnalysisRoutes from './routes/aiAnalysisRoutes.js';
-import aiChatRoutes from './routes/aiChatRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -100,7 +99,6 @@ app.use('/api/medical-reports', requireDbConnection, medicalReportRoutes);
 app.use('/api/food-diary', requireDbConnection, foodDiaryRoutes);
 app.use('/api/symptoms', requireDbConnection, symptomRoutes);
 app.use('/api/ai-analysis', requireDbConnection, aiAnalysisRoutes);
-app.use('/api/ai-chat', requireDbConnection, aiChatRoutes);
 
 // Serve static frontend files if built (for monolithic or production single-service hosting)
 const candidateDistPaths = [

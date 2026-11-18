@@ -1,16 +1,15 @@
 /**
- * AI Personalized Analysis Engine
- * Multi-provider LLM service supporting Google Gemini API, OpenAI API, and Clinical Rule Fallback.
- * Configurable via environment variables (GEMINI_API_KEY, OPENAI_API_KEY, AI_PROVIDER).
- * Analyzes multi-factor relationships and strictly follows the 9-part medical response structure.
+ * Clinical Health Relationship & Risk Analysis Engine
+ * Deterministic clinical rules & statistical pattern evaluation adhering to AAAAI, EAACI, and NIAID protocols.
+ * Formulates high-fidelity 9-part structured clinical analysis without any conversational LLMs or chatbots.
  */
 
 import { checkEmergencySafety } from './medicalSafetyEngine.js';
 
 /**
  * Deterministic Clinical Analysis Engine
- * Formulates high-fidelity 9-part structured analysis when external LLM APIs are unconfigured or unavailable.
- * Follows AAAAI/EAACI guidelines and all medical rules from the user specification.
+ * Formulates high-fidelity 9-part structured analysis using patient clinical records,
+ * food diary logs, reported symptoms, and detected statistical patterns.
  */
 export function generateClinicalRuleAnalysis({
   user = {},
@@ -194,9 +193,9 @@ export function generateClinicalRuleAnalysis({
 
   // 8. Whether medical consultation is recommended
   const isConsultationRecommended = true;
-  let consultationRationale =
+  const consultationRationale =
     'Formal allergy evaluation with an allergist or immunologist is recommended to accurately interpret symptoms, perform validated testing if indicated, and establish an emergency action plan.';
-  let urgency = emergencyCheck.isEmergency ? 'Immediate Emergency' : riskLevel === 'High' ? 'Prompt (Within 24-48h)' : 'Routine Follow-up';
+  const urgency = emergencyCheck.isEmergency ? 'Immediate Emergency' : riskLevel === 'High' ? 'Prompt (Within 24-48h)' : 'Routine Follow-up';
 
   return {
     foodConsumptionSummary: foodSummaryText,
@@ -225,14 +224,11 @@ export function generateClinicalRuleAnalysis({
 }
 
 /**
- * Main AI Analysis Dispatcher
- * Calls Google Gemini API or OpenAI API when configured, otherwise cleanly falls back to the Clinical Rule Engine.
+ * Main Health Relationship Analysis Dispatcher
+ * Purely deterministic clinical rule & statistical dataset analysis engine.
+ * Adheres strictly to AAAAI, EAACI, and NIAID clinical guidelines.
  */
 export async function runPersonalizedAIAnalysis(analysisContext) {
-  const provider = (process.env.AI_PROVIDER || 'gemini').toLowerCase().trim();
-  const geminiKey = process.env.GEMINI_API_KEY;
-  const openaiKey = process.env.OPENAI_API_KEY;
-
   // Pre-check for immediate emergency (zero-latency safety check)
   const allSymptomNames = (analysisContext.symptomRecords || []).map((s) => s.symptomName);
   const emergencyPreCheck = checkEmergencySafety(
@@ -241,24 +237,7 @@ export async function runPersonalizedAIAnalysis(analysisContext) {
     analysisContext.targetSymptom?.additionalNotes || ''
   );
 
-  // If live LLM API is configured, construct prompt and call
-  if (provider === 'gemini' && geminiKey) {
-    try {
-      const geminiResult = await callGeminiAPI(analysisContext, geminiKey, emergencyPreCheck);
-      if (geminiResult) return geminiResult;
-    } catch (err) {
-      console.warn('[AI Analysis] Gemini API call failed, using clinical rule engine fallback:', err.message);
-    }
-  } else if (provider === 'openai' && openaiKey) {
-    try {
-      const openaiResult = await callOpenAIAPI(analysisContext, openaiKey, emergencyPreCheck);
-      if (openaiResult) return openaiResult;
-    } catch (err) {
-      console.warn('[AI Analysis] OpenAI API call failed, using clinical rule engine fallback:', err.message);
-    }
-  }
-
-  // Use the verified Clinical Rules Engine
+  // Formulate deterministic clinical rule & pattern analysis
   const analysis = generateClinicalRuleAnalysis(analysisContext);
   if (emergencyPreCheck.isEmergency) {
     analysis.emergencyWarning = {
@@ -269,164 +248,4 @@ export async function runPersonalizedAIAnalysis(analysisContext) {
     analysis.riskAssessment.level = 'Emergency / Severe';
   }
   return analysis;
-}
-
-/**
- * Call Google Gemini API (gemini-1.5-flash / gemini-2.5-flash) via native fetch
- */
-async function callGeminiAPI(context, apiKey, emergencyPreCheck) {
-  const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-
-  const promptText = buildLLMPrompt(context, emergencyPreCheck);
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: promptText }] }],
-      generationConfig: {
-        responseMimeType: 'application/json',
-        temperature: 0.1, // low temperature for consistent, cautious medical reasoning
-      },
-    }),
-  });
-
-  if (!response.ok) {
-    const errBody = await response.text();
-    throw new Error(`Gemini API responded with status ${response.status}: ${errBody}`);
-  }
-
-  const data = await response.json();
-  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!rawText) throw new Error('Empty text in Gemini response');
-
-  const parsed = JSON.parse(rawText);
-  parsed.aiProvider = 'gemini';
-  parsed.modelUsed = modelName;
-
-  // Always enforce zero-delay emergency check
-  if (emergencyPreCheck.isEmergency) {
-    parsed.emergencyWarning = {
-      isEmergency: true,
-      message: emergencyPreCheck.emergencyMessage,
-      actionPlan: emergencyPreCheck.actionPlan,
-    };
-    parsed.riskAssessment.level = 'Emergency / Severe';
-  }
-
-  return parsed;
-}
-
-/**
- * Call OpenAI API (gpt-4o-mini / gpt-4o) via native fetch
- */
-async function callOpenAIAPI(context, apiKey, emergencyPreCheck) {
-  const modelName = process.env.OPENAI_MODEL || 'gpt-4o-mini';
-  const url = 'https://api.openai.com/v1/chat/completions';
-
-  const promptText = buildLLMPrompt(context, emergencyPreCheck);
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: modelName,
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are an expert Clinical Allergy Decision Support Engine adhering to AAAAI, EAACI, and NIAID guidelines. You provide clear, cautious food allergy and diet analysis. Return ONLY valid JSON adhering strictly to the requested schema. Never diagnose definitively, never prescribe, never advise home challenges.',
-        },
-        { role: 'user', content: promptText },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.1,
-    }),
-  });
-
-  if (!response.ok) {
-    const errBody = await response.text();
-    throw new Error(`OpenAI API responded with status ${response.status}: ${errBody}`);
-  }
-
-  const data = await response.json();
-  const rawText = data?.choices?.[0]?.message?.content;
-  if (!rawText) throw new Error('Empty text in OpenAI response');
-
-  const parsed = JSON.parse(rawText);
-  parsed.aiProvider = 'openai';
-  parsed.modelUsed = modelName;
-
-  if (emergencyPreCheck.isEmergency) {
-    parsed.emergencyWarning = {
-      isEmergency: true,
-      message: emergencyPreCheck.emergencyMessage,
-      actionPlan: emergencyPreCheck.actionPlan,
-    };
-    parsed.riskAssessment.level = 'Emergency / Severe';
-  }
-
-  return parsed;
-}
-
-/**
- * Constructs the standardized LLM prompt requesting the 9-part JSON structure.
- */
-function buildLLMPrompt(context, emergencyPreCheck) {
-  return `
-Analyze the relationship between the patient's medical profile, daily food consumption, and reported symptoms.
-
-PATIENT CONTEXT:
-Name: ${context.user?.name || 'Patient'}
-Age: ${context.user?.age || 'Unknown'}
-Doctor-Confirmed Allergies: ${JSON.stringify(context.confirmedAllergies || [])}
-Suspected Allergies: ${JSON.stringify(context.suspectedAllergies || [])}
-Medical Test Records (sIgE, SPT, CRD): ${JSON.stringify(context.medicalTests || [])}
-Food Consumption Log: ${JSON.stringify(context.foodEntries || [])}
-Reported Symptoms: ${JSON.stringify(context.symptomRecords || [])}
-Statistical Patterns Detected: ${JSON.stringify(context.patterns || {})}
-Emergency Pre-Check Result: ${JSON.stringify(emergencyPreCheck)}
-
-CRITICAL MEDICAL RULES:
-1. SENSITIZATION != CLINICAL ALLERGY: A positive sIgE or SPT wheal indicates immunological sensitization, NOT definitive clinical allergy. Do not treat unconfirmed lab results as confirmed food allergies.
-2. CAUSALITY CAVEAT: Never state that a food definitely caused a reaction based solely on temporal coincidence. Always consider co-ingredients, cross-contact, prep methods, and other potential causes.
-3. WHEAT DIFFERENTIAL: Do not confuse wheat allergy (IgE-mediated rapid reaction) with Celiac Disease (autoimmune mucosal damage) or non-celiac gluten sensitivity.
-4. MEDICAL SAFETY: Never advise deliberate home challenges or unguided elimination diets. Never prescribe medications.
-5. EMERGENCY: If respiratory distress, airway swelling, or multi-system collapse is present, flag immediate emergency.
-
-Return a JSON object with EXACTLY this structure:
-{
-  "foodConsumptionSummary": "string",
-  "relevantMedicalProfile": "string",
-  "detectedAssociations": [
-    {
-      "foodName": "string",
-      "symptomName": "string",
-      "associationStrength": "Doctor-Confirmed Allergy Trigger | Repeated Association (Needs Review) | Possible Association (Single Occurrence) | Sensitization Match (Unconfirmed Clinical Allergy)",
-      "rationale": "string"
-    }
-  ],
-  "possibleExplanations": ["string"],
-  "riskAssessment": {
-    "level": "Low | Moderate | High | Emergency / Severe",
-    "supportingReasons": ["string"]
-  },
-  "missingInformation": ["string"],
-  "safeNextSteps": ["string"],
-  "medicalConsultationRecommended": {
-    "recommended": boolean,
-    "rationale": "string",
-    "urgency": "Immediate Emergency | Prompt (Within 24-48h) | Routine Follow-up | Optional"
-  },
-  "emergencyWarning": {
-    "isEmergency": boolean,
-    "message": "string",
-    "actionPlan": "string"
-  }
-}
-`;
 }

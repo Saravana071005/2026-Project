@@ -39,8 +39,9 @@ Thumbs.db
 *.sw?
 
 # Uploaded medical documents (NEVER COMMIT)
-uploads/reports/
-*/uploads/reports/
+uploads/
+*/uploads/
+!uploads/.gitkeep
 
 # Testing & Coverage
 coverage/

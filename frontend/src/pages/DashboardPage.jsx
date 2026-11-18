@@ -53,11 +53,9 @@ import AIAnalysisDetailModal from '../components/AIAnalysisDetailModal';
 import EmergencyAlertBanner from '../components/EmergencyAlertBanner';
 import DailyFoodDiaryView from '../components/DailyFoodDiaryView';
 import SymptomJournalView from '../components/SymptomJournalView';
-import AIAnalysisView from '../components/AIAnalysisView';
 import HistoryAndPatternsView from '../components/HistoryAndPatternsView';
-import HomepageAIAssistant from '../components/HomepageAIAssistant';
+import HealthInsightsView from '../components/HealthInsightsView';
 import HumanBody3D from '../components/HumanBody3D';
-import VisualAIAssistant from '../components/VisualAIAssistant';
 import {
   SUPPORTED_TEST_TYPES_LIST,
   TEST_SCHEMAS,
@@ -343,7 +341,7 @@ function TestSpecificParametersView({ test }) {
 
 export default function DashboardPage() {
   const { t } = useTranslation();
-  const { user, language, hasCompletedTutorial, completeTutorial, restartTutorial } = useAuth();
+  const { user, language } = useAuth();
 
   // Active Tab: persisted to localStorage (allergies | tests | diary | symptoms | analysis | history | assistant | reports | profile)
   const [activeTab, setActiveTab] = useState(() => {
@@ -427,7 +425,6 @@ export default function DashboardPage() {
         analysesRes,
         dietRes,
         patternsRes,
-        chatRes,
       ] = await Promise.allSettled([
         api.get('/allergies'),
         api.get('/medical-tests'),
@@ -437,7 +434,6 @@ export default function DashboardPage() {
         api.get('/ai-analysis/history'),
         api.get('/ai-analysis/diet-monitoring'),
         api.get('/ai-analysis/patterns'),
-        api.get('/ai-chat/history'),
       ]);
 
       if (allergiesRes.status === 'fulfilled') setAllergies(allergiesRes.value.data.data || []);
@@ -448,7 +444,6 @@ export default function DashboardPage() {
       if (analysesRes.status === 'fulfilled') setAnalyses(analysesRes.value.data.data || []);
       if (dietRes.status === 'fulfilled') setDietMonitoring(dietRes.value.data.data || null);
       if (patternsRes.status === 'fulfilled') setPatterns(patternsRes.value.data.data || null);
-      if (chatRes.status === 'fulfilled') setChatMessages(chatRes.value.data.data || []);
     } catch (err) {
       console.error('Failed to load records:', err);
       setError('Could not load records from MongoDB Atlas. Please check your connection.');
@@ -872,12 +867,12 @@ export default function DashboardPage() {
               <span>{t('common.edit')}</span>
             </button>
             <button
-              onClick={restartTutorial}
+              onClick={() => handleTabChange('analysis')}
               className="px-3 py-2.5 rounded-xl bg-teal-400/30 hover:bg-teal-400/40 text-teal-100 text-xs font-bold transition-all border border-teal-300/40 flex items-center gap-1.5 shadow-xs cursor-pointer"
-              title={t('common.restartTutorial')}
+              title="View Health Insights"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span className="hidden sm:inline">{t('common.help')}</span>
+              <TrendingUp className="w-3.5 h-3.5 text-amber-300" />
+              <span className="hidden sm:inline">Health Insights</span>
             </button>
           </div>
         </div>
@@ -1295,8 +1290,8 @@ export default function DashboardPage() {
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <Sparkles className="w-4 h-4" />
-              <span>{t('nav.analysis')} ({analyses.length})</span>
+              <TrendingUp className="w-4 h-4" />
+              <span>My Health Insights</span>
             </button>
 
             <button
@@ -1326,18 +1321,6 @@ export default function DashboardPage() {
             >
               <HeartPulse className="w-4 h-4" />
               <span>3D Body Map</span>
-            </button>
-
-            <button
-              onClick={() => handleTabChange('assistant')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
-                activeTab === 'assistant'
-                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <Bot className="w-4 h-4" />
-              <span>{t('nav.assistant')}</span>
             </button>
 
             <button
@@ -2384,18 +2367,18 @@ export default function DashboardPage() {
             />
           )}
 
-          {/* TAB 7: AI FOOD ANALYSIS & DIET MONITOR */}
+          {/* TAB 7: MY HEALTH INSIGHTS (Deterministic Rules & Statistical Analytics) */}
           {activeTab === 'analysis' && (
-            <AIAnalysisView
-              analyses={analyses}
+            <HealthInsightsView
+              user={user}
+              allergies={allergies}
+              medicalTests={medicalTests}
+              foodEntries={foodEntries}
+              symptoms={symptoms}
               dietMonitoring={dietMonitoring}
-              onRunAnalysis={handleRunAnalysis}
-              onOpenDetailModal={(report) => {
-                setSelectedAnalysis(report);
-                setIsAnalysisDetailOpen(true);
-              }}
-              onDeleteAnalysis={(report) => openDeleteModal('analysis', report)}
-              loading={loading}
+              patterns={patterns}
+              onRefresh={fetchData}
+              onNavigateTab={handleTabChange}
             />
           )}
 
@@ -2419,11 +2402,6 @@ export default function DashboardPage() {
                 setIsSymptomModalOpen(true);
               }}
             />
-          )}
-
-          {/* TAB: AI HEALTH ASSISTANT CHAT */}
-          {activeTab === 'assistant' && (
-            <HomepageAIAssistant user={user} />
           )}
         </>
       )}
@@ -2513,16 +2491,6 @@ export default function DashboardPage() {
         }}
         report={selectedReportForReview}
         onConfirmedSaved={handleReportConfirmed}
-      />
-
-      {/* Visual AI Assistant - Jarvis-style Cute Healthcare Robot Companion */}
-      <VisualAIAssistant
-        activeTab={activeTab}
-        onNavigateTab={handleTabChange}
-        hasCompletedTutorial={hasCompletedTutorial}
-        onCompleteTutorial={completeTutorial}
-        onRestartTutorial={restartTutorial}
-        userName={user?.name}
       />
     </div>
   );

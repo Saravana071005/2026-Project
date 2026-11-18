@@ -399,10 +399,10 @@ export const confirmReportData = async (req, res) => {
       report.structuredExtractedData = {};
     }
     if (clinicOrLabName !== undefined) {
-      report.structuredExtractedData.clinicOrLabName = clinicOrLabName.trim();
+      report.structuredExtractedData.clinicOrLabName = typeof clinicOrLabName === 'string' ? clinicOrLabName.trim() : clinicOrLabName;
     }
     if (doctorName !== undefined) {
-      report.structuredExtractedData.doctorName = doctorName.trim();
+      report.structuredExtractedData.doctorName = typeof doctorName === 'string' ? doctorName.trim() : doctorName;
     }
     if (!report.auditTrail) {
       report.auditTrail = [];
