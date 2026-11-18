@@ -63,7 +63,7 @@ export const getChatHistory = async (req, res) => {
 export const sendMessage = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { message, sessionId = 'default_session' } = req.body;
+    const { message, sessionId = 'default_session', provider } = req.body;
 
     if (!message || !message.trim()) {
       return res.status(400).json({
@@ -91,10 +91,11 @@ export const sendMessage = async (req, res) => {
       content: h.content,
     }));
 
-    // 3. Process message using Multi-Provider Architecture (Gemini, OpenAI, Grounded Fallback)
+    // 3. Process message using Multi-Provider Architecture (OpenAI, Gemini, August AI, Grounded Fallback)
     const result = await processAIChatMessageWithMultiProvider({
       userId,
       userMessage: message.trim(),
+      requestedProvider: provider,
       chatHistory: chronologicalHistory,
       user: {
         name: userDoc?.name || req.user.name,

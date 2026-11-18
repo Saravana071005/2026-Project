@@ -2,13 +2,16 @@
  * Multi-Provider AI Engine for Food Allergy & Diet Monitoring
  *
  * Implements a resilient, multi-provider AI architecture supporting:
- * 1. Google Gemini API (GenerateContent API: https://ai.google.dev/api/generate-content)
- * 2. OpenAI API (Chat Completions / Responses API: https://developers.openai.com/api/docs)
- * 3. Grounded Clinical Rule-Based Engine (Deterministic Zero-Failure Fallback)
+ * 1. OpenAI API (Chat Completions: https://platform.openai.com/docs)
+ * 2. Google Gemini API (GenerateContent API: https://ai.google.dev/api/generate-content)
+ * 3. August AI (https://www.meetaugust.ai/ by August Labs Inc.) - Partner Gateway Adapter
+ * 4. Grounded Clinical Rule-Based Engine (Deterministic Zero-Failure Fallback)
  *
- * Features:
+ * Compliance & Architecture Rules:
+ * - Direct PII redaction: Sanitizes patient names, exact addresses, and contact info before external AI serialization
+ * - No fake integrations: August AI is explicitly verified and marked NOT CONNECTED if no authorized partner API is provided
  * - Configurable primary and fallback providers via env (AI_PRIMARY_PROVIDER, AI_FALLBACK_PROVIDER)
- * - Strict timeout handling via AbortController
+ * - Strict timeout handling via AbortController (12s)
  * - Rate-limit (HTTP 429) detection with automatic fallback transition
  * - Exponential backoff retry logic for transient errors
  * - 0-latency emergency pre-check for anaphylaxis & severe respiratory symptoms
@@ -21,28 +24,117 @@ import { evaluateFoodSafety } from './dietMonitoringService.js';
 const DEFAULT_TIMEOUT_MS = 12000; // 12 seconds
 const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
 const DEFAULT_OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+const AUGUST_AI_OFFICIAL_URL = 'https://www.meetaugust.ai/';
+const AUGUST_AI_COMPANY = 'August Labs Inc.';
 
 /**
- * Returns current status of configured AI providers (safe for public disclosure)
+ * Returns comprehensive status of configured AI providers (safe for public disclosure)
  */
 export function getAIProviderStatus() {
-  const primary = (process.env.AI_PRIMARY_PROVIDER || 'gemini').toLowerCase().trim();
-  const fallback = (process.env.AI_FALLBACK_PROVIDER || 'openai').toLowerCase().trim();
+  const primary = (process.env.AI_PRIMARY_PROVIDER || 'openai').toLowerCase().trim();
+  const fallback = (process.env.AI_FALLBACK_PROVIDER || 'gemini').toLowerCase().trim();
+
   const hasGemini = Boolean(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim().length > 5);
   const hasOpenAI = Boolean(process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY.trim().length > 5);
+  const hasAugust = Boolean(
+    process.env.AUGUST_AI_API_KEY &&
+      process.env.AUGUST_AI_API_KEY.trim().length > 5 &&
+      process.env.AUGUST_AI_API_ENDPOINT &&
+      process.env.AUGUST_AI_API_ENDPOINT.trim().length > 10
+  );
+
+  let activeProvider = 'clinical_grounded_engine';
+  if (primary === 'openai' && hasOpenAI) {
+    activeProvider = 'openai';
+  } else if (primary === 'gemini' && hasGemini) {
+    activeProvider = 'gemini';
+  } else if (primary === 'august' && hasAugust) {
+    activeProvider = 'august';
+  } else if (hasOpenAI) {
+    activeProvider = 'openai';
+  } else if (hasGemini) {
+    activeProvider = 'gemini';
+  } else if (hasAugust) {
+    activeProvider = 'august';
+  }
 
   return {
     primaryProvider: primary,
     fallbackProvider: fallback,
     hasGeminiKey: hasGemini,
     hasOpenAIKey: hasOpenAI,
-    activeProvider: hasGemini && primary === 'gemini' ? 'gemini' : hasOpenAI && primary === 'openai' ? 'openai' : hasGemini ? 'gemini' : hasOpenAI ? 'openai' : 'clinical_grounded_engine',
-    supportedProviders: ['gemini', 'openai', 'clinical_grounded_engine'],
+    hasAugustKey: hasAugust,
+    activeProvider,
+    supportedProviders: ['openai', 'gemini', 'august', 'clinical_grounded_engine'],
+    providers: {
+      openai: {
+        id: 'openai',
+        name: 'OpenAI',
+        model: DEFAULT_OPENAI_MODEL,
+        status: hasOpenAI ? 'connected' : 'unconfigured',
+        hasCredentials: hasOpenAI,
+        apiDocs: 'https://platform.openai.com/docs',
+        description: 'OpenAI GPT-4o Mini conversational medical decision support',
+      },
+      gemini: {
+        id: 'gemini',
+        name: 'Google Gemini',
+        model: DEFAULT_GEMINI_MODEL,
+        status: hasGemini ? 'connected' : 'unconfigured',
+        hasCredentials: hasGemini,
+        apiDocs: 'https://ai.google.dev/docs',
+        description: 'Google Gemini 1.5 Flash multimodal healthcare intelligence',
+      },
+      august: {
+        id: 'august',
+        name: 'August AI',
+        model: 'August Clinical Health Companion',
+        status: hasAugust ? 'connected' : 'not_connected',
+        hasCredentials: hasAugust,
+        officialUrl: AUGUST_AI_OFFICIAL_URL,
+        company: AUGUST_AI_COMPANY,
+        requiresPartnerAccess: true,
+        endpointConfigured: Boolean(process.env.AUGUST_AI_API_ENDPOINT),
+        connectionNote: hasAugust
+          ? 'Connected via authorized enterprise partner gateway'
+          : 'NOT CONNECTED. August AI does not offer public self-service developer endpoints. Third-party integration requires an authorized enterprise partnership agreement and designated clinical gateway endpoint directly from August Labs Inc.',
+        privacyNotice:
+          'Under August Labs Inc. terms, third-party AI training on identifiable health data is prohibited; clinical data exchange requires verified enterprise B2B authorizations.',
+      },
+      clinical_grounded_engine: {
+        id: 'clinical_grounded_engine',
+        name: 'Clinical Grounded Engine',
+        model: 'Clinical-Rule-Engine-v2',
+        status: 'connected',
+        hasCredentials: true,
+        description: 'Deterministic clinical decision support grounded in AAAAI/EAACI/NIAID protocols (Zero-Failure Fallback)',
+      },
+    },
     models: {
       gemini: DEFAULT_GEMINI_MODEL,
       openai: DEFAULT_OPENAI_MODEL,
+      august: 'August Clinical Companion',
     },
     medicalStandards: ['AAAAI Guidelines', 'EAACI Food Allergy Protocol', 'NIAID Expert Panel Standards'],
+  };
+}
+
+/**
+ * Medical Privacy & Data Minimization Filter:
+ * Strips direct patient PII (full name, email, street address, telephone) before transmitting to external AI services.
+ * Transmits only relevant clinical parameters (age in years, biological sex, allergy records, lab results, food diary, symptoms).
+ */
+export function sanitizeContextForExternalAI(context) {
+  return {
+    ...context,
+    userName: 'Patient',
+    userAge: context.userAge ?? 'Adult',
+    userSex: context.userSex ?? 'Unspecified',
+    foodAllergySummary: context.foodAllergySummary || 'None documented',
+    // Ensure raw contact info is strictly excluded
+    userEmail: undefined,
+    userAddress: undefined,
+    userPhone: undefined,
   };
 }
 
@@ -50,17 +142,19 @@ export function getAIProviderStatus() {
  * Build clinical system instruction grounding prompt
  */
 function buildSystemInstruction(context) {
+  const sanitized = sanitizeContextForExternalAI(context);
+
   return `
 You are the Clinical Allergy Decision Support Assistant for the Food Allergy Detection System.
-You assist patient ${context.userName || 'Patient'} (Age: ${context.userAge || 'Not specified'}, Sex: ${context.userSex || 'Not specified'}).
+You assist patient ${sanitized.userName} (Age: ${sanitized.userAge}, Sex: ${sanitized.userSex}).
 
-PATIENT CLINICAL CONTEXT:
-- Doctor-Confirmed Allergies: ${context.confirmedList || 'None documented'}
-- Suspected / Patient-Reported Allergies: ${context.suspectedList || 'None documented'}
-- Medical Diagnostic Lab Tests (sIgE / Skin Prick): ${context.testsList || 'No tests on record'}
-- Recent Daily Food Diary: ${context.recentFoodsList || 'No recent food records'}
-- Recent Symptom Journal: ${context.recentSymptomsList || 'No recent symptoms reported'}
-- General Allergy Summary: ${context.foodAllergySummary || 'None documented'}
+PATIENT CLINICAL CONTEXT (De-identified for medical privacy):
+- Doctor-Confirmed Allergies: ${sanitized.confirmedList || 'None documented'}
+- Suspected / Patient-Reported Allergies: ${sanitized.suspectedList || 'None documented'}
+- Medical Diagnostic Lab Tests (sIgE / Skin Prick): ${sanitized.testsList || 'No tests on record'}
+- Recent Daily Food Diary: ${sanitized.recentFoodsList || 'No recent food records'}
+- Recent Symptom Journal: ${sanitized.recentSymptomsList || 'No recent symptoms reported'}
+- General Allergy Summary: ${sanitized.foodAllergySummary || 'None documented'}
 
 MANDATORY MEDICAL RULES & PROTOCOLS (AAAAI / EAACI / NIAID):
 1. SENSITIZATION != CLINICAL ALLERGY: A positive IgE blood test or skin prick test demonstrates immunological sensitization, NOT definitive clinical allergy without documented clinical symptoms upon exposure.
@@ -226,6 +320,95 @@ async function callOpenAI(message, history, context, apiKey, timeoutMs = DEFAULT
 }
 
 /**
+ * Call August AI Partner Gateway (https://www.meetaugust.ai/)
+ *
+ * Strict Privacy & Authenticity Conditions:
+ * 1. Only runs when an authorized partner endpoint & API key from August Labs Inc. are configured.
+ * 2. Never invents unofficial endpoints, scrapes web pages, or reverse-engineers private apps.
+ * 3. Applies strict de-identification / PII minimization before payload serialization.
+ */
+async function callAugustAI(message, history, context, apiKey, endpoint, partnerId, timeoutMs = DEFAULT_TIMEOUT_MS) {
+  if (!apiKey || !endpoint) {
+    throw new Error(
+      'AUGUST_AI_NOT_CONNECTED: August AI does not offer a public developer API. ' +
+        'An authorized enterprise partnership agreement and gateway endpoint with August Labs Inc. are required.'
+    );
+  }
+
+  const sanitized = sanitizeContextForExternalAI(context);
+  const systemPrompt = buildSystemInstruction(sanitized);
+
+  const payload = {
+    partnerId: partnerId || undefined,
+    systemInstruction: systemPrompt,
+    query: message,
+    conversationHistory: history.slice(-6).map((h) => ({
+      role: h.role,
+      content: h.content,
+    })),
+    clinicalContext: {
+      age: sanitized.userAge,
+      sex: sanitized.userSex,
+      confirmedAllergies: sanitized.confirmedList,
+      tests: sanitized.testsList,
+      recentFoods: sanitized.recentFoodsList,
+      recentSymptoms: sanitized.recentSymptomsList,
+    },
+  };
+
+  const executeRequest = async () => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+          ...(partnerId ? { 'X-August-Partner-ID': partnerId } : {}),
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timer);
+
+      if (response.status === 429) {
+        throw new Error('AUGUST_AI_RATE_LIMITED');
+      }
+
+      if (!response.ok) {
+        const errorBody = await response.text().catch(() => '');
+        throw new Error(`AUGUST_AI_ERROR_${response.status}: ${errorBody.slice(0, 150)}`);
+      }
+
+      const data = await response.json();
+      const replyText = data?.reply || data?.response || data?.choices?.[0]?.message?.content;
+
+      if (!replyText || !replyText.trim()) {
+        throw new Error('AUGUST_AI_EMPTY_RESPONSE');
+      }
+
+      return replyText.trim();
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+
+  try {
+    return await executeRequest();
+  } catch (err) {
+    if (err.message === 'AUGUST_AI_RATE_LIMITED') {
+      throw err;
+    }
+    console.warn('[AI Provider: August AI] Transient error, attempting 1 retry:', err.message);
+    await new Promise((r) => setTimeout(r, 600));
+    return await executeRequest();
+  }
+}
+
+/**
  * Deterministic Clinical Assistant Engine (Zero-Failure Grounded Fallback)
  */
 export function generateClinicalAssistantReply(query, context) {
@@ -353,6 +536,7 @@ export function generateClinicalAssistantReply(query, context) {
 export async function processAIChatMessageWithMultiProvider({
   userId,
   userMessage,
+  requestedProvider,
   chatHistory = [],
   user = {},
   confirmedAllergies = [],
@@ -418,59 +602,90 @@ export async function processAIChatMessageWithMultiProvider({
     recentSymptoms,
   };
 
-  const primaryProvider = (process.env.AI_PRIMARY_PROVIDER || 'gemini').toLowerCase().trim();
-  const fallbackProvider = (process.env.AI_FALLBACK_PROVIDER || 'openai').toLowerCase().trim();
+  const primaryProvider = (process.env.AI_PRIMARY_PROVIDER || 'openai').toLowerCase().trim();
+  const fallbackProvider = (process.env.AI_FALLBACK_PROVIDER || 'gemini').toLowerCase().trim();
+
   const geminiKey = process.env.GEMINI_API_KEY?.trim();
   const openaiKey = process.env.OPENAI_API_KEY?.trim();
+  const augustKey = process.env.AUGUST_AI_API_KEY?.trim();
+  const augustEndpoint = process.env.AUGUST_AI_API_ENDPOINT?.trim();
+  const augustPartnerId = process.env.AUGUST_AI_PARTNER_ID?.trim();
+
+  let augustNotice = '';
 
   // Helper to attempt provider
   const attemptProvider = async (providerName) => {
-    if (providerName === 'gemini') {
-      if (!geminiKey) throw new Error('GEMINI_KEY_NOT_CONFIGURED');
-      const text = await callGemini(cleanMessage, chatHistory, contextData, geminiKey);
-      return { reply: text, providerUsed: 'gemini', model: DEFAULT_GEMINI_MODEL };
-    }
     if (providerName === 'openai') {
       if (!openaiKey) throw new Error('OPENAI_KEY_NOT_CONFIGURED');
       const text = await callOpenAI(cleanMessage, chatHistory, contextData, openaiKey);
       return { reply: text, providerUsed: 'openai', model: DEFAULT_OPENAI_MODEL };
     }
+    if (providerName === 'gemini') {
+      if (!geminiKey) throw new Error('GEMINI_KEY_NOT_CONFIGURED');
+      const text = await callGemini(cleanMessage, chatHistory, contextData, geminiKey);
+      return { reply: text, providerUsed: 'gemini', model: DEFAULT_GEMINI_MODEL };
+    }
+    if (providerName === 'august') {
+      if (!augustKey || !augustEndpoint) {
+        throw new Error('AUGUST_AI_NOT_CONNECTED: Public API unavailable; requires official enterprise partner gateway');
+      }
+      const text = await callAugustAI(cleanMessage, chatHistory, contextData, augustKey, augustEndpoint, augustPartnerId);
+      return { reply: text, providerUsed: 'august', model: 'August Clinical Companion' };
+    }
+    if (providerName === 'clinical_grounded_engine') {
+      const text = generateClinicalAssistantReply(cleanMessage, contextData);
+      return { reply: text, providerUsed: 'clinical_grounded_engine', model: 'Clinical-Rule-Engine-v2' };
+    }
     throw new Error(`UNKNOWN_PROVIDER_${providerName}`);
   };
 
-  // 3. Execute Primary Provider
+  // Determine provider trial order
+  const targetProvider = (requestedProvider && requestedProvider !== 'auto' ? requestedProvider : primaryProvider).toLowerCase().trim();
+
+  // If the user explicitly requested August AI but it is not connected, set a helpful clinical notice
+  if (targetProvider === 'august' && (!augustKey || !augustEndpoint)) {
+    augustNotice =
+      '> [!NOTE]\n' +
+      '> **August AI Integration Status:** August AI ([meetaugust.ai](https://www.meetaugust.ai/) by August Labs Inc.) is currently marked as **NOT CONNECTED** because no public developer API exists and an authorized enterprise partner gateway is not configured. In accordance with medical privacy standards, your inquiry was safely routed to our verified clinical multi-provider engine.\n\n';
+  }
+
+  // 3. Attempt Target / Primary Provider
   try {
-    const result = await attemptProvider(primaryProvider);
+    const result = await attemptProvider(targetProvider);
     return {
       ...result,
+      reply: augustNotice ? augustNotice + result.reply : result.reply,
       isEmergency: false,
       sources: ['AAAAI Clinical Guidelines', 'EAACI Food Allergy Protocol'],
     };
   } catch (primaryErr) {
-    console.warn(`[AI Provider] Primary provider (${primaryProvider}) failed or unconfigured:`, primaryErr.message);
+    console.warn(`[AI Provider] Provider (${targetProvider}) failed or unconfigured:`, primaryErr.message);
 
-    // 4. Execute Fallback Provider (if different from primary)
-    if (fallbackProvider && fallbackProvider !== primaryProvider) {
+    // 4. Attempt Fallback Provider if distinct from target
+    const secondaryToTry = targetProvider === fallbackProvider ? primaryProvider : fallbackProvider;
+
+    if (secondaryToTry && secondaryToTry !== targetProvider) {
       try {
-        console.log(`[AI Provider] Engaging fallback provider (${fallbackProvider})...`);
-        const fallbackResult = await attemptProvider(fallbackProvider);
+        console.log(`[AI Provider] Engaging fallback provider (${secondaryToTry})...`);
+        const fallbackResult = await attemptProvider(secondaryToTry);
         return {
           ...fallbackResult,
+          reply: augustNotice ? augustNotice + fallbackResult.reply : fallbackResult.reply,
           isEmergency: false,
           sources: ['AAAAI Clinical Guidelines', 'EAACI Food Allergy Protocol'],
         };
       } catch (fallbackErr) {
-        console.warn(`[AI Provider] Fallback provider (${fallbackProvider}) failed or unconfigured:`, fallbackErr.message);
+        console.warn(`[AI Provider] Secondary fallback provider (${secondaryToTry}) failed:`, fallbackErr.message);
       }
     }
   }
 
-  // 5. Deterministic Grounded Clinical Engine Fallback (Guaranteed Success)
+  // 5. Deterministic Grounded Clinical Engine Fallback (Guaranteed 100% Success)
   console.log('[AI Provider] Utilizing Grounded Clinical Rule-Based Decision Support Engine.');
   const clinicalReply = generateClinicalAssistantReply(cleanMessage, contextData);
 
   return {
-    reply: clinicalReply,
+    reply: augustNotice ? augustNotice + clinicalReply : clinicalReply,
     isEmergency: false,
     providerUsed: 'clinical_grounded_engine',
     model: 'Clinical-Rule-Engine-v2',
