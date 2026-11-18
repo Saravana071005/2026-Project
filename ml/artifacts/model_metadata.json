@@ -1,0 +1,110 @@
+{
+  "model_name": "Random Forest (Balanced)",
+  "training_date": "2026-11-19T04:00:00Z",
+  "algorithm": "RandomForestClassifier",
+  "framework": "scikit-learn 1.9.1 / Python 3.11.9",
+  "dataset_name": "Food Allergy Prediction & Clinical Risk Stratification Dataset",
+  "dataset_source": "https://github.com/RuthvikUppala30/food-allergy-dataset",
+  "total_dataset_records": 10000,
+  "train_records": 7000,
+  "validation_records": 1500,
+  "test_records": 1500,
+  "features": {
+    "numerical": [
+      "Age",
+      "Food_Frequency",
+      "IgE_Levels",
+      "Severity_Score"
+    ],
+    "categorical": [
+      "Gender",
+      "Family_History",
+      "Previous_Reaction",
+      "Symptoms",
+      "Food_Type",
+      "Medical_Conditions"
+    ],
+    "total_encoded_features": 26
+  },
+  "top_feature_importances": {
+    "IgE_Levels": 0.6416908670157228,
+    "Severity_Score": 0.28434951220573235,
+    "Age": 0.018026059668187194,
+    "Food_Frequency": 0.014752958617257643,
+    "Gender_Male": 0.002243617542470671,
+    "Symptoms_Skin rash": 0.0021381943445129025,
+    "Gender_Female": 0.0020886936178765524,
+    "Gender_Other": 0.002067323251276045,
+    "Previous_Reaction_Severe": 0.0020315874510075504,
+    "Previous_Reaction_Mild": 0.002015350625510657,
+    "Symptoms_No symptoms": 0.0020058251933644626,
+    "Medical_Conditions_None": 0.0019695983729304724,
+    "Medical_Conditions_Asthma": 0.0019550502440423357,
+    "Previous_Reaction_None": 0.001953420824372617,
+    "Medical_Conditions_Eczema": 0.0019063740461983851
+  },
+  "candidate_comparison": {
+    "Logistic Regression (Balanced)": {
+      "val_accuracy": 0.9486666666666667,
+      "val_balanced_accuracy": 0.9582616013332527,
+      "val_precision": 0.9969183359013868,
+      "val_recall": 0.9465983906364301,
+      "val_f1": 0.9711069418386492,
+      "val_macro_f1": 0.8706280977849963,
+      "val_roc_auc": 0.9922391934481412,
+      "val_pr_auc": 0.9992444406795498
+    },
+    "Random Forest (Balanced)": {
+      "val_accuracy": 1.0,
+      "val_balanced_accuracy": 1.0,
+      "val_precision": 1.0,
+      "val_recall": 1.0,
+      "val_f1": 1.0,
+      "val_macro_f1": 1.0,
+      "val_roc_auc": 1.0,
+      "val_pr_auc": 1.0
+    },
+    "Gradient Boosting": {
+      "val_accuracy": 1.0,
+      "val_balanced_accuracy": 1.0,
+      "val_precision": 1.0,
+      "val_recall": 1.0,
+      "val_f1": 1.0,
+      "val_macro_f1": 1.0,
+      "val_roc_auc": 1.0,
+      "val_pr_auc": 1.0
+    },
+    "Multi-Layer Perceptron (MLP)": {
+      "val_accuracy": 0.9946666666666667,
+      "val_balanced_accuracy": 0.9733184460786201,
+      "val_precision": 0.9949016751638747,
+      "val_recall": 0.9992684711046086,
+      "val_f1": 0.997080291970803,
+      "val_macro_f1": 0.9831555306007861,
+      "val_roc_auc": 0.9997744910923982,
+      "val_pr_auc": 0.9999780999566267
+    }
+  },
+  "test_metrics": {
+    "accuracy": 1.0,
+    "balanced_accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score_allergic": 1.0,
+    "macro_f1_score": 1.0,
+    "roc_auc": 1.0,
+    "pr_auc": 1.0,
+    "confusion_matrix": {
+      "true_negatives": 133,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_positives": 1367
+    }
+  },
+  "limitations": [
+    "Model predicts probability of Type I IgE-mediated allergy risk; does not replace oral food challenges or in-vivo physician consultation.",
+    "Imbalanced target distribution in source dataset (91.2% positive vs 8.8% negative).",
+    "Performance subject to regional dietary differences and non-IgE mediated intolerances (e.g., celiac disease or FPIES).",
+    "No clinical validation study on pediatric cohort < 5 years of age."
+  ]
+}

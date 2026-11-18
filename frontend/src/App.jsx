@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import DatasetTransparencySection from './components/DatasetTransparencySection';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -112,6 +113,11 @@ function AppContent() {
         {activePage === 'dashboard' && isAuthenticated && <DashboardPage />}
         {activePage === 'not_found' && <NotFoundPage setActivePage={handlePageChange} />}
       </main>
+
+      {/* Datasets & Research Sources Section at bottom of website above footer */}
+      {(activePage === 'home' || activePage === 'dashboard') && (
+        <DatasetTransparencySection />
+      )}
 
       <Footer />
     </div>

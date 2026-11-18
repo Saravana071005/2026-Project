@@ -100,6 +100,25 @@ export default function Navbar({ activePage, setActivePage }) {
                 <span className="hidden sm:inline">Home</span>
               </button>
 
+              {/* Datasets & Research Sources Link */}
+              <button
+                onClick={() => {
+                  if (activePage !== 'home' && activePage !== 'dashboard') {
+                    setActivePage('home');
+                    setTimeout(() => {
+                      document.getElementById('datasets-and-research-sources')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  } else {
+                    document.getElementById('datasets-and-research-sources')?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-700 hover:text-teal-700 hover:bg-teal-50 transition-all cursor-pointer"
+                title="Datasets & Research Sources"
+              >
+                <Database className="w-4 h-4 text-teal-600" />
+                <span className="hidden lg:inline">Datasets & ML</span>
+              </button>
+
               {isAuthenticated ? (
                 <>
                   <button

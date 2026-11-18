@@ -1,0 +1,1501 @@
+Age,Food_Frequency,IgE_Levels,Severity_Score,Gender,Family_History,Previous_Reaction,Symptoms,Food_Type,Medical_Conditions,Allergic
+11,2,878.545794898539,5,Male,Yes,None,Skin rash,Gluten,Eczema,1
+73,2,976.8729632100216,6,Other,No,Mild,Nausea,Eggs,None,1
+19,19,224.59202941507797,6,Other,Yes,Mild,Skin rash,Seafood,Eczema,1
+20,28,843.3201083993043,6,Female,No,Moderate,Breathing issues,Nuts,Asthma,1
+57,22,353.6910484993221,0,Male,Yes,Severe,No symptoms,Seafood,None,1
+71,2,965.745780116746,2,Male,No,Mild,Breathing issues,Dairy,None,1
+48,23,241.2780821495968,6,Female,Yes,Severe,No symptoms,Gluten,Asthma,1
+65,17,139.7764923213773,3,Female,Yes,None,Skin rash,Seafood,None,0
+74,21,308.4209859525626,8,Male,Yes,None,Skin rash,Dairy,None,1
+65,2,108.8522911400228,2,Male,Yes,Moderate,Swelling,Eggs,Asthma,0
+37,1,367.4174826929846,9,Other,No,Mild,Breathing issues,Eggs,Eczema,1
+52,1,415.6150426994851,5,Female,Yes,Moderate,No symptoms,Nuts,Eczema,1
+37,20,97.40421111648892,3,Male,No,Severe,Swelling,Dairy,Eczema,0
+29,8,451.80137700801725,8,Female,Yes,None,Skin rash,Gluten,Eczema,1
+41,2,36.6108894521621,3,Male,No,None,Swelling,Eggs,None,0
+65,26,534.8536482917135,6,Other,Yes,None,Breathing issues,Seafood,Eczema,1
+75,25,41.4913138694815,8,Female,No,None,Breathing issues,Seafood,None,1
+15,17,777.0511978803936,2,Female,No,None,Swelling,Eggs,Eczema,1
+58,11,108.86059268138854,1,Other,Yes,Severe,Skin rash,Seafood,Eczema,0
+17,11,982.8703661857592,7,Female,Yes,Moderate,Nausea,Dairy,None,1
+8,14,751.3789973158198,7,Female,No,Severe,Nausea,Nuts,Asthma,1
+49,3,404.6391567892834,1,Male,No,Moderate,Breathing issues,Gluten,Eczema,1
+32,22,254.85595414500892,2,Male,Yes,Mild,Skin rash,Gluten,Asthma,1
+30,11,251.5012700269436,9,Female,No,None,No symptoms,Gluten,Eczema,1
+61,4,335.0473824081706,3,Female,No,Moderate,No symptoms,Eggs,None,1
+25,23,638.7278637147575,6,Other,No,None,Swelling,Gluten,Asthma,1
+55,20,586.9496059279212,6,Male,Yes,None,Breathing issues,Nuts,None,1
+47,5,179.58928764295692,10,Other,Yes,Mild,Nausea,Dairy,None,1
+58,3,621.2469907705454,9,Female,No,Mild,Breathing issues,Nuts,None,1
+67,22,54.82612521543012,9,Female,No,None,Nausea,Eggs,Eczema,1
+8,26,149.59416036892782,5,Female,No,Mild,Nausea,Nuts,Asthma,1
+10,22,14.172738695692743,7,Female,No,Moderate,Swelling,Dairy,Asthma,1
+61,14,349.157203348902,2,Male,Yes,None,Skin rash,Eggs,None,1
+70,3,651.8919314763368,6,Female,Yes,Moderate,Skin rash,Nuts,Eczema,1
+15,20,323.49760629824374,7,Male,No,Severe,No symptoms,Nuts,Eczema,1
+38,17,672.2955671370003,2,Male,Yes,Moderate,Nausea,Gluten,Asthma,1
+14,0,764.5241415152911,10,Other,Yes,Severe,Swelling,Nuts,Asthma,1
+68,22,951.510684576888,10,Female,Yes,Severe,Breathing issues,Seafood,Eczema,1
+18,6,98.50224187170224,8,Female,Yes,Moderate,Swelling,Dairy,Eczema,1
+52,9,133.31355037701712,0,Female,No,None,Skin rash,Gluten,Asthma,0
+26,18,145.54761250041412,9,Other,Yes,Mild,Swelling,Dairy,Asthma,1
+46,17,105.37597455602172,2,Other,No,Moderate,Breathing issues,Nuts,Eczema,0
+24,7,342.0408977483368,6,Female,No,Mild,Breathing issues,Nuts,Eczema,1
+36,23,417.2544984521899,0,Female,No,None,Breathing issues,Seafood,Eczema,1
+79,3,555.8672421215628,9,Male,No,Moderate,Breathing issues,Seafood,Eczema,1
+31,25,421.1694478990482,2,Female,No,Severe,Nausea,Seafood,Eczema,1
+14,27,6.5171052845669655,1,Other,No,Mild,No symptoms,Dairy,None,0
+36,11,486.3058260291669,4,Other,No,Severe,Nausea,Gluten,None,1
+45,2,632.7453017949487,9,Female,Yes,None,Nausea,Gluten,None,1
+6,8,792.65932345618,2,Male,Yes,None,Breathing issues,Dairy,Asthma,1
+17,8,261.3634080408688,3,Male,Yes,Mild,Swelling,Seafood,Asthma,1
+53,8,719.7434731292572,8,Male,Yes,None,Swelling,Gluten,None,1
+77,16,787.470880305903,7,Other,No,Moderate,Swelling,Dairy,Asthma,1
+11,22,385.2318085203525,8,Female,Yes,None,Swelling,Dairy,None,1
+59,22,915.7213738150688,8,Other,Yes,None,Swelling,Dairy,Asthma,1
+49,3,785.896303171611,5,Other,Yes,Mild,Swelling,Eggs,None,1
+57,14,985.8963475592714,9,Other,Yes,None,Swelling,Seafood,Eczema,1
+17,2,191.64690076217897,6,Male,No,Mild,No symptoms,Gluten,Eczema,1
+47,5,223.6772353788051,9,Female,Yes,Severe,Skin rash,Nuts,Eczema,1
+48,11,139.64196530538462,2,Other,Yes,Mild,Swelling,Seafood,None,0
+61,10,295.42871819543853,7,Other,No,Severe,No symptoms,Seafood,None,1
+67,6,279.12449284603633,7,Male,No,Moderate,Nausea,Eggs,Asthma,1
+37,15,493.0852263335141,5,Male,Yes,Severe,Breathing issues,Dairy,None,1
+58,16,263.04337103525205,10,Female,No,Mild,Skin rash,Seafood,None,1
+60,6,922.8147656545618,10,Male,Yes,Severe,Swelling,Nuts,Eczema,1
+12,6,353.8280386731275,8,Other,Yes,None,Skin rash,Gluten,None,1
+55,0,372.80213874978017,1,Female,Yes,None,Breathing issues,Dairy,Asthma,1
+72,18,138.8268727314444,9,Male,Yes,Severe,Skin rash,Eggs,Asthma,1
+23,29,943.245734354766,0,Female,Yes,Moderate,Skin rash,Dairy,Eczema,1
+9,8,539.794483390274,3,Male,Yes,Mild,Breathing issues,Seafood,Eczema,1
+28,28,298.5711884529491,6,Other,Yes,Severe,Skin rash,Eggs,Eczema,1
+64,12,919.491282206849,6,Female,No,Moderate,Swelling,Seafood,Asthma,1
+58,20,514.3906231909642,1,Female,No,Moderate,Breathing issues,Eggs,None,1
+15,21,488.3302268226297,10,Other,Yes,Severe,No symptoms,Gluten,Eczema,1
+37,3,32.00873055658069,5,Female,Yes,None,Breathing issues,Eggs,None,1
+44,4,414.6039539452702,3,Other,Yes,Severe,Nausea,Eggs,None,1
+69,2,315.6119897809127,8,Male,No,None,Breathing issues,Eggs,Asthma,1
+21,6,16.6364471352284,9,Other,No,Moderate,Swelling,Nuts,Eczema,1
+31,27,110.56344475702542,5,Female,Yes,Severe,Skin rash,Eggs,Asthma,1
+8,16,875.6937453463388,4,Other,No,Severe,Swelling,Gluten,None,1
+52,6,89.54216651516226,8,Other,No,Mild,Nausea,Gluten,Eczema,1
+36,25,608.3340579353548,9,Other,Yes,Moderate,Breathing issues,Seafood,Eczema,1
+62,24,366.5859217853737,2,Female,Yes,Severe,No symptoms,Gluten,Eczema,1
+44,2,646.9885241144507,2,Other,No,None,No symptoms,Seafood,None,1
+53,25,709.1251474085702,2,Other,Yes,None,Breathing issues,Gluten,None,1
+25,8,528.9799683840162,8,Female,No,Mild,Nausea,Seafood,None,1
+20,2,316.29133675502817,10,Male,Yes,Severe,Skin rash,Eggs,Eczema,1
+45,3,25.682892448365084,0,Other,Yes,None,Swelling,Dairy,Eczema,0
+37,13,972.80569413052,2,Female,No,Moderate,Swelling,Gluten,Eczema,1
+25,22,381.9139453869794,8,Female,Yes,None,No symptoms,Nuts,None,1
+50,19,159.04136585644267,9,Other,Yes,Mild,Skin rash,Nuts,Asthma,1
+21,6,561.5213431641205,8,Male,Yes,Severe,Nausea,Gluten,Asthma,1
+34,26,257.77475792117696,10,Female,Yes,Mild,Breathing issues,Nuts,Eczema,1
+67,18,838.7077731495451,4,Other,No,Moderate,Nausea,Dairy,Eczema,1
+36,29,605.8382489532506,3,Other,No,None,Skin rash,Dairy,Asthma,1
+72,16,762.2220504896901,9,Other,No,None,Swelling,Gluten,Asthma,1
+38,11,192.41331288151764,0,Female,No,Mild,Breathing issues,Dairy,Eczema,0
+37,8,299.7358520222812,2,Male,Yes,Mild,Nausea,Nuts,Eczema,1
+75,28,985.1555159407912,7,Other,Yes,None,No symptoms,Eggs,Asthma,1
+77,21,48.80217381057211,9,Female,Yes,None,Skin rash,Seafood,None,1
+50,25,966.7657932857376,9,Other,Yes,Moderate,Nausea,Gluten,Asthma,1
+23,10,953.736692037744,2,Other,Yes,Severe,Nausea,Seafood,Asthma,1
+60,15,144.20117218451372,1,Other,Yes,None,Nausea,Seafood,Asthma,0
+44,10,606.583128886754,2,Female,No,Severe,Skin rash,Nuts,Eczema,1
+8,7,630.8742043913115,8,Female,Yes,Severe,Swelling,Nuts,Asthma,1
+77,2,489.72479550840256,5,Female,Yes,Mild,Breathing issues,Nuts,Eczema,1
+56,13,253.4824784719433,3,Female,No,None,Nausea,Gluten,None,1
+69,23,62.71797884971176,9,Male,No,Moderate,Nausea,Dairy,Eczema,1
+52,12,216.9544321059585,9,Female,No,Severe,Swelling,Dairy,Asthma,1
+31,28,263.2702451343066,1,Female,Yes,Severe,Swelling,Gluten,Eczema,1
+35,29,656.6245667084796,7,Female,Yes,None,No symptoms,Dairy,Eczema,1
+16,3,750.8303725430214,2,Other,No,Severe,Breathing issues,Seafood,Eczema,1
+61,19,120.32122113192708,0,Female,Yes,Moderate,Swelling,Nuts,Eczema,0
+42,19,135.3949707751141,1,Male,Yes,Severe,Nausea,Gluten,Eczema,0
+36,25,752.5613604974905,4,Female,No,Mild,Nausea,Seafood,Asthma,1
+67,15,117.79246688875456,1,Female,No,Moderate,Nausea,Dairy,Eczema,0
+65,21,494.9714611299702,8,Female,No,None,No symptoms,Dairy,None,1
+18,12,426.1119516833968,2,Female,Yes,Moderate,Swelling,Eggs,Asthma,1
+36,10,475.7152532733465,3,Male,No,Moderate,Nausea,Gluten,Asthma,1
+37,15,594.5768014315643,7,Other,Yes,None,Skin rash,Nuts,None,1
+68,15,882.0656484046855,1,Female,Yes,Mild,Swelling,Seafood,None,1
+39,3,40.93642470963677,0,Male,Yes,Moderate,Skin rash,Eggs,Eczema,0
+64,1,585.7923636337326,3,Male,Yes,Mild,No symptoms,Nuts,Eczema,1
+38,15,34.680306745449954,10,Female,No,Mild,Breathing issues,Eggs,Eczema,1
+11,23,147.66525042141936,1,Other,Yes,Severe,Skin rash,Eggs,Eczema,0
+37,4,703.8419352435317,5,Male,Yes,Severe,Swelling,Nuts,Asthma,1
+55,18,299.796553075507,1,Other,No,Severe,Skin rash,Dairy,Eczema,1
+24,0,223.5417246243437,7,Other,Yes,Severe,Swelling,Seafood,Asthma,1
+63,18,796.807560672294,3,Female,No,Moderate,Skin rash,Nuts,None,1
+52,27,739.3116970445601,6,Other,Yes,Moderate,Breathing issues,Nuts,Asthma,1
+62,12,22.50888573996408,7,Male,No,Moderate,Swelling,Eggs,Eczema,1
+21,9,132.57530898452052,4,Other,Yes,Moderate,Skin rash,Eggs,Eczema,0
+32,8,997.2023705793484,0,Male,No,None,No symptoms,Seafood,Eczema,1
+41,3,464.0288556745038,1,Other,No,None,Nausea,Dairy,None,1
+13,25,484.62416517703656,3,Female,Yes,None,Nausea,Gluten,Asthma,1
+19,8,881.2918949037244,8,Male,No,Severe,Swelling,Eggs,Asthma,1
+69,27,736.7922979354062,5,Other,No,Severe,Breathing issues,Nuts,Asthma,1
+66,11,938.1605238409264,6,Other,No,Mild,Swelling,Gluten,Eczema,1
+56,4,927.0481945692916,10,Male,No,Mild,No symptoms,Eggs,Asthma,1
+63,4,634.0392674117768,8,Female,No,None,Swelling,Nuts,None,1
+35,22,901.3342390794936,7,Other,Yes,Moderate,Skin rash,Eggs,Asthma,1
+26,0,840.1860450592833,5,Female,No,Severe,Skin rash,Seafood,Asthma,1
+21,12,456.9641175992181,10,Female,Yes,None,Nausea,Nuts,Eczema,1
+68,25,15.462473193274691,2,Other,Yes,None,Swelling,Dairy,Eczema,0
+21,17,178.50951535601865,3,Female,Yes,Mild,Skin rash,Gluten,None,0
+34,12,682.7847945891388,4,Other,Yes,Severe,Nausea,Seafood,None,1
+14,11,462.91394505630086,3,Other,Yes,Severe,No symptoms,Eggs,None,1
+26,28,500.6802460723206,2,Female,No,None,Skin rash,Eggs,Eczema,1
+49,9,358.02430016357863,0,Male,Yes,Moderate,Swelling,Dairy,Eczema,1
+62,26,825.718323850499,6,Female,Yes,Moderate,Skin rash,Eggs,None,1
+33,26,550.0531616327094,6,Female,Yes,None,Swelling,Nuts,Asthma,1
+26,23,561.0347783515526,2,Other,Yes,Severe,Swelling,Seafood,Asthma,1
+70,27,957.5812311265006,0,Male,Yes,None,Swelling,Gluten,Eczema,1
+42,29,884.500248718616,8,Other,No,Mild,Skin rash,Nuts,None,1
+40,16,611.6019965935772,6,Male,Yes,Severe,No symptoms,Nuts,Asthma,1
+18,2,956.7243126120924,0,Other,No,Severe,Skin rash,Nuts,None,1
+33,28,862.8919240124505,5,Female,Yes,Moderate,Breathing issues,Seafood,Eczema,1
+30,2,219.94881980577645,2,Other,No,Moderate,No symptoms,Gluten,Asthma,1
+78,24,774.6470323619127,0,Other,No,Mild,Skin rash,Dairy,None,1
+38,20,99.80637904103656,0,Male,Yes,Moderate,Nausea,Nuts,Eczema,0
+79,0,244.60363961094257,10,Male,Yes,Moderate,Breathing issues,Seafood,Eczema,1
+54,1,388.73878949235575,8,Other,Yes,Severe,Skin rash,Eggs,Asthma,1
+57,23,552.0905976332396,1,Female,No,Moderate,Nausea,Gluten,Eczema,1
+58,10,763.8470495661415,4,Other,No,Severe,Swelling,Gluten,Asthma,1
+30,10,985.9887154081802,2,Female,Yes,None,Swelling,Gluten,Asthma,1
+7,22,436.8889063697662,0,Other,Yes,Severe,Nausea,Nuts,None,1
+49,5,789.6992320243774,10,Other,No,Mild,Breathing issues,Gluten,Eczema,1
+21,27,497.36895200781896,6,Other,No,Moderate,Nausea,Dairy,Eczema,1
+32,19,438.771172944892,0,Female,Yes,Moderate,No symptoms,Gluten,Asthma,1
+15,28,243.71833362197643,8,Other,No,Mild,Skin rash,Nuts,Eczema,1
+7,23,890.1410815272025,2,Female,Yes,Severe,Breathing issues,Eggs,Eczema,1
+48,5,834.460368428584,8,Male,No,Moderate,No symptoms,Seafood,Asthma,1
+17,29,625.4241731681605,1,Male,Yes,Mild,No symptoms,Eggs,None,1
+60,10,230.75348773278847,8,Male,Yes,None,Nausea,Eggs,Eczema,1
+12,18,772.9619860711792,1,Male,Yes,Mild,No symptoms,Nuts,Eczema,1
+41,13,873.0069760802302,10,Female,Yes,Severe,Skin rash,Eggs,None,1
+19,14,995.3638091303584,2,Male,Yes,Severe,Nausea,Gluten,None,1
+64,9,118.7045872956585,9,Other,Yes,Moderate,No symptoms,Gluten,Asthma,1
+71,24,721.2387844410156,6,Female,Yes,None,Breathing issues,Gluten,Asthma,1
+66,0,158.97884381563838,1,Female,Yes,None,Breathing issues,Eggs,Eczema,0
+10,23,666.5139989688208,4,Female,Yes,Mild,Nausea,Dairy,None,1
+13,18,384.4313353659193,5,Other,No,None,Swelling,Nuts,Asthma,1
+12,1,997.1295331316728,10,Other,No,None,No symptoms,Gluten,Asthma,1
+63,7,392.4506401638255,5,Other,No,Severe,Swelling,Gluten,Eczema,1
+53,25,254.8725334201917,2,Female,Yes,Moderate,Breathing issues,Seafood,None,1
+6,14,123.4580638055038,6,Male,No,Mild,Skin rash,Eggs,None,1
+28,8,210.02962762479197,6,Female,No,None,Skin rash,Eggs,Eczema,1
+20,10,472.3761772357621,6,Other,No,Mild,Skin rash,Dairy,None,1
+60,6,686.4801160456583,10,Female,No,Severe,Nausea,Gluten,Asthma,1
+16,4,758.4377051338695,2,Other,Yes,None,Nausea,Seafood,Eczema,1
+70,21,664.5377363336665,3,Male,Yes,Moderate,Breathing issues,Gluten,None,1
+72,19,698.7140038333442,0,Male,No,None,Swelling,Seafood,None,1
+68,4,708.9895997855069,5,Female,Yes,Mild,No symptoms,Nuts,Eczema,1
+35,18,690.6628116045068,9,Female,No,Moderate,Breathing issues,Eggs,Eczema,1
+55,12,492.2010781372,8,Other,No,None,Swelling,Nuts,Asthma,1
+8,5,288.0743181895344,6,Female,No,Moderate,Swelling,Nuts,Eczema,1
+22,9,637.2541236966247,1,Female,No,Moderate,Nausea,Gluten,None,1
+36,0,945.4244378588388,0,Male,No,Severe,Nausea,Gluten,Eczema,1
+56,17,84.94080036942763,6,Female,No,Severe,Skin rash,Nuts,Eczema,1
+5,22,114.6062271331073,0,Male,Yes,Moderate,Swelling,Eggs,None,0
+51,8,227.4418607833389,2,Female,No,None,Breathing issues,Eggs,None,1
+56,14,535.8009399219158,7,Female,No,Mild,Skin rash,Nuts,Asthma,1
+25,24,105.99744759845112,2,Male,Yes,Severe,Nausea,Dairy,Asthma,0
+68,14,52.40702008528546,6,Male,Yes,Severe,Swelling,Dairy,None,1
+12,23,335.05070732583954,9,Male,No,None,Breathing issues,Eggs,Asthma,1
+63,28,523.8599803696051,8,Male,No,None,Nausea,Seafood,None,1
+32,20,875.5333253107304,9,Other,No,Severe,Skin rash,Seafood,Asthma,1
+43,4,903.2462848259876,6,Other,Yes,None,No symptoms,Seafood,Asthma,1
+32,1,567.9906892540943,8,Male,No,Mild,Breathing issues,Dairy,None,1
+31,25,409.5093094826548,8,Female,No,Severe,Swelling,Eggs,Eczema,1
+23,9,341.6586290752982,4,Other,Yes,Moderate,Nausea,Dairy,Asthma,1
+49,26,688.4730864204115,1,Female,No,None,Swelling,Dairy,None,1
+58,7,688.1796648204311,4,Male,No,Mild,No symptoms,Nuts,None,1
+54,1,706.2800250640088,9,Male,Yes,Severe,No symptoms,Seafood,Eczema,1
+47,0,167.7349167207715,6,Male,No,Mild,Nausea,Gluten,Asthma,1
+65,20,727.5495863386038,9,Male,No,None,Swelling,Dairy,Asthma,1
+66,18,765.4248439861657,5,Male,No,Moderate,No symptoms,Gluten,Eczema,1
+32,22,661.4458111854526,8,Male,Yes,Mild,Swelling,Eggs,None,1
+76,7,687.9235136762826,4,Male,No,Mild,Swelling,Dairy,Eczema,1
+21,29,915.9705263633658,0,Male,No,Severe,Nausea,Seafood,None,1
+16,26,583.218791479174,0,Male,Yes,Severe,Skin rash,Dairy,None,1
+22,27,916.5543985238075,9,Female,Yes,Moderate,Swelling,Nuts,Asthma,1
+28,20,843.2079872890865,7,Other,No,Mild,Swelling,Dairy,Asthma,1
+19,18,434.8581825501221,3,Female,Yes,None,Breathing issues,Dairy,None,1
+51,10,219.4488366851953,1,Female,No,None,Breathing issues,Nuts,Eczema,1
+11,5,752.8915066416281,6,Male,No,Moderate,Nausea,Nuts,Eczema,1
+77,28,161.24945788059432,4,Male,Yes,Moderate,No symptoms,Seafood,None,0
+16,25,43.63488884791235,0,Female,Yes,None,Swelling,Gluten,Asthma,0
+37,15,756.9570145793867,4,Male,No,Mild,Breathing issues,Seafood,Asthma,1
+8,25,702.2951424303787,9,Other,Yes,None,No symptoms,Nuts,None,1
+66,24,549.1583114190634,10,Other,No,Mild,No symptoms,Seafood,Asthma,1
+14,3,964.102286208162,5,Male,Yes,Severe,Nausea,Dairy,Eczema,1
+31,1,663.7873705016721,4,Other,Yes,Moderate,Breathing issues,Gluten,Asthma,1
+62,24,989.697225083678,9,Female,No,Mild,Nausea,Dairy,None,1
+66,21,733.1768587138857,5,Male,No,Mild,Breathing issues,Seafood,Asthma,1
+24,5,154.12935959458866,8,Other,Yes,Severe,No symptoms,Gluten,None,1
+45,17,539.9859151444568,9,Male,Yes,Mild,Skin rash,Dairy,None,1
+8,12,630.0498843994666,0,Other,Yes,None,Skin rash,Gluten,None,1
+35,19,317.3982624640253,10,Female,Yes,Moderate,Breathing issues,Seafood,Eczema,1
+26,28,357.5821873788858,6,Other,Yes,Moderate,Skin rash,Eggs,Asthma,1
+10,28,791.3966383849221,6,Other,Yes,Mild,No symptoms,Seafood,Eczema,1
+63,7,203.18335928684195,1,Female,No,Severe,Swelling,Nuts,None,1
+42,13,62.47417356034039,2,Other,No,Severe,Breathing issues,Gluten,Asthma,0
+65,26,159.1747624020676,0,Female,Yes,Moderate,Skin rash,Dairy,Asthma,0
+68,20,796.4634596145854,7,Other,No,Moderate,Swelling,Dairy,Asthma,1
+7,12,182.38492503891928,6,Female,Yes,Severe,Skin rash,Eggs,Asthma,1
+28,25,477.5866079430991,0,Female,Yes,None,Breathing issues,Dairy,Eczema,1
+50,0,893.3141594685643,5,Female,Yes,Moderate,Nausea,Nuts,None,1
+79,8,532.7243536463902,1,Other,Yes,None,No symptoms,Eggs,Eczema,1
+54,10,45.374312734932,7,Other,No,Mild,Swelling,Eggs,Eczema,1
+22,22,528.8676240824665,6,Male,No,Mild,No symptoms,Eggs,Eczema,1
+18,21,649.0286893454195,10,Other,Yes,Moderate,Skin rash,Gluten,None,1
+78,4,765.7486354203477,5,Other,Yes,Mild,Swelling,Dairy,Eczema,1
+70,14,10.636792636493086,0,Female,Yes,Severe,Breathing issues,Nuts,None,0
+15,28,810.0897824717795,10,Female,No,Moderate,Nausea,Gluten,None,1
+55,28,793.4052765258997,1,Female,Yes,None,Breathing issues,Eggs,Asthma,1
+21,13,62.50210051512872,10,Male,No,None,No symptoms,Gluten,Asthma,1
+36,22,379.4104208550452,10,Male,No,Severe,Skin rash,Gluten,Eczema,1
+68,1,338.1869662425887,8,Male,Yes,None,Swelling,Eggs,Eczema,1
+7,5,30.114649200329648,6,Other,No,Severe,Skin rash,Seafood,Asthma,1
+63,7,200.68924215219852,5,Male,Yes,None,No symptoms,Seafood,Asthma,1
+19,19,777.1732228496626,4,Male,Yes,None,Nausea,Dairy,None,1
+19,5,537.7236231691514,1,Other,No,Moderate,Nausea,Nuts,Asthma,1
+43,26,451.35461582244426,8,Other,Yes,None,Nausea,Seafood,Eczema,1
+44,21,34.45299902866768,1,Other,No,Moderate,Swelling,Dairy,Eczema,0
+62,1,557.2161058123208,8,Female,No,Mild,No symptoms,Dairy,None,1
+73,13,539.8896036956171,4,Other,Yes,Mild,Skin rash,Gluten,None,1
+30,12,42.56300961924909,7,Male,Yes,Mild,Swelling,Gluten,None,1
+6,23,644.7766094071168,4,Female,No,Mild,Swelling,Gluten,Asthma,1
+48,6,181.2525726663725,5,Male,Yes,Moderate,Skin rash,Dairy,None,1
+30,28,882.2852227000812,7,Female,Yes,Severe,Skin rash,Eggs,None,1
+65,23,3.643260965243817,5,Other,No,Severe,Skin rash,Eggs,None,1
+75,24,37.51298023200923,4,Other,No,Severe,Skin rash,Gluten,Eczema,0
+39,29,990.3214556486184,1,Female,No,None,Breathing issues,Nuts,None,1
+55,1,685.675819148914,8,Male,Yes,None,No symptoms,Eggs,None,1
+62,7,545.1537582323044,6,Female,No,None,Swelling,Gluten,Eczema,1
+55,13,354.86017576367993,8,Male,No,None,Skin rash,Seafood,Asthma,1
+74,20,768.9355857534813,4,Other,Yes,Mild,Swelling,Nuts,Eczema,1
+33,2,334.8862672229403,1,Male,No,Mild,Skin rash,Dairy,Eczema,1
+52,17,535.4632329783888,5,Female,Yes,None,Nausea,Seafood,None,1
+7,7,909.102516450656,8,Male,No,Moderate,Nausea,Seafood,None,1
+31,28,217.16672393739228,2,Female,Yes,Moderate,Skin rash,Seafood,Asthma,1
+30,12,986.7480872242256,7,Female,No,Severe,Breathing issues,Nuts,Asthma,1
+52,25,692.3658451268522,0,Female,No,Moderate,No symptoms,Gluten,None,1
+48,1,19.91625971536255,6,Other,Yes,Moderate,Swelling,Dairy,None,1
+63,28,464.1285985221752,1,Other,No,Severe,Breathing issues,Gluten,Eczema,1
+50,8,171.18417639651267,10,Other,Yes,Moderate,Skin rash,Nuts,None,1
+56,19,693.0849666053116,10,Female,No,Mild,Swelling,Dairy,None,1
+73,21,542.2827514333467,9,Male,Yes,Mild,Nausea,Nuts,None,1
+53,9,366.7089346282842,0,Other,No,None,Nausea,Eggs,None,1
+58,26,701.2663931178823,10,Male,Yes,None,Skin rash,Nuts,Asthma,1
+10,22,397.7825219354157,9,Other,No,Moderate,No symptoms,Eggs,None,1
+9,20,352.9613214788606,2,Female,No,None,Nausea,Dairy,Asthma,1
+8,28,207.19193413980315,8,Female,Yes,Moderate,Breathing issues,Gluten,Asthma,1
+43,20,505.8177013929135,0,Other,No,Mild,Skin rash,Eggs,Asthma,1
+60,8,653.489399324036,1,Male,No,None,No symptoms,Gluten,Asthma,1
+7,15,393.9219311551783,3,Female,No,Severe,Breathing issues,Eggs,Asthma,1
+20,12,850.1295406281467,7,Female,Yes,Moderate,No symptoms,Nuts,None,1
+55,0,160.5399036029493,0,Male,Yes,None,Breathing issues,Seafood,Eczema,0
+78,2,565.171455442162,0,Male,No,Moderate,Nausea,Eggs,Eczema,1
+8,4,104.59254094882344,6,Male,Yes,None,Skin rash,Eggs,None,1
+10,5,753.4626585959896,10,Other,No,None,Nausea,Nuts,None,1
+8,10,530.0698982698825,3,Female,Yes,None,Swelling,Dairy,Asthma,1
+35,15,494.1706823250107,1,Male,Yes,Severe,Breathing issues,Dairy,Eczema,1
+48,0,546.1551865950877,3,Male,No,Moderate,Swelling,Gluten,Eczema,1
+49,21,280.8515148167551,6,Male,No,Moderate,Skin rash,Nuts,Asthma,1
+23,18,481.8628948955978,8,Other,Yes,Severe,Breathing issues,Dairy,Eczema,1
+36,15,444.8643762913571,8,Female,No,None,Skin rash,Dairy,Asthma,1
+44,4,292.68992918192686,4,Female,Yes,Moderate,Nausea,Nuts,Asthma,1
+45,1,273.0712820424187,2,Other,No,Severe,Swelling,Eggs,Asthma,1
+71,1,36.762521530687785,7,Male,No,Moderate,Skin rash,Dairy,Eczema,1
+22,29,75.77875539280461,7,Male,Yes,Moderate,Nausea,Gluten,None,1
+74,25,892.6076851788896,7,Female,No,None,Swelling,Seafood,Eczema,1
+47,28,379.92864008594495,5,Female,No,Severe,Nausea,Seafood,Eczema,1
+18,11,261.3787522148695,2,Male,No,Severe,Breathing issues,Eggs,Eczema,1
+14,0,976.0293238352044,0,Male,Yes,None,Breathing issues,Gluten,None,1
+33,12,940.2801489068852,4,Female,Yes,None,No symptoms,Eggs,None,1
+28,4,157.85082718626796,5,Female,Yes,Mild,Skin rash,Dairy,Eczema,1
+77,3,823.6241711757667,8,Male,Yes,Mild,Swelling,Dairy,None,1
+32,0,605.8339328742233,7,Male,No,None,Breathing issues,Nuts,None,1
+5,17,193.8149674397575,7,Male,Yes,Mild,Nausea,Seafood,Eczema,1
+66,20,271.305640162078,6,Male,No,Severe,No symptoms,Seafood,None,1
+29,7,412.39453069904914,5,Other,Yes,None,Breathing issues,Eggs,None,1
+23,20,673.6207922646968,5,Female,No,None,Swelling,Seafood,Asthma,1
+27,3,701.4133946942273,2,Male,Yes,Moderate,Swelling,Dairy,Asthma,1
+51,8,548.4036705915539,6,Other,No,Severe,Breathing issues,Eggs,Asthma,1
+11,6,995.2434412711276,6,Female,Yes,None,No symptoms,Dairy,None,1
+62,26,898.588825438289,1,Other,Yes,Mild,Skin rash,Nuts,Eczema,1
+10,2,196.86800540583565,2,Female,No,Severe,Nausea,Nuts,Asthma,0
+25,13,540.6625312618971,4,Female,No,Severe,No symptoms,Gluten,Eczema,1
+24,18,790.4872185174805,5,Female,No,Mild,Nausea,Nuts,Eczema,1
+6,18,861.9858803487558,8,Female,Yes,Severe,Swelling,Eggs,Eczema,1
+73,28,970.5456558209454,3,Other,No,Mild,Swelling,Nuts,Eczema,1
+36,6,831.219983450763,1,Female,No,None,Swelling,Nuts,Asthma,1
+15,14,842.0233170397977,6,Other,No,Severe,Nausea,Eggs,None,1
+40,3,239.43063506710968,1,Female,Yes,Mild,Swelling,Nuts,Asthma,1
+22,14,891.8748388188725,2,Other,Yes,None,Breathing issues,Seafood,Asthma,1
+67,23,702.5378159466449,9,Other,Yes,Severe,Skin rash,Dairy,Eczema,1
+74,22,583.4877374569801,9,Male,Yes,Severe,No symptoms,Nuts,Eczema,1
+64,24,949.304150901165,6,Other,No,None,Skin rash,Eggs,None,1
+61,2,472.9506907016676,1,Other,No,Mild,Nausea,Nuts,Eczema,1
+30,2,995.4131623499384,2,Other,Yes,Mild,Nausea,Gluten,Eczema,1
+53,7,290.5693828635067,4,Female,Yes,Severe,Skin rash,Nuts,Asthma,1
+5,6,123.622699713346,6,Male,No,Severe,No symptoms,Eggs,None,1
+65,22,645.1829625659929,4,Other,Yes,Moderate,Breathing issues,Gluten,None,1
+18,1,931.0474371107912,5,Female,No,Moderate,Nausea,Nuts,Eczema,1
+47,12,491.27509408968905,7,Male,No,Moderate,Swelling,Dairy,None,1
+58,17,265.92628898838103,2,Male,No,Severe,Breathing issues,Seafood,Eczema,1
+39,4,769.8248523351364,9,Male,No,Severe,Swelling,Dairy,Asthma,1
+30,0,315.3123303009411,2,Other,Yes,Mild,Nausea,Eggs,Eczema,1
+34,28,325.4230813135681,9,Male,Yes,Severe,Breathing issues,Eggs,Asthma,1
+22,22,645.7516818002839,6,Female,No,Mild,Swelling,Dairy,Asthma,1
+34,28,547.3636726692578,1,Male,No,None,Skin rash,Seafood,Eczema,1
+37,29,731.5195418052898,1,Other,Yes,Severe,Breathing issues,Dairy,Eczema,1
+50,22,645.6927011143144,0,Male,No,None,Breathing issues,Nuts,Eczema,1
+40,29,223.3552776538055,3,Female,Yes,Moderate,Breathing issues,Gluten,Asthma,1
+27,16,911.225978432886,9,Female,No,None,Swelling,Nuts,Asthma,1
+58,29,401.2352697368803,2,Male,No,Severe,Breathing issues,Eggs,None,1
+28,6,840.7972707135528,4,Male,Yes,None,Swelling,Gluten,Asthma,1
+10,23,707.7871149622766,7,Male,Yes,Severe,Swelling,Gluten,None,1
+40,22,123.4434084457186,4,Male,No,Mild,Swelling,Dairy,None,0
+58,25,400.6959299734156,0,Other,Yes,None,No symptoms,Gluten,None,1
+40,8,700.953341935627,0,Female,Yes,Mild,Breathing issues,Seafood,Asthma,1
+42,24,431.6183837181858,3,Male,No,Severe,Nausea,Eggs,Asthma,1
+66,17,728.4907178485197,4,Female,No,None,Skin rash,Seafood,Eczema,1
+7,21,744.9878251230962,0,Male,No,Mild,Nausea,Nuts,Asthma,1
+8,3,969.26737686437,2,Other,No,Mild,No symptoms,Gluten,None,1
+44,12,117.22852110066506,7,Female,Yes,Severe,Nausea,Nuts,Asthma,1
+39,16,607.9071366604743,4,Male,No,Moderate,Nausea,Nuts,Asthma,1
+23,2,81.88213221329293,7,Male,Yes,Moderate,Swelling,Seafood,Asthma,1
+64,23,663.2470686296296,1,Male,Yes,None,Skin rash,Eggs,None,1
+39,0,288.00878983011705,6,Female,Yes,None,No symptoms,Eggs,None,1
+5,4,296.02530941131005,6,Male,Yes,Mild,Skin rash,Nuts,Eczema,1
+78,25,178.88393249760838,1,Female,No,Severe,Nausea,Eggs,Asthma,0
+58,27,264.5398255193926,5,Other,No,Severe,No symptoms,Eggs,Eczema,1
+49,21,57.41961111376199,1,Female,No,Severe,No symptoms,Dairy,Eczema,0
+50,26,807.4360033177094,3,Other,Yes,Severe,Nausea,Seafood,Asthma,1
+13,0,371.4676982552616,4,Female,No,None,No symptoms,Nuts,Asthma,1
+46,10,100.2937059610604,4,Other,Yes,None,Breathing issues,Seafood,Eczema,0
+15,19,810.3678684530189,0,Male,No,Severe,No symptoms,Seafood,None,1
+19,0,790.246514666135,3,Female,No,Severe,No symptoms,Dairy,None,1
+6,21,173.42211578178996,9,Male,Yes,Mild,Nausea,Dairy,Asthma,1
+78,27,347.3680395888908,3,Female,Yes,Mild,Breathing issues,Gluten,Eczema,1
+40,8,184.5527917270906,5,Female,No,Moderate,Skin rash,Dairy,None,1
+17,7,334.0271211102458,5,Male,No,Moderate,Swelling,Seafood,Eczema,1
+43,2,903.900844574375,5,Male,No,Severe,Breathing issues,Dairy,Eczema,1
+73,8,520.3459899539023,7,Female,No,None,Swelling,Nuts,None,1
+33,10,649.6453401911148,1,Male,Yes,Mild,Swelling,Dairy,None,1
+77,26,208.9363565581832,9,Other,No,Mild,Skin rash,Dairy,Asthma,1
+61,16,864.2309103885021,3,Other,No,Mild,Skin rash,Nuts,Asthma,1
+24,3,463.4173584161799,4,Other,No,Severe,Swelling,Nuts,Asthma,1
+63,14,828.7122602697012,0,Male,No,Severe,Swelling,Seafood,Eczema,1
+6,0,836.0527055097857,3,Female,Yes,None,Skin rash,Gluten,None,1
+55,15,902.4665382491584,6,Other,Yes,Moderate,Breathing issues,Seafood,None,1
+14,13,47.91280654348563,5,Female,No,Mild,Breathing issues,Seafood,Asthma,1
+48,17,120.06036274389233,4,Female,No,Moderate,Skin rash,Dairy,Eczema,0
+48,26,278.5061259461588,10,Other,Yes,Severe,No symptoms,Nuts,None,1
+46,10,224.09413092225623,2,Male,Yes,None,Breathing issues,Eggs,None,1
+48,14,723.3717470555814,2,Male,No,None,Swelling,Seafood,Eczema,1
+7,18,68.31008392004316,8,Female,Yes,Severe,Skin rash,Eggs,None,1
+72,4,173.5741081178718,6,Female,No,None,Nausea,Eggs,None,1
+27,15,626.1775450642431,8,Other,No,Mild,Swelling,Gluten,None,1
+5,28,215.1910798010448,3,Other,No,None,Skin rash,Gluten,Asthma,1
+59,26,987.3666868865928,8,Male,Yes,Severe,Nausea,Dairy,Asthma,1
+66,19,433.4675828158085,3,Female,No,Mild,Swelling,Eggs,Asthma,1
+70,3,583.8624989346058,5,Male,Yes,Severe,Swelling,Seafood,Asthma,1
+28,18,562.3821148172698,5,Male,Yes,Moderate,Breathing issues,Dairy,None,1
+53,12,178.16701950272272,2,Male,Yes,Mild,Breathing issues,Gluten,Eczema,0
+59,27,233.22463598067444,7,Other,Yes,Severe,Swelling,Eggs,None,1
+13,19,706.7649990476853,0,Male,Yes,Moderate,Breathing issues,Eggs,Asthma,1
+21,13,778.1717649300815,1,Other,Yes,Severe,Breathing issues,Gluten,None,1
+31,27,641.8231520138406,4,Female,Yes,None,No symptoms,Gluten,Asthma,1
+69,27,927.9987021083576,9,Female,Yes,Mild,Skin rash,Gluten,Eczema,1
+79,16,811.9862466561314,3,Female,No,None,Nausea,Dairy,Asthma,1
+21,23,293.5276305829164,10,Female,No,Mild,Skin rash,Dairy,None,1
+43,3,946.9941705933308,8,Other,Yes,Moderate,Skin rash,Dairy,Asthma,1
+58,26,385.8592432863551,10,Male,No,Mild,Skin rash,Seafood,None,1
+67,17,343.65674772972494,9,Other,No,None,Swelling,Seafood,Eczema,1
+54,5,291.9518841591228,7,Male,No,None,No symptoms,Eggs,Asthma,1
+54,16,50.1692130085066,0,Female,No,Mild,Breathing issues,Seafood,None,0
+18,14,50.229250887732704,3,Other,No,Mild,No symptoms,Gluten,None,0
+8,21,686.6614920146468,0,Other,Yes,Mild,Nausea,Eggs,None,1
+23,21,722.020052269189,7,Male,No,Severe,Nausea,Dairy,Eczema,1
+44,19,768.8918743655903,7,Male,Yes,Moderate,No symptoms,Seafood,Eczema,1
+36,6,683.265315629244,1,Other,No,Mild,Breathing issues,Dairy,Eczema,1
+65,27,918.4891374356982,1,Male,Yes,Moderate,Swelling,Nuts,Asthma,1
+51,14,265.4957061723133,6,Male,Yes,Severe,No symptoms,Eggs,Asthma,1
+15,0,521.7992299439734,6,Female,No,Severe,Nausea,Nuts,Asthma,1
+68,2,52.12366529721112,9,Female,No,None,No symptoms,Eggs,Asthma,1
+21,28,643.5750845630558,5,Female,No,Severe,Skin rash,Nuts,None,1
+8,22,657.0512938495743,4,Male,Yes,None,Nausea,Eggs,None,1
+21,13,462.3769186132088,6,Female,No,None,Swelling,Nuts,Eczema,1
+73,21,829.7796956900726,2,Male,No,Moderate,Nausea,Dairy,None,1
+71,15,885.822643485712,10,Male,No,Mild,Swelling,Nuts,Asthma,1
+47,27,257.3165528642981,1,Other,Yes,None,Nausea,Seafood,Eczema,1
+41,25,653.7619829498411,10,Female,Yes,Severe,Breathing issues,Gluten,Eczema,1
+7,2,558.3467328608946,2,Male,No,Mild,Swelling,Eggs,Eczema,1
+41,27,913.8648583619918,10,Other,No,None,Breathing issues,Nuts,Asthma,1
+72,25,631.3113072040067,9,Male,No,None,Breathing issues,Nuts,Asthma,1
+77,17,728.8538211927156,0,Male,Yes,Severe,Swelling,Eggs,Eczema,1
+46,11,455.9161112560374,6,Male,Yes,Severe,Nausea,Nuts,Eczema,1
+19,7,610.8061268013919,4,Female,Yes,Severe,Swelling,Dairy,None,1
+23,8,577.254207168545,3,Male,No,Severe,Nausea,Gluten,Asthma,1
+10,15,846.6485739512373,2,Female,No,None,Breathing issues,Seafood,Eczema,1
+6,28,639.0382795054272,3,Other,No,Moderate,Nausea,Nuts,Eczema,1
+30,5,274.00986479629694,5,Female,Yes,Severe,Skin rash,Gluten,None,1
+55,16,384.2322454825359,3,Female,No,Mild,Skin rash,Seafood,Eczema,1
+20,5,775.8320358922854,3,Male,Yes,Moderate,Skin rash,Gluten,Asthma,1
+33,3,865.8153747828771,8,Female,No,Severe,No symptoms,Eggs,Eczema,1
+79,8,816.1679008970382,8,Other,No,None,Nausea,Dairy,Eczema,1
+53,24,419.98853275592,8,Female,No,Severe,Breathing issues,Seafood,Eczema,1
+47,0,206.3098178938011,1,Male,No,Severe,Swelling,Nuts,Eczema,1
+33,13,485.4239466246967,7,Other,Yes,None,Breathing issues,Nuts,Eczema,1
+30,22,447.43549384566114,5,Other,Yes,None,No symptoms,Seafood,Asthma,1
+32,6,310.6238933048729,8,Male,No,Severe,Skin rash,Eggs,Asthma,1
+37,15,795.9849630178651,2,Other,No,None,Breathing issues,Eggs,None,1
+33,5,123.35487784303946,1,Female,Yes,Severe,Skin rash,Eggs,Eczema,0
+16,17,611.0745508112523,2,Other,No,None,Nausea,Gluten,Asthma,1
+41,26,648.5199842657519,10,Other,Yes,Mild,Breathing issues,Nuts,Eczema,1
+27,23,540.6795126280518,7,Other,No,Moderate,Swelling,Nuts,None,1
+74,9,239.5759542966444,9,Female,No,None,Breathing issues,Seafood,None,1
+27,9,508.8226635150048,8,Female,Yes,None,No symptoms,Eggs,Asthma,1
+41,27,936.9337081378898,6,Other,Yes,Severe,Nausea,Gluten,Eczema,1
+68,1,835.02791751661,3,Female,No,None,No symptoms,Gluten,Eczema,1
+65,27,40.16563683649821,9,Female,Yes,Moderate,Breathing issues,Gluten,Eczema,1
+53,23,391.4481999768832,9,Other,No,Mild,Swelling,Nuts,Eczema,1
+55,12,299.87047117416296,8,Male,No,Mild,Skin rash,Eggs,Asthma,1
+32,8,491.9406812611102,0,Female,No,Mild,Breathing issues,Nuts,None,1
+65,0,939.1137906090394,9,Male,No,None,Nausea,Gluten,Eczema,1
+29,9,792.0522086038023,8,Female,Yes,Moderate,Breathing issues,Nuts,Asthma,1
+78,1,371.35321742157,3,Male,Yes,Severe,Skin rash,Seafood,None,1
+55,18,391.1233395145656,6,Other,Yes,None,Swelling,Eggs,Asthma,1
+17,24,631.1306369931631,0,Male,No,None,No symptoms,Seafood,None,1
+7,8,583.2323344376632,4,Other,Yes,Moderate,Swelling,Dairy,Asthma,1
+11,28,980.4962826519726,0,Other,Yes,Moderate,Skin rash,Gluten,None,1
+52,4,379.40046983502623,10,Female,No,Moderate,No symptoms,Dairy,Eczema,1
+45,6,849.2440032594698,0,Female,No,Severe,Nausea,Dairy,Asthma,1
+20,11,593.265552534967,10,Other,Yes,None,Skin rash,Dairy,Asthma,1
+69,26,226.718634004128,4,Other,No,Severe,Nausea,Nuts,Eczema,1
+42,3,221.5759538210972,3,Female,No,Severe,Breathing issues,Gluten,None,1
+13,21,555.3413331666959,8,Other,No,Severe,Swelling,Dairy,Asthma,1
+54,16,544.1919176358393,7,Male,No,Moderate,No symptoms,Nuts,Eczema,1
+62,2,47.03400018124981,9,Female,No,Mild,Swelling,Seafood,None,1
+74,3,827.1864055283687,6,Female,No,Moderate,Swelling,Nuts,Asthma,1
+12,0,986.7108810177288,9,Other,Yes,Mild,No symptoms,Seafood,Asthma,1
+7,27,399.0983328249004,2,Other,Yes,Severe,Nausea,Gluten,None,1
+73,19,547.2286855266035,5,Female,Yes,None,Nausea,Nuts,Eczema,1
+17,29,421.87428716178056,1,Male,No,Severe,Skin rash,Eggs,Eczema,1
+23,10,419.5597247384429,5,Other,No,Mild,Skin rash,Eggs,Eczema,1
+46,29,992.4269330473664,1,Male,Yes,Moderate,No symptoms,Seafood,Asthma,1
+64,10,570.3852390008315,5,Female,Yes,Mild,No symptoms,Seafood,None,1
+36,24,870.5400191137263,1,Other,No,None,Nausea,Gluten,Asthma,1
+56,14,972.0820698488608,7,Female,Yes,Severe,Nausea,Eggs,None,1
+67,9,655.7078144769501,0,Female,No,Moderate,Breathing issues,Seafood,Eczema,1
+68,16,252.0338023813395,4,Other,Yes,None,Swelling,Eggs,Asthma,1
+55,3,938.3619127927808,6,Female,No,Moderate,No symptoms,Nuts,Asthma,1
+69,9,320.11053146192006,9,Other,Yes,None,Breathing issues,Eggs,None,1
+38,9,562.911157558275,4,Female,Yes,None,Nausea,Dairy,Asthma,1
+29,28,35.333202881557526,1,Female,No,None,No symptoms,Eggs,Eczema,0
+55,12,587.2174347947844,9,Other,No,Mild,Swelling,Dairy,None,1
+49,19,582.6482367790122,7,Male,No,Mild,No symptoms,Eggs,None,1
+53,21,4.161877931124176,2,Other,Yes,Severe,Swelling,Seafood,Asthma,0
+44,29,296.9399526374445,7,Female,Yes,None,Swelling,Dairy,None,1
+9,4,860.7905197961029,8,Other,Yes,None,No symptoms,Gluten,Asthma,1
+29,1,655.2237959316228,7,Female,Yes,Severe,No symptoms,Nuts,Asthma,1
+55,24,559.2026170154332,2,Other,No,Moderate,Breathing issues,Dairy,Eczema,1
+78,18,741.5591553275815,3,Female,No,None,Skin rash,Nuts,Asthma,1
+26,27,937.5063861185936,1,Female,No,Mild,Swelling,Eggs,None,1
+78,18,175.57514678687622,0,Male,No,None,No symptoms,Nuts,Eczema,0
+26,25,23.577305682385624,9,Other,No,None,Skin rash,Nuts,None,1
+61,8,478.8811365697691,5,Other,No,Moderate,Breathing issues,Nuts,Asthma,1
+41,19,860.1464880196495,2,Female,Yes,Severe,Skin rash,Nuts,None,1
+40,24,994.929991991548,5,Male,No,None,No symptoms,Seafood,Asthma,1
+50,27,502.85862136239626,9,Female,Yes,Severe,Breathing issues,Gluten,Asthma,1
+12,22,564.6833762433832,0,Male,Yes,Mild,Skin rash,Dairy,Eczema,1
+27,18,531.371095252215,4,Female,Yes,None,Nausea,Gluten,Asthma,1
+26,26,18.40585127401211,5,Other,Yes,Moderate,No symptoms,Dairy,None,1
+15,28,737.0937496039024,10,Male,Yes,Severe,Nausea,Dairy,None,1
+71,27,213.81328168408925,0,Female,Yes,Moderate,Nausea,Gluten,Eczema,1
+16,1,382.79641745796425,7,Female,Yes,Mild,No symptoms,Dairy,Eczema,1
+33,12,675.4783512847596,0,Female,No,Severe,Breathing issues,Nuts,None,1
+10,22,113.59897568062676,2,Female,No,Severe,Nausea,Seafood,Eczema,0
+16,24,324.42276438468343,10,Female,Yes,Moderate,Skin rash,Gluten,None,1
+30,26,517.3307633313036,10,Male,Yes,Mild,No symptoms,Eggs,Eczema,1
+52,21,350.4720156323892,4,Other,No,Mild,Skin rash,Seafood,None,1
+58,22,399.7503765895228,6,Other,Yes,None,Skin rash,Seafood,None,1
+25,16,660.7315855454939,5,Male,Yes,Mild,Breathing issues,Seafood,Asthma,1
+64,14,98.39538480314326,4,Other,Yes,None,Nausea,Seafood,None,0
+16,18,77.32000086608348,2,Female,Yes,None,Nausea,Gluten,Eczema,0
+35,23,596.2042277734837,3,Other,No,Mild,Swelling,Gluten,None,1
+55,3,629.9232970526745,6,Male,No,Severe,Skin rash,Nuts,Eczema,1
+48,16,834.6733471087009,0,Other,Yes,Severe,Swelling,Dairy,None,1
+38,15,601.230462188954,5,Female,No,None,Skin rash,Nuts,Asthma,1
+16,17,246.0187744281712,3,Other,No,None,No symptoms,Seafood,None,1
+40,2,410.8834523389966,9,Male,Yes,Mild,Skin rash,Dairy,Asthma,1
+36,8,951.4076786672406,6,Female,Yes,Moderate,Swelling,Eggs,None,1
+27,13,959.4197751394516,0,Female,No,None,No symptoms,Dairy,Asthma,1
+60,2,50.52729846544523,9,Other,Yes,Severe,Breathing issues,Seafood,Eczema,1
+20,10,70.17585829283874,6,Other,Yes,Mild,Breathing issues,Nuts,None,1
+30,13,914.756398489991,9,Male,No,Moderate,Skin rash,Gluten,Eczema,1
+76,25,689.0187431337143,6,Male,No,Moderate,No symptoms,Gluten,None,1
+41,22,97.53768966938182,6,Female,Yes,Severe,Breathing issues,Nuts,Asthma,1
+78,14,296.5294440705388,7,Female,Yes,Moderate,Skin rash,Nuts,Asthma,1
+22,21,64.43793747085861,4,Female,No,Severe,Swelling,Nuts,None,0
+56,2,859.7563761425542,5,Other,Yes,Moderate,Breathing issues,Gluten,Asthma,1
+66,4,739.9686193730392,7,Male,No,Moderate,Swelling,Gluten,None,1
+41,20,750.2338203145019,0,Other,No,Severe,No symptoms,Dairy,Eczema,1
+58,7,861.517263238495,10,Other,Yes,Mild,Skin rash,Dairy,Asthma,1
+72,12,324.24933420050064,7,Female,No,Severe,Nausea,Nuts,Eczema,1
+61,21,71.58780770379786,1,Other,No,Severe,Nausea,Gluten,None,0
+56,6,922.9398634753092,3,Other,No,None,No symptoms,Gluten,Asthma,1
+48,18,713.692943842848,1,Male,No,Mild,Skin rash,Gluten,None,1
+30,8,112.26514337696996,8,Other,No,None,Skin rash,Dairy,None,1
+70,0,634.8764588788309,9,Male,No,Mild,Breathing issues,Seafood,Asthma,1
+66,6,933.6155341940148,1,Female,Yes,Moderate,Nausea,Eggs,Eczema,1
+57,20,80.28434780466874,9,Female,No,None,Swelling,Gluten,None,1
+55,12,189.08837415150543,0,Other,Yes,Severe,Nausea,Eggs,Eczema,0
+78,27,320.0382135590316,3,Other,Yes,Mild,Nausea,Eggs,Eczema,1
+22,3,695.4233641231308,7,Female,No,Moderate,Breathing issues,Eggs,Eczema,1
+71,24,429.9587073997459,0,Female,Yes,Severe,No symptoms,Seafood,None,1
+38,15,932.638222018057,8,Male,Yes,Mild,Breathing issues,Eggs,Asthma,1
+9,22,460.4323534006335,7,Female,Yes,None,No symptoms,Seafood,Asthma,1
+77,28,825.1409408065068,5,Female,No,Moderate,No symptoms,Eggs,Eczema,1
+59,5,356.22276598790427,7,Female,No,Severe,Breathing issues,Gluten,Asthma,1
+8,6,3.329020058961061,7,Male,No,Mild,Nausea,Gluten,None,1
+57,11,286.3815060406012,4,Other,No,Moderate,Breathing issues,Gluten,None,1
+5,10,706.3013478111003,6,Male,No,Severe,Breathing issues,Dairy,Asthma,1
+16,15,455.6975538516224,4,Male,No,Severe,Skin rash,Nuts,Eczema,1
+43,27,981.4841598924628,1,Other,No,Severe,Swelling,Nuts,Eczema,1
+31,1,179.59855586548107,3,Male,Yes,Severe,Breathing issues,Seafood,Eczema,0
+11,3,562.7858463626063,2,Other,No,Moderate,Skin rash,Nuts,Asthma,1
+34,29,345.405833032745,0,Male,No,Mild,No symptoms,Eggs,Asthma,1
+74,26,868.6378404621365,4,Other,Yes,Mild,Breathing issues,Gluten,Asthma,1
+37,19,780.3727892971298,1,Male,No,Moderate,Swelling,Seafood,Asthma,1
+9,11,916.9283986878714,2,Male,No,Severe,Breathing issues,Nuts,Eczema,1
+35,16,650.7650485598833,3,Other,No,None,Breathing issues,Gluten,Asthma,1
+56,0,55.6365846281199,8,Female,Yes,Moderate,Skin rash,Dairy,Eczema,1
+68,0,726.6924579332139,5,Other,Yes,Severe,Breathing issues,Seafood,Asthma,1
+7,8,84.76506642257483,1,Other,No,None,Nausea,Nuts,Asthma,0
+9,8,768.1652680925625,2,Female,No,Severe,Swelling,Nuts,Eczema,1
+38,1,770.424367608082,8,Other,Yes,Mild,Swelling,Eggs,None,1
+10,24,912.6966846749824,7,Male,Yes,None,No symptoms,Gluten,Asthma,1
+29,8,125.95548484806086,9,Female,No,Moderate,Breathing issues,Gluten,Eczema,1
+78,0,947.2779419717526,10,Female,No,Mild,Nausea,Dairy,Eczema,1
+55,15,283.5680511541638,9,Other,Yes,Mild,Breathing issues,Dairy,Asthma,1
+57,26,161.57639554026923,10,Male,No,Mild,No symptoms,Gluten,None,1
+68,16,981.6825987327557,4,Other,Yes,Moderate,Nausea,Eggs,Eczema,1
+44,24,860.9240283916442,7,Male,No,Mild,Nausea,Gluten,None,1
+41,16,202.00968787462077,9,Male,No,Moderate,Nausea,Gluten,Asthma,1
+16,24,482.3271598725746,7,Female,Yes,None,No symptoms,Gluten,None,1
+41,26,696.00099405115,4,Other,Yes,Mild,Skin rash,Seafood,Eczema,1
+7,1,144.56618816495444,9,Other,Yes,Moderate,Swelling,Dairy,Eczema,1
+33,0,869.7115430969965,1,Female,No,Moderate,Breathing issues,Nuts,Eczema,1
+9,27,352.157770323244,3,Male,No,Mild,Swelling,Seafood,Eczema,1
+20,22,870.7790568143072,1,Female,Yes,Severe,Skin rash,Dairy,None,1
+73,5,674.3426370344658,6,Male,Yes,Severe,Nausea,Gluten,None,1
+7,17,966.925564836925,7,Male,Yes,Moderate,Swelling,Dairy,Asthma,1
+62,23,591.1788013909562,10,Male,No,Mild,Swelling,Nuts,None,1
+15,21,706.456406915295,9,Other,Yes,Mild,No symptoms,Dairy,None,1
+63,10,782.91650402934,3,Female,Yes,None,Skin rash,Nuts,Eczema,1
+59,7,855.5935431363234,10,Other,No,Mild,Swelling,Nuts,Eczema,1
+52,2,654.2758234429301,6,Other,Yes,Moderate,Nausea,Dairy,Eczema,1
+8,12,774.3300407024316,7,Male,No,Moderate,Swelling,Seafood,None,1
+55,28,731.3882463617366,7,Other,Yes,Severe,Swelling,Nuts,Asthma,1
+62,26,724.2982950708639,9,Female,No,Mild,Nausea,Seafood,None,1
+60,4,244.1021918410535,5,Female,No,Mild,No symptoms,Eggs,Asthma,1
+76,9,11.332703899583027,2,Female,No,None,Skin rash,Gluten,Asthma,0
+49,28,611.7034523696443,8,Male,Yes,Mild,Skin rash,Dairy,Asthma,1
+70,9,712.4418634751154,6,Other,Yes,Moderate,Skin rash,Eggs,Asthma,1
+56,17,410.2036647141729,3,Male,Yes,None,Nausea,Seafood,Asthma,1
+79,1,696.6952138544499,9,Male,Yes,Mild,No symptoms,Nuts,Asthma,1
+44,28,720.7583554605509,7,Female,Yes,None,No symptoms,Dairy,Asthma,1
+55,9,229.8989651937857,9,Male,No,Moderate,Swelling,Seafood,Asthma,1
+78,13,215.6687869228592,4,Other,Yes,Mild,Breathing issues,Dairy,None,1
+21,10,731.7381012231938,5,Other,Yes,None,No symptoms,Eggs,Eczema,1
+73,25,48.951136173369264,6,Male,No,Severe,Skin rash,Dairy,Eczema,1
+30,7,667.133960986169,4,Female,No,Severe,No symptoms,Nuts,None,1
+59,9,987.6118104001624,4,Male,No,Severe,Breathing issues,Gluten,Asthma,1
+34,28,117.44756566745222,7,Female,No,Severe,Breathing issues,Gluten,None,1
+51,23,943.1882120864032,7,Other,Yes,Mild,Nausea,Seafood,Eczema,1
+68,8,521.8553684932742,10,Female,Yes,Mild,Breathing issues,Seafood,Asthma,1
+58,2,237.776374309342,1,Female,No,Severe,No symptoms,Gluten,None,1
+66,12,604.4273643493963,1,Female,Yes,Mild,Skin rash,Dairy,Eczema,1
+36,25,432.1511824260284,1,Female,Yes,Mild,Swelling,Gluten,Asthma,1
+71,28,812.4740206330075,6,Female,No,Moderate,No symptoms,Dairy,Asthma,1
+69,7,354.53232359668345,4,Male,Yes,Severe,Nausea,Dairy,Eczema,1
+48,8,908.98251074684,10,Other,No,Moderate,Skin rash,Dairy,Eczema,1
+72,18,885.1675415603786,3,Male,Yes,None,Breathing issues,Eggs,None,1
+59,17,749.2123195513957,8,Female,No,None,Nausea,Nuts,None,1
+66,13,978.2585448424792,7,Other,Yes,None,Breathing issues,Seafood,Eczema,1
+50,9,182.5213800154129,1,Male,Yes,Severe,Swelling,Dairy,None,0
+35,17,591.9146919338083,5,Female,Yes,Mild,Swelling,Nuts,Asthma,1
+23,4,21.819711749248864,8,Male,Yes,Moderate,Swelling,Dairy,Eczema,1
+23,12,43.81068293846594,4,Female,Yes,None,Skin rash,Nuts,Asthma,0
+64,12,811.9641388940092,1,Other,Yes,Moderate,Skin rash,Dairy,Asthma,1
+35,29,629.2532547221607,2,Other,No,Severe,Breathing issues,Eggs,None,1
+67,25,95.93165082951924,10,Female,Yes,Mild,Nausea,Seafood,Asthma,1
+60,17,942.7155526190952,10,Male,No,Severe,Swelling,Eggs,Eczema,1
+48,11,365.4785933648362,6,Other,No,Moderate,Breathing issues,Dairy,Asthma,1
+15,11,597.3105350977913,2,Male,No,None,Breathing issues,Eggs,Asthma,1
+29,2,744.0186669158311,9,Male,Yes,Severe,Swelling,Eggs,None,1
+43,16,628.4558592697591,10,Female,Yes,Mild,Skin rash,Dairy,Asthma,1
+64,3,96.41740154487653,1,Female,No,None,Nausea,Eggs,Asthma,0
+12,8,69.28321963493786,7,Female,Yes,Severe,Skin rash,Gluten,Asthma,1
+67,9,318.5752548442824,3,Male,Yes,None,Breathing issues,Gluten,Asthma,1
+64,27,823.947225188356,6,Female,No,None,Breathing issues,Dairy,None,1
+28,15,638.8269833781484,6,Female,No,Moderate,Skin rash,Nuts,Eczema,1
+57,14,992.6837733141496,2,Male,No,Mild,Skin rash,Nuts,None,1
+49,28,590.8626960920193,1,Other,No,None,No symptoms,Eggs,Eczema,1
+18,8,553.3178814929361,9,Female,Yes,Moderate,Breathing issues,Seafood,Eczema,1
+67,14,946.8152691327718,2,Male,No,Severe,No symptoms,Eggs,Asthma,1
+39,28,598.889266840025,8,Male,No,Mild,Breathing issues,Dairy,None,1
+46,9,873.2955608546337,3,Male,No,Moderate,No symptoms,Eggs,None,1
+43,16,299.6142789866546,10,Male,Yes,Severe,No symptoms,Seafood,None,1
+45,25,214.9368833364887,5,Male,Yes,Moderate,Swelling,Seafood,Eczema,1
+31,25,7.929707453844126,10,Other,Yes,Mild,Skin rash,Seafood,None,1
+21,28,96.85039572714246,8,Female,Yes,Severe,No symptoms,Nuts,Eczema,1
+13,14,393.4983199150372,8,Male,No,Moderate,Breathing issues,Nuts,None,1
+64,20,765.9506335528686,6,Male,Yes,Mild,Swelling,Dairy,Asthma,1
+36,29,55.77176895135456,6,Female,No,None,Swelling,Seafood,None,1
+38,14,503.8598842994066,0,Male,Yes,Moderate,Nausea,Nuts,None,1
+26,14,749.3723513027716,8,Female,No,Moderate,Breathing issues,Dairy,Eczema,1
+17,14,685.6713346649126,4,Other,Yes,Moderate,Nausea,Gluten,Asthma,1
+6,26,732.3555753990272,8,Female,No,Severe,Breathing issues,Dairy,Eczema,1
+15,16,636.146164706234,1,Male,Yes,Moderate,Nausea,Seafood,Eczema,1
+51,8,518.9360586046421,2,Female,Yes,None,No symptoms,Eggs,Eczema,1
+26,17,344.99216883309765,10,Female,No,Mild,Nausea,Nuts,Asthma,1
+56,29,291.3481252949702,10,Male,Yes,None,Breathing issues,Gluten,Eczema,1
+15,21,387.2528019575676,7,Male,Yes,Moderate,Nausea,Gluten,Asthma,1
+66,4,533.4888034680755,1,Other,Yes,Severe,Breathing issues,Dairy,None,1
+33,9,955.6960327168016,0,Male,No,Severe,Skin rash,Nuts,None,1
+64,1,37.93953571425683,4,Female,No,Mild,Skin rash,Eggs,Asthma,0
+31,24,572.4919520339747,6,Male,No,None,No symptoms,Eggs,None,1
+39,27,663.3258110045301,3,Male,Yes,Moderate,Breathing issues,Nuts,Asthma,1
+79,27,61.88529771633912,2,Other,Yes,Mild,No symptoms,Eggs,None,0
+6,6,93.86714271943684,6,Female,No,Moderate,Swelling,Dairy,Eczema,1
+32,14,552.7576193989759,1,Male,Yes,Severe,No symptoms,Seafood,None,1
+42,22,113.38384072302397,10,Male,No,Mild,No symptoms,Eggs,Asthma,1
+23,27,806.4320639617648,0,Female,Yes,Severe,No symptoms,Nuts,Eczema,1
+62,0,9.94326381519972,9,Female,No,Severe,Skin rash,Seafood,Asthma,1
+70,4,967.2796058006944,5,Other,No,Moderate,Skin rash,Dairy,Asthma,1
+42,26,968.1110812349928,5,Other,No,Severe,No symptoms,Dairy,None,1
+34,0,747.2187242945342,8,Female,Yes,Moderate,Breathing issues,Nuts,Eczema,1
+65,23,882.5658884992547,0,Other,Yes,None,Nausea,Eggs,Asthma,1
+30,24,977.6475910282212,4,Other,Yes,Moderate,Nausea,Seafood,Eczema,1
+42,24,423.60490486646376,7,Male,No,Severe,Breathing issues,Eggs,None,1
+14,20,486.5460657087977,8,Other,Yes,None,Skin rash,Gluten,Eczema,1
+52,2,44.6507040770251,0,Male,Yes,Mild,Nausea,Seafood,Eczema,0
+45,15,248.4805958982268,4,Female,Yes,Mild,Breathing issues,Nuts,Eczema,1
+41,0,788.06087945657,10,Other,No,Moderate,Breathing issues,Gluten,Eczema,1
+54,21,391.8553840245828,10,Other,Yes,Mild,Breathing issues,Seafood,Asthma,1
+54,2,18.315939145645263,2,Male,No,Severe,Swelling,Dairy,None,0
+32,15,865.6602871469474,4,Other,No,Moderate,Breathing issues,Nuts,Eczema,1
+12,28,984.1424723747922,10,Male,Yes,Severe,Breathing issues,Nuts,Eczema,1
+75,25,862.7073501949544,3,Male,No,Moderate,No symptoms,Nuts,None,1
+74,25,117.12508869738402,4,Other,Yes,Severe,No symptoms,Gluten,None,0
+77,25,977.1722650726258,4,Male,No,Severe,Breathing issues,Seafood,Eczema,1
+37,15,830.3915777351805,8,Male,No,Moderate,No symptoms,Nuts,None,1
+77,1,614.6935648173527,4,Male,No,Severe,Swelling,Nuts,None,1
+72,20,188.14125470992892,5,Female,Yes,Severe,Swelling,Dairy,Eczema,1
+13,28,864.7324809398664,2,Other,Yes,Severe,Swelling,Dairy,None,1
+69,11,24.107380224024705,4,Male,No,None,Breathing issues,Gluten,None,0
+66,13,432.52586971352974,5,Other,No,None,Swelling,Eggs,None,1
+30,12,281.401312332098,1,Other,No,None,Skin rash,Nuts,None,1
+67,19,171.58767077309452,2,Other,Yes,Severe,Skin rash,Eggs,Asthma,0
+68,5,433.9038542605021,2,Female,Yes,Moderate,Skin rash,Eggs,Eczema,1
+45,23,343.5374609258265,1,Male,Yes,Severe,No symptoms,Nuts,Asthma,1
+42,2,424.9800272706435,8,Female,Yes,Severe,Breathing issues,Seafood,Eczema,1
+71,14,965.735308831018,5,Other,No,Mild,Nausea,Eggs,Asthma,1
+42,0,223.86126553563767,9,Female,No,Moderate,Breathing issues,Gluten,None,1
+55,25,380.88585851136025,8,Female,No,Moderate,No symptoms,Nuts,None,1
+56,25,928.7313108774638,10,Female,Yes,Severe,Swelling,Gluten,Eczema,1
+43,14,667.9611272541384,3,Female,Yes,Moderate,Nausea,Dairy,Asthma,1
+40,24,344.0424531030581,3,Female,No,Severe,Skin rash,Dairy,Asthma,1
+25,23,90.24165534073056,0,Female,No,Moderate,Nausea,Gluten,Asthma,0
+22,23,190.29338973117717,7,Male,No,Mild,Breathing issues,Gluten,Asthma,1
+14,18,576.6077504363873,10,Male,Yes,None,Swelling,Eggs,None,1
+10,11,735.2004532467568,4,Female,Yes,Severe,Nausea,Dairy,Asthma,1
+70,7,802.8840065142775,1,Female,No,Mild,No symptoms,Seafood,Asthma,1
+57,2,64.88376176137548,9,Female,No,Mild,No symptoms,Eggs,Asthma,1
+12,15,724.0695280026483,6,Other,No,None,No symptoms,Dairy,Eczema,1
+10,18,171.3203054259585,5,Other,Yes,Mild,Nausea,Nuts,None,1
+43,28,806.4011916858365,4,Male,Yes,Mild,No symptoms,Nuts,None,1
+20,18,888.4108021720643,6,Female,Yes,None,Swelling,Seafood,Asthma,1
+69,1,580.0956537381503,0,Female,Yes,Moderate,No symptoms,Gluten,None,1
+14,20,980.4090247217936,9,Female,No,Moderate,Skin rash,Gluten,Asthma,1
+32,10,790.4200423754285,10,Male,Yes,Mild,Skin rash,Seafood,None,1
+6,13,627.2968098580227,1,Female,Yes,Mild,Swelling,Nuts,None,1
+9,15,362.9996928608144,10,Male,No,Mild,Swelling,Nuts,Eczema,1
+53,24,418.1569530431308,6,Other,Yes,None,Breathing issues,Dairy,Eczema,1
+78,25,738.5306418274419,1,Female,Yes,None,Breathing issues,Gluten,None,1
+19,18,917.9877325142947,2,Other,No,Severe,Breathing issues,Dairy,None,1
+31,1,830.8952672888239,4,Male,Yes,Mild,Swelling,Dairy,Asthma,1
+59,10,850.1274003656382,10,Other,Yes,None,Skin rash,Nuts,Asthma,1
+30,10,794.4546246902618,2,Female,Yes,None,Swelling,Seafood,None,1
+73,20,401.6868159052884,1,Male,No,None,Skin rash,Eggs,None,1
+75,22,419.3818422056183,6,Other,Yes,Severe,No symptoms,Dairy,Eczema,1
+28,9,246.34313541978105,9,Other,Yes,None,No symptoms,Nuts,None,1
+29,28,11.154123891634582,7,Other,Yes,None,Swelling,Eggs,None,1
+36,12,879.5916446076395,5,Other,Yes,Mild,Breathing issues,Nuts,None,1
+70,6,844.7764154349114,10,Other,No,Mild,No symptoms,Seafood,None,1
+9,19,417.55965816300494,10,Other,Yes,Moderate,Swelling,Gluten,Eczema,1
+21,27,541.691558261433,4,Male,No,Moderate,Skin rash,Seafood,None,1
+14,5,13.55599701990112,8,Female,Yes,Mild,Swelling,Eggs,None,1
+38,20,473.3246007572949,0,Female,No,Severe,No symptoms,Dairy,None,1
+39,24,791.7285389035736,8,Other,No,None,Breathing issues,Gluten,None,1
+65,1,416.5941474539338,1,Other,Yes,Mild,Skin rash,Nuts,None,1
+37,6,201.01079699809023,6,Female,Yes,Severe,Skin rash,Eggs,Asthma,1
+47,4,98.22288685871956,7,Other,No,Moderate,Nausea,Dairy,Eczema,1
+59,8,829.4974691306309,3,Female,No,None,Skin rash,Eggs,None,1
+55,20,716.3131523662637,1,Other,No,Moderate,Skin rash,Seafood,Asthma,1
+25,18,136.93603500070972,10,Female,No,Mild,Nausea,Nuts,Asthma,1
+30,16,224.939528578784,5,Female,Yes,Severe,No symptoms,Seafood,Asthma,1
+25,23,726.250017792829,3,Other,Yes,None,Breathing issues,Eggs,Asthma,1
+28,25,988.4311201715096,4,Female,No,Severe,Swelling,Dairy,Eczema,1
+73,2,158.35720573482607,2,Female,Yes,Severe,Swelling,Nuts,Asthma,0
+30,10,688.7791004511495,9,Female,Yes,None,Breathing issues,Seafood,Eczema,1
+71,12,907.1917354566508,2,Female,No,Moderate,Nausea,Eggs,Asthma,1
+67,8,312.8125950075141,7,Female,Yes,Mild,Skin rash,Eggs,Eczema,1
+73,0,856.6076893464572,6,Other,Yes,None,Nausea,Eggs,Eczema,1
+23,28,814.835956778489,6,Female,No,Moderate,Skin rash,Dairy,None,1
+40,25,404.0686164816037,0,Male,Yes,Moderate,No symptoms,Dairy,None,1
+65,7,633.5243851260783,1,Male,No,None,Swelling,Gluten,Eczema,1
+57,6,255.89267220061683,0,Male,Yes,Mild,Nausea,Nuts,None,1
+13,29,894.3351907556216,10,Male,Yes,Mild,Nausea,Gluten,None,1
+37,1,780.7165935401074,7,Female,No,Moderate,Breathing issues,Gluten,Eczema,1
+15,21,712.8284187739886,0,Other,Yes,Severe,Skin rash,Dairy,Asthma,1
+22,17,377.9719125750326,7,Other,Yes,Severe,No symptoms,Gluten,None,1
+57,19,698.4295025215828,2,Male,Yes,Mild,No symptoms,Gluten,Eczema,1
+44,1,821.2693305457227,0,Male,Yes,Severe,Swelling,Dairy,Eczema,1
+64,21,41.8172714076496,5,Other,No,Mild,Nausea,Seafood,None,1
+39,11,278.0959672085394,6,Female,Yes,None,Swelling,Nuts,Eczema,1
+22,20,942.051275825444,3,Female,Yes,None,Skin rash,Nuts,Asthma,1
+59,17,550.1605842440764,10,Male,No,Moderate,No symptoms,Eggs,Asthma,1
+29,13,916.5970443292256,2,Other,Yes,Severe,No symptoms,Gluten,Eczema,1
+72,7,261.1115338802077,10,Male,No,Moderate,Nausea,Eggs,None,1
+50,8,552.7382397019031,5,Other,No,Mild,Breathing issues,Nuts,Asthma,1
+17,18,702.1341269544063,8,Female,No,Mild,Skin rash,Dairy,None,1
+17,22,132.873961060294,1,Female,No,Severe,Breathing issues,Nuts,Asthma,0
+55,22,593.9176772317724,1,Female,Yes,Moderate,Swelling,Eggs,None,1
+71,28,997.3193981526184,3,Female,Yes,Moderate,Nausea,Seafood,None,1
+30,15,165.41359440021398,10,Female,Yes,Severe,Breathing issues,Dairy,None,1
+24,20,456.5893191593741,3,Other,Yes,None,No symptoms,Gluten,Asthma,1
+18,16,792.7469094523947,6,Female,Yes,Moderate,Breathing issues,Nuts,None,1
+75,3,185.98643602429792,4,Male,Yes,Severe,Swelling,Eggs,None,0
+40,12,739.5397683485269,2,Male,No,Mild,Skin rash,Seafood,Eczema,1
+10,8,155.3635016429332,1,Male,No,Severe,Swelling,Gluten,None,0
+37,29,451.1923072297101,0,Male,No,Mild,Skin rash,Nuts,Asthma,1
+10,20,153.50435519302977,4,Female,Yes,Mild,Swelling,Dairy,Eczema,0
+53,22,829.221899819661,2,Male,No,Moderate,No symptoms,Dairy,Eczema,1
+36,4,139.97179952554526,10,Female,Yes,None,No symptoms,Dairy,None,1
+78,9,68.72996993284413,1,Female,Yes,Severe,Nausea,Gluten,Eczema,0
+32,21,368.2509916746253,10,Other,Yes,Mild,Skin rash,Gluten,Eczema,1
+23,5,884.5061818190618,2,Female,No,Mild,Breathing issues,Gluten,None,1
+45,5,377.5223066672297,8,Male,No,Severe,No symptoms,Eggs,Eczema,1
+45,23,203.04257424607115,10,Female,Yes,None,Swelling,Eggs,Eczema,1
+15,5,755.5800075566958,9,Male,Yes,Moderate,Swelling,Dairy,Eczema,1
+34,4,744.468667334688,3,Female,Yes,None,Nausea,Nuts,Asthma,1
+45,20,350.0485836048571,6,Male,No,Moderate,Skin rash,Eggs,None,1
+60,21,894.9409082175135,4,Female,No,None,Breathing issues,Gluten,None,1
+65,9,154.51332349401378,0,Female,No,Moderate,No symptoms,Eggs,Asthma,0
+47,22,968.7039313148946,3,Female,Yes,None,Breathing issues,Seafood,Asthma,1
+5,24,732.4124434506302,0,Male,Yes,Mild,Nausea,Nuts,Asthma,1
+72,0,532.5524836122842,2,Female,Yes,Mild,Swelling,Gluten,Eczema,1
+79,27,246.7180097183897,7,Female,No,Severe,Breathing issues,Gluten,None,1
+11,21,310.45382088409406,4,Male,Yes,Mild,Nausea,Seafood,Asthma,1
+54,2,235.30765449123743,4,Other,No,Mild,Nausea,Eggs,Asthma,1
+68,15,604.6098584323048,5,Female,No,None,No symptoms,Seafood,None,1
+55,2,391.6150956066604,9,Male,No,Mild,Nausea,Dairy,Asthma,1
+53,29,921.3893426972088,0,Male,No,None,Skin rash,Gluten,Eczema,1
+25,29,859.8345539938767,7,Female,No,Mild,Skin rash,Dairy,None,1
+68,28,343.401992527096,4,Male,No,None,Swelling,Eggs,Eczema,1
+78,12,182.97758609991212,0,Other,Yes,None,Skin rash,Eggs,None,0
+49,19,594.5582937378433,6,Female,No,Moderate,Skin rash,Nuts,None,1
+66,18,58.590308612377385,3,Male,No,Mild,Swelling,Seafood,Eczema,0
+8,26,683.9310380194881,4,Male,Yes,Moderate,Breathing issues,Gluten,Asthma,1
+40,25,153.83563249318703,7,Male,No,Severe,No symptoms,Nuts,None,1
+64,25,877.4158527188049,0,Other,Yes,None,Nausea,Nuts,Asthma,1
+54,8,324.03574182346483,9,Male,No,Severe,Breathing issues,Dairy,Eczema,1
+64,5,214.01207358443733,5,Male,Yes,None,Swelling,Nuts,Asthma,1
+30,18,496.3981035398506,10,Male,Yes,None,Swelling,Gluten,Eczema,1
+38,13,171.19414996684796,10,Female,Yes,Severe,No symptoms,Nuts,None,1
+6,25,35.858014850956486,2,Female,Yes,None,No symptoms,Eggs,Asthma,0
+63,19,164.29180203819217,3,Other,No,Severe,Skin rash,Gluten,Eczema,0
+16,20,793.2841597082848,7,Male,No,Moderate,Nausea,Gluten,Eczema,1
+79,19,390.6371094126247,1,Male,Yes,None,No symptoms,Gluten,Asthma,1
+13,21,972.8653597889636,0,Male,Yes,Mild,Skin rash,Dairy,None,1
+53,2,268.2898641894857,3,Male,No,Severe,Swelling,Gluten,Eczema,1
+7,14,679.1911096673159,8,Other,Yes,Moderate,Skin rash,Gluten,Asthma,1
+29,13,528.9475038787092,10,Female,Yes,Severe,Breathing issues,Nuts,None,1
+21,8,10.235851719739376,0,Other,No,Mild,Breathing issues,Dairy,None,0
+73,19,741.0029694876662,0,Female,Yes,Moderate,No symptoms,Gluten,None,1
+37,2,743.1264082128944,9,Other,Yes,None,Skin rash,Seafood,Eczema,1
+19,8,907.7134177197064,7,Female,No,Severe,Swelling,Gluten,Eczema,1
+77,21,630.2216115045422,2,Other,Yes,None,Nausea,Dairy,Asthma,1
+20,3,260.24161373996867,6,Male,No,None,Swelling,Nuts,None,1
+15,13,361.2800110746581,1,Female,No,Moderate,No symptoms,Gluten,Asthma,1
+68,7,558.6737079030466,4,Male,No,Mild,Nausea,Seafood,Asthma,1
+18,25,640.6378050575008,7,Other,No,Moderate,Skin rash,Gluten,None,1
+32,20,587.1778092418426,0,Other,Yes,Mild,Skin rash,Nuts,Asthma,1
+30,17,197.19773027604305,2,Other,Yes,None,Swelling,Nuts,Asthma,0
+71,21,476.4517386858313,4,Female,Yes,None,No symptoms,Seafood,None,1
+46,7,872.0864912721428,5,Male,No,Moderate,Swelling,Gluten,Asthma,1
+51,21,855.711948033085,2,Female,Yes,Severe,Nausea,Seafood,Asthma,1
+25,29,268.08350595039843,4,Other,No,Severe,Breathing issues,Seafood,Eczema,1
+7,7,395.17064669208,8,Female,Yes,Severe,Swelling,Eggs,None,1
+16,8,219.06095807516408,3,Female,No,Mild,Skin rash,Gluten,Eczema,1
+31,16,473.6574839523012,4,Female,Yes,None,Nausea,Seafood,Asthma,1
+69,6,725.0089533301788,6,Male,Yes,Severe,Skin rash,Eggs,Eczema,1
+17,23,649.7440934424009,5,Male,No,Severe,Nausea,Dairy,None,1
+53,10,978.068703932097,8,Male,No,None,Swelling,Eggs,None,1
+25,6,675.303148718694,6,Female,No,Moderate,Swelling,Eggs,Asthma,1
+30,4,288.7041671580539,1,Other,Yes,Mild,Nausea,Nuts,Eczema,1
+75,21,332.41898153304305,7,Other,Yes,Severe,No symptoms,Eggs,Eczema,1
+71,26,742.34998668037,9,Female,No,Severe,Swelling,Dairy,Eczema,1
+8,23,428.059831014591,2,Female,Yes,Moderate,Nausea,Nuts,None,1
+5,26,695.7798464074114,5,Female,No,Severe,Skin rash,Gluten,Asthma,1
+62,5,882.0317375039496,10,Male,Yes,Mild,Skin rash,Dairy,None,1
+71,20,971.9995562677676,4,Other,Yes,Moderate,Skin rash,Dairy,Eczema,1
+18,19,148.49569738787042,0,Male,Yes,Severe,Breathing issues,Nuts,Asthma,0
+21,23,403.2075331765985,7,Other,No,Moderate,Breathing issues,Gluten,Asthma,1
+24,25,764.207391404131,1,Male,No,None,Nausea,Nuts,None,1
+19,9,888.1324363881866,3,Female,Yes,Mild,Swelling,Eggs,None,1
+28,24,377.2592003767443,8,Female,No,None,Swelling,Eggs,Eczema,1
+19,24,639.1440714547393,6,Female,Yes,None,Breathing issues,Dairy,Asthma,1
+54,24,65.17664539894018,4,Male,Yes,None,Swelling,Eggs,None,0
+32,25,301.1875064865433,10,Female,No,Moderate,Swelling,Gluten,None,1
+28,21,503.9961124908304,10,Female,No,None,Nausea,Dairy,None,1
+14,14,873.1945944112115,10,Other,No,Severe,Nausea,Nuts,Asthma,1
+7,9,897.4149760977732,1,Female,Yes,Severe,Nausea,Seafood,None,1
+22,20,797.4340526903728,4,Other,Yes,Mild,Swelling,Dairy,None,1
+19,3,632.8017582032388,2,Male,Yes,Moderate,Breathing issues,Dairy,Asthma,1
+21,17,192.1211903516644,5,Other,Yes,Severe,No symptoms,Eggs,Eczema,1
+53,5,638.5345595344163,2,Female,Yes,Moderate,Breathing issues,Seafood,None,1
+16,9,806.466418903436,5,Female,Yes,Mild,Nausea,Gluten,None,1
+72,26,578.4927563200624,5,Female,No,Moderate,Nausea,Nuts,Eczema,1
+68,17,414.4838597863019,4,Other,Yes,Mild,Nausea,Nuts,Asthma,1
+30,20,43.8131418901121,1,Male,No,None,No symptoms,Seafood,Eczema,0
+22,23,549.8269345020408,1,Female,No,Moderate,Skin rash,Seafood,Asthma,1
+9,4,98.98588783858597,10,Male,No,Moderate,Swelling,Seafood,Asthma,1
+39,7,254.55486907378523,8,Other,Yes,Severe,No symptoms,Nuts,None,1
+56,27,652.1040026362485,0,Male,No,None,Skin rash,Dairy,Eczema,1
+22,0,855.2325500764298,4,Female,No,Mild,Nausea,Nuts,None,1
+61,29,489.1130546148095,4,Other,No,Mild,Skin rash,Nuts,Asthma,1
+34,23,815.3095601751385,0,Male,Yes,Severe,Nausea,Nuts,None,1
+14,24,136.3095616141537,4,Other,No,Severe,Swelling,Dairy,Eczema,0
+33,19,141.49197493544295,3,Male,No,Moderate,Nausea,Dairy,Asthma,0
+49,4,664.0928871582657,8,Male,Yes,Mild,No symptoms,Nuts,Asthma,1
+25,13,936.888763746534,5,Female,No,None,No symptoms,Nuts,Asthma,1
+75,3,310.6883600229617,6,Other,Yes,Mild,Swelling,Gluten,Eczema,1
+10,1,50.71025502799094,9,Other,No,None,No symptoms,Gluten,None,1
+9,3,844.652023550052,7,Female,No,Moderate,Skin rash,Nuts,None,1
+32,7,313.2999884097084,9,Other,No,None,Breathing issues,Dairy,Eczema,1
+34,18,334.2300371633437,8,Other,No,Moderate,Swelling,Nuts,Asthma,1
+50,29,964.4503981696324,2,Female,No,Mild,No symptoms,Gluten,Eczema,1
+64,22,56.43781181094286,1,Female,No,None,No symptoms,Dairy,Eczema,0
+55,25,788.3242773179015,3,Other,Yes,Severe,Breathing issues,Gluten,Eczema,1
+79,19,588.7104170029079,9,Other,Yes,None,No symptoms,Nuts,Eczema,1
+79,12,543.7529109969613,9,Female,Yes,Mild,Nausea,Eggs,None,1
+50,10,492.2526081945877,10,Other,No,Severe,Nausea,Eggs,None,1
+73,28,507.733536054998,6,Other,Yes,Severe,Nausea,Gluten,Asthma,1
+13,16,798.2330988031292,9,Male,No,Severe,No symptoms,Nuts,None,1
+34,13,696.6533334391631,2,Male,Yes,Severe,Skin rash,Nuts,None,1
+54,1,433.6115120438676,3,Male,No,None,Swelling,Nuts,Eczema,1
+51,10,303.60022878096026,1,Male,No,Moderate,No symptoms,Nuts,None,1
+25,4,122.81668312298316,7,Other,No,Mild,Skin rash,Gluten,Asthma,1
+67,3,6.997905632149963,4,Other,No,Mild,Skin rash,Seafood,Asthma,0
+71,7,215.4972215747541,6,Other,Yes,Moderate,Breathing issues,Nuts,Asthma,1
+50,17,256.61003490685107,0,Other,No,Mild,No symptoms,Dairy,Eczema,1
+78,9,45.95896879650015,9,Male,No,None,Breathing issues,Seafood,Asthma,1
+49,4,508.7705124312726,2,Male,No,Moderate,No symptoms,Seafood,Asthma,1
+17,23,875.8886901937008,7,Female,No,Severe,No symptoms,Gluten,Eczema,1
+20,1,62.975202069768535,3,Female,No,Moderate,Swelling,Gluten,None,0
+51,16,153.8658309691189,6,Other,Yes,Severe,No symptoms,Seafood,Asthma,1
+70,26,950.1970087412776,4,Female,No,None,Skin rash,Eggs,None,1
+50,14,25.604452004392307,3,Female,Yes,Mild,Breathing issues,Nuts,Eczema,0
+8,23,447.29176900484174,1,Other,No,Moderate,Skin rash,Nuts,None,1
+76,0,724.8593735217449,2,Male,Yes,Severe,No symptoms,Nuts,Asthma,1
+25,11,203.8020190287972,7,Female,No,Mild,Breathing issues,Nuts,None,1
+21,8,337.0166562868029,9,Other,Yes,None,Swelling,Gluten,Eczema,1
+64,19,353.756071963694,5,Other,Yes,Mild,No symptoms,Gluten,Asthma,1
+75,4,826.916399792,1,Female,No,Severe,Breathing issues,Nuts,Eczema,1
+62,15,782.5235852511389,1,Female,Yes,Moderate,Swelling,Dairy,None,1
+72,11,654.8512285565413,9,Male,No,Severe,Nausea,Dairy,Asthma,1
+63,24,810.8584633027604,5,Other,Yes,Mild,No symptoms,Nuts,Asthma,1
+37,5,983.878552226886,6,Other,Yes,None,Breathing issues,Nuts,Eczema,1
+7,1,760.3969023831503,7,Female,Yes,Mild,Skin rash,Dairy,Eczema,1
+8,28,802.9148011125905,2,Other,Yes,Mild,Skin rash,Gluten,Asthma,1
+15,13,952.5787326093318,0,Male,No,None,No symptoms,Seafood,None,1
+49,13,13.185292635467684,2,Female,Yes,Severe,Swelling,Gluten,Eczema,0
+75,23,683.4976236337042,5,Female,No,Moderate,Breathing issues,Seafood,Asthma,1
+52,20,101.15929038957424,10,Female,Yes,Severe,No symptoms,Seafood,Eczema,1
+53,4,526.8375509537486,6,Female,No,Severe,Swelling,Eggs,Asthma,1
+22,17,580.0284200444684,0,Male,No,Moderate,Swelling,Eggs,Eczema,1
+14,27,351.6439198975159,5,Female,Yes,Mild,Breathing issues,Gluten,None,1
+73,4,87.91620702728733,0,Female,No,Mild,Skin rash,Eggs,Eczema,0
+16,21,911.2208797009522,2,Male,No,None,Breathing issues,Eggs,None,1
+45,12,835.8379129344678,7,Male,Yes,None,Skin rash,Dairy,None,1
+37,16,485.0161931324004,4,Other,Yes,None,Swelling,Nuts,Eczema,1
+55,7,874.0602827778234,0,Other,No,Severe,Swelling,Seafood,None,1
+31,24,10.94159866417879,4,Male,No,Severe,Breathing issues,Nuts,Asthma,0
+55,20,75.20681538745006,6,Male,Yes,Mild,Breathing issues,Seafood,None,1
+36,14,4.983042073711481,3,Female,Yes,Severe,Nausea,Seafood,Eczema,0
+73,10,853.7976868196124,2,Male,No,None,Skin rash,Nuts,Asthma,1
+46,9,494.3049279005008,8,Other,No,Severe,Nausea,Gluten,Eczema,1
+31,23,582.5792529309083,5,Other,No,Moderate,Breathing issues,Seafood,Asthma,1
+21,23,287.7050117288007,8,Other,Yes,Mild,Swelling,Gluten,None,1
+20,26,14.845017885003324,10,Other,Yes,Moderate,Breathing issues,Gluten,Asthma,1
+7,21,945.1073708597854,8,Female,Yes,Mild,Skin rash,Eggs,Eczema,1
+21,15,3.9094215133968993,8,Female,No,Severe,Nausea,Nuts,Asthma,1
+36,18,734.9030322010545,5,Other,Yes,None,Nausea,Dairy,None,1
+40,16,874.1378186479001,4,Male,Yes,Mild,Skin rash,Seafood,Eczema,1
+12,7,687.9482617596095,7,Male,Yes,None,Skin rash,Nuts,Eczema,1
+11,2,343.8939472081348,0,Male,Yes,Mild,Swelling,Dairy,Asthma,1
+9,13,627.0725097947056,2,Other,Yes,None,Swelling,Dairy,None,1
+73,8,376.7198173217309,4,Male,Yes,Mild,Breathing issues,Gluten,None,1
+57,22,247.51084661322255,4,Male,No,None,No symptoms,Dairy,Eczema,1
+67,24,561.4036560692642,0,Other,No,Mild,Nausea,Dairy,None,1
+75,4,490.4000601868755,6,Male,Yes,Moderate,Skin rash,Nuts,Eczema,1
+25,24,665.0270742963417,1,Other,No,Severe,Breathing issues,Eggs,Eczema,1
+43,24,288.5911572116528,1,Female,Yes,None,Skin rash,Dairy,Eczema,1
+18,5,423.3895061237795,6,Male,No,Severe,Nausea,Eggs,Eczema,1
+58,22,476.05268633038594,9,Male,Yes,Moderate,Nausea,Seafood,None,1
+34,19,537.4713709264073,10,Other,No,None,Nausea,Eggs,Asthma,1
+44,14,545.4066386046665,1,Male,No,Severe,No symptoms,Nuts,None,1
+16,3,111.85476409292816,10,Male,Yes,None,Breathing issues,Dairy,None,1
+28,25,96.69780453685804,0,Other,Yes,None,Nausea,Dairy,Asthma,0
+13,3,893.6211857018795,0,Male,Yes,Mild,Skin rash,Dairy,None,1
+36,3,222.0930713844228,7,Other,Yes,Moderate,Swelling,Seafood,None,1
+22,22,647.2123578831614,8,Female,Yes,Severe,Skin rash,Seafood,Asthma,1
+28,10,640.1637205015874,6,Female,Yes,Severe,No symptoms,Seafood,Eczema,1
+16,19,84.17253075922986,9,Other,Yes,Severe,Breathing issues,Eggs,None,1
+56,11,372.72422969042896,5,Other,Yes,Mild,Skin rash,Eggs,None,1
+72,29,679.2141014316907,5,Male,Yes,Mild,Swelling,Dairy,Eczema,1
+23,24,272.4522250819452,9,Female,No,Mild,Nausea,Seafood,Eczema,1
+17,10,507.4395421635065,5,Other,No,Mild,Breathing issues,Seafood,Asthma,1
+22,29,247.1203969802341,4,Male,Yes,Severe,Nausea,Eggs,Eczema,1
+71,27,940.7044577700052,4,Female,Yes,None,Breathing issues,Seafood,Asthma,1
+73,11,834.8133796730195,10,Other,No,Mild,Swelling,Seafood,Eczema,1
+22,27,675.2011009775581,5,Other,No,Mild,Swelling,Dairy,Eczema,1
+72,8,575.0469945173812,9,Male,Yes,Moderate,No symptoms,Seafood,Eczema,1
+23,14,779.3095097119484,1,Other,Yes,Severe,Breathing issues,Nuts,Eczema,1
+52,28,804.3821480740943,1,Female,Yes,Mild,Swelling,Eggs,Asthma,1
+50,2,907.804995843491,5,Female,Yes,Mild,Swelling,Nuts,Asthma,1
+79,6,499.96426241578894,3,Female,Yes,Mild,Swelling,Dairy,Eczema,1
+14,16,832.9325770172426,9,Female,Yes,None,Skin rash,Nuts,Asthma,1
+54,15,302.3274797869204,7,Male,No,Mild,Swelling,Dairy,Eczema,1
+28,22,333.97791467122954,6,Other,No,Mild,Nausea,Gluten,Eczema,1
+25,4,121.08587692534806,0,Other,Yes,Severe,Swelling,Seafood,None,0
+14,26,317.60243511306066,10,Female,No,None,No symptoms,Nuts,Eczema,1
+16,6,725.5400657632853,0,Female,Yes,Severe,Skin rash,Gluten,Eczema,1
+22,0,776.4331440321901,10,Male,Yes,Severe,Breathing issues,Gluten,None,1
+59,17,422.8428013352524,5,Female,No,None,Swelling,Gluten,Eczema,1
+58,14,47.26632621551036,10,Other,No,Severe,Breathing issues,Dairy,Eczema,1
+46,28,854.377268771753,0,Female,Yes,None,Skin rash,Seafood,Asthma,1
+29,15,328.61888777023125,8,Other,Yes,None,Nausea,Dairy,None,1
+76,5,910.4527597224412,5,Other,Yes,Mild,Breathing issues,Gluten,Eczema,1
+67,2,514.6317242186202,2,Male,No,Moderate,Breathing issues,Seafood,None,1
+30,9,186.37656712415367,1,Other,Yes,Severe,Breathing issues,Nuts,None,0
+58,24,96.3428705531114,8,Other,Yes,Severe,Swelling,Dairy,None,1
+47,16,718.0210286887922,2,Male,Yes,Mild,Breathing issues,Seafood,None,1
+58,5,849.4367972058911,10,Other,Yes,Severe,Nausea,Eggs,Asthma,1
+17,24,111.45469279699822,1,Other,Yes,Severe,No symptoms,Dairy,Eczema,0
+57,1,840.8109074774537,4,Male,Yes,None,No symptoms,Eggs,Eczema,1
+23,2,216.30322064550893,7,Other,Yes,Severe,No symptoms,Gluten,Asthma,1
+62,9,150.0036198237835,6,Male,No,None,Skin rash,Gluten,Eczema,1
+32,16,462.192790512383,0,Male,Yes,Mild,Swelling,Nuts,Eczema,1
+16,11,772.1472824842947,2,Other,Yes,None,No symptoms,Seafood,None,1
+61,23,438.27532757071066,4,Male,Yes,None,Nausea,Eggs,None,1
+14,4,809.6397028847523,2,Other,No,None,Breathing issues,Gluten,Asthma,1
+42,21,210.732337997854,10,Other,No,Moderate,Breathing issues,Eggs,None,1
+22,8,661.5555047285507,7,Other,No,None,Skin rash,Eggs,Asthma,1
+75,5,349.3152086029804,4,Other,No,Severe,Breathing issues,Dairy,None,1
+75,11,70.12921671925706,4,Male,No,Moderate,Breathing issues,Seafood,Asthma,0
+77,25,732.4364236928695,6,Other,Yes,Severe,No symptoms,Nuts,None,1
+62,24,670.6246655818532,2,Male,Yes,None,Swelling,Dairy,None,1
+70,9,357.9544761691143,0,Other,No,Severe,Skin rash,Seafood,Asthma,1
+57,24,910.5222254014452,7,Other,Yes,Moderate,Skin rash,Gluten,Eczema,1
+8,3,806.5694408303876,3,Female,No,Moderate,Nausea,Gluten,None,1
+49,6,172.81640518649417,10,Female,No,None,Nausea,Gluten,None,1
+58,18,242.31645859251816,9,Female,No,Mild,Nausea,Nuts,Eczema,1
+5,0,120.6792460354106,3,Other,Yes,None,Nausea,Dairy,None,0
+56,9,966.4729880871184,10,Male,No,None,Breathing issues,Gluten,None,1
+61,22,782.0655837763985,5,Male,No,Severe,Skin rash,Gluten,Asthma,1
+9,24,176.7519430306864,3,Female,Yes,None,Swelling,Gluten,Eczema,0
+76,21,424.6549356356159,3,Male,Yes,Severe,Breathing issues,Nuts,Asthma,1
+25,19,422.52260418474646,3,Other,Yes,Severe,Swelling,Gluten,Asthma,1
+46,8,808.8568555774439,1,Male,No,Mild,Nausea,Gluten,Asthma,1
+48,22,279.7267131679386,7,Male,No,Moderate,Nausea,Nuts,Eczema,1
+72,5,684.5808274419624,8,Female,Yes,Severe,No symptoms,Eggs,Asthma,1
+71,25,613.5069243316614,9,Other,Yes,Severe,Breathing issues,Dairy,Asthma,1
+51,19,201.8686021508185,3,Other,Yes,Mild,No symptoms,Nuts,Eczema,1
+58,10,555.024777213369,3,Female,Yes,Mild,Breathing issues,Dairy,None,1
+21,5,713.5553817923503,4,Other,Yes,Mild,Breathing issues,Gluten,None,1
+77,1,762.890417546162,10,Female,Yes,Moderate,Swelling,Seafood,None,1
+66,26,887.5285425344962,1,Other,No,Severe,Skin rash,Nuts,Asthma,1
+42,10,606.5218857532238,1,Other,Yes,Severe,Skin rash,Nuts,Asthma,1
+28,21,633.5165538939453,8,Other,No,Mild,Breathing issues,Gluten,None,1
+46,29,783.8299246465251,7,Male,No,None,Nausea,Seafood,Asthma,1
+71,9,10.25677769209138,9,Other,No,None,Nausea,Gluten,Eczema,1
+7,7,654.1003547030402,5,Female,No,Moderate,No symptoms,Gluten,Eczema,1
+8,11,614.1549565116167,0,Other,No,Severe,Breathing issues,Seafood,None,1
+31,8,665.532007301737,0,Male,Yes,Moderate,Skin rash,Eggs,Asthma,1
+42,29,727.774711531281,6,Other,Yes,None,Skin rash,Dairy,Asthma,1
+9,21,780.3774324019587,7,Other,No,Mild,No symptoms,Dairy,Asthma,1
+74,8,331.4890266614082,7,Male,Yes,Mild,No symptoms,Dairy,None,1
+33,27,76.91230244005727,4,Male,No,None,No symptoms,Dairy,Asthma,0
+65,22,655.5990301060284,7,Other,Yes,Mild,Nausea,Gluten,Eczema,1
+23,19,314.53274810815515,6,Female,No,Mild,Nausea,Seafood,Asthma,1
+75,26,4.8282502175602815,3,Other,No,Mild,Nausea,Dairy,Eczema,0
+32,22,197.76327249625945,10,Male,No,None,Breathing issues,Seafood,None,1
+72,2,113.91890234345672,6,Female,No,Mild,Breathing issues,Dairy,Eczema,1
+15,29,527.1586395989937,5,Female,Yes,None,Skin rash,Seafood,Asthma,1
+33,4,164.82150564352423,5,Male,Yes,Moderate,Breathing issues,Seafood,Asthma,1
+14,7,455.049685910864,8,Female,No,Mild,No symptoms,Nuts,None,1
+22,13,814.8253756173066,1,Female,No,Mild,Nausea,Eggs,Eczema,1
+20,15,133.4157798224508,1,Male,Yes,Severe,Nausea,Nuts,None,0
+76,17,76.06579846416203,7,Male,No,None,No symptoms,Dairy,None,1
+69,28,246.84008572640872,1,Female,Yes,Severe,Skin rash,Eggs,Eczema,1
+57,14,192.340046250589,6,Male,No,None,No symptoms,Nuts,Asthma,1
+78,26,561.7702278146116,2,Male,Yes,None,Nausea,Gluten,Eczema,1
+79,16,521.8538102969703,10,Female,Yes,Severe,Skin rash,Gluten,None,1
+66,1,547.5880440016717,6,Other,No,Severe,Swelling,Seafood,None,1
+5,21,770.2125449127243,1,Female,No,None,Breathing issues,Eggs,Asthma,1
+32,26,29.45827715821316,5,Male,Yes,Severe,Breathing issues,Gluten,Eczema,1
+68,12,815.7472466493637,2,Other,No,None,Nausea,Nuts,Eczema,1
+51,5,889.7399071864161,4,Other,Yes,Mild,No symptoms,Gluten,Asthma,1
+74,4,433.8097104200672,5,Other,Yes,None,No symptoms,Seafood,Eczema,1
+33,3,752.5586914772225,9,Other,No,Moderate,Skin rash,Nuts,None,1
+27,13,478.143557926894,3,Male,No,None,Swelling,Seafood,Asthma,1
+79,7,501.6605334238423,5,Male,Yes,Mild,Swelling,Seafood,None,1
+8,3,897.6136121094154,8,Male,Yes,Mild,Nausea,Nuts,None,1
+33,17,554.1325907217895,5,Male,No,Severe,Swelling,Seafood,Asthma,1
+53,9,994.5252399635432,7,Male,Yes,Moderate,Swelling,Seafood,Asthma,1
+6,18,206.39520297976867,7,Other,Yes,Mild,Swelling,Seafood,Asthma,1
+23,22,878.8821286332208,1,Female,Yes,Mild,Breathing issues,Seafood,Eczema,1
+37,16,392.44491705141536,0,Male,Yes,None,Nausea,Seafood,None,1
+13,23,540.1650327964024,9,Male,No,Severe,Swelling,Dairy,Eczema,1
+62,21,463.876270497088,0,Male,No,None,Breathing issues,Seafood,Asthma,1
+25,11,695.6752026405367,3,Female,Yes,None,Swelling,Nuts,Asthma,1
+45,29,192.01659221255036,1,Female,No,None,Breathing issues,Dairy,Asthma,0
+29,13,379.6388418939767,6,Female,Yes,None,No symptoms,Gluten,Eczema,1
+56,18,714.3084676384008,0,Other,No,Severe,Skin rash,Seafood,Eczema,1
+79,3,674.4963618772186,3,Female,Yes,None,Swelling,Gluten,None,1
+5,8,346.6567645711041,10,Male,No,None,Swelling,Eggs,Eczema,1
+17,6,247.73223910383584,5,Male,Yes,Severe,Nausea,Dairy,Eczema,1
+10,2,810.3635931154269,8,Male,No,None,No symptoms,Gluten,Eczema,1
+46,22,233.80776206713685,2,Other,No,Mild,Skin rash,Nuts,Asthma,1
+57,16,968.8884131022812,8,Other,Yes,Severe,Breathing issues,Seafood,Asthma,1
+19,16,475.9528911105821,0,Female,Yes,Mild,Skin rash,Eggs,Asthma,1
+58,15,237.05785881834737,9,Female,No,Severe,Nausea,Seafood,Eczema,1
+12,19,586.9648774327316,6,Other,Yes,Mild,Nausea,Eggs,None,1
+69,3,819.6931881644632,6,Male,No,Severe,Breathing issues,Eggs,None,1
+44,19,709.3202967058969,10,Female,Yes,None,No symptoms,Seafood,Eczema,1
+32,15,491.4355340869647,0,Female,No,Moderate,Skin rash,Eggs,Eczema,1
+24,21,967.7853996055932,9,Female,No,None,Swelling,Dairy,Asthma,1
+27,16,101.70719478378663,6,Other,Yes,Mild,Swelling,Eggs,Asthma,1
+74,9,820.072909726686,10,Female,No,Moderate,Skin rash,Gluten,Asthma,1
+25,2,982.7422636020052,8,Other,No,None,No symptoms,Seafood,Eczema,1
+23,2,257.6717184535632,3,Other,Yes,Severe,Nausea,Gluten,None,1
+72,24,225.501334725424,7,Female,No,Mild,Skin rash,Gluten,Eczema,1
+33,24,403.5852409557921,2,Other,Yes,None,Breathing issues,Eggs,Asthma,1
+62,25,899.4424243894308,3,Female,No,None,Breathing issues,Eggs,Asthma,1
+38,8,143.96653159597378,9,Other,Yes,Mild,Nausea,Eggs,Asthma,1
+55,16,627.2286722940488,4,Female,No,Moderate,Nausea,Dairy,None,1
+30,3,976.2719135972866,1,Male,No,Moderate,Swelling,Seafood,Eczema,1
+52,2,30.11348498192603,8,Other,No,None,Breathing issues,Gluten,Eczema,1
+72,19,466.9500524624902,2,Male,No,Severe,Skin rash,Nuts,Eczema,1
+15,20,197.2715483210045,4,Female,No,Severe,Swelling,Seafood,None,0
+26,23,503.8736446509267,3,Male,Yes,None,Skin rash,Seafood,None,1
+57,2,757.444637817043,1,Male,Yes,Mild,No symptoms,Eggs,Asthma,1
+29,27,607.070074369752,8,Male,No,None,Skin rash,Gluten,Asthma,1
+20,11,190.18770324658792,7,Female,No,Mild,No symptoms,Dairy,None,1
+66,11,983.3878185398786,10,Other,Yes,Mild,Swelling,Seafood,Eczema,1
+17,8,322.0387604101127,9,Other,No,Severe,Skin rash,Nuts,Asthma,1
+33,13,346.0871586359726,0,Female,No,Severe,No symptoms,Seafood,Asthma,1
+11,11,557.0939990781183,6,Male,Yes,Mild,Skin rash,Dairy,Asthma,1
+46,16,348.4486475000349,6,Other,No,Severe,Nausea,Eggs,Eczema,1
+27,23,847.9092528592262,3,Other,No,Moderate,Nausea,Seafood,Eczema,1
+75,6,854.8086971187752,4,Male,Yes,Mild,Skin rash,Gluten,None,1
+50,14,615.3541796720658,3,Female,Yes,None,No symptoms,Gluten,Asthma,1
+38,2,233.0613555416187,0,Female,No,None,Breathing issues,Nuts,Asthma,1
+67,27,321.9626055548099,5,Male,Yes,Mild,Skin rash,Dairy,Asthma,1
+66,17,646.0151090079877,4,Male,No,Mild,Nausea,Gluten,None,1
+75,5,215.7829967066002,0,Other,No,Severe,Swelling,Seafood,None,1
+49,13,880.6353801415116,5,Other,No,Mild,Nausea,Gluten,Asthma,1
+68,22,610.0423528285767,8,Other,No,Moderate,Swelling,Eggs,Eczema,1
+76,24,294.11431869295234,7,Other,No,Mild,No symptoms,Seafood,None,1
+21,4,101.71296388815033,9,Male,Yes,None,Nausea,Eggs,None,1
+17,4,983.740817274188,7,Other,Yes,None,Nausea,Gluten,Asthma,1
+68,19,213.0907027893328,9,Other,No,Mild,No symptoms,Eggs,Eczema,1
+60,26,434.2109393411902,6,Female,No,Mild,Nausea,Dairy,Eczema,1
+14,7,508.0995298606509,1,Female,No,Moderate,Breathing issues,Seafood,None,1
+61,3,61.783039784004224,6,Female,No,Moderate,Nausea,Nuts,Eczema,1
+71,9,914.4277384454824,8,Other,Yes,Mild,Swelling,Gluten,Asthma,1
+66,14,923.253540345798,10,Female,No,None,Nausea,Eggs,Eczema,1
+8,27,159.28507749628795,1,Other,Yes,Severe,Breathing issues,Gluten,Asthma,0
+40,14,360.9057742033232,1,Male,No,None,Breathing issues,Eggs,None,1
+59,18,885.8786750432006,5,Male,No,Mild,Swelling,Dairy,None,1
+27,21,568.2905870838429,8,Other,No,None,Skin rash,Dairy,Eczema,1
+55,28,681.4228044845439,4,Other,No,Mild,Breathing issues,Nuts,None,1
+25,20,677.6869730423581,0,Female,No,None,No symptoms,Eggs,Asthma,1
+11,14,746.5574676419035,5,Other,Yes,Mild,Breathing issues,Nuts,Asthma,1
+20,11,256.13522320866633,1,Other,No,Mild,Skin rash,Eggs,None,1
+7,22,461.8723495428814,4,Other,Yes,Mild,Swelling,Gluten,Asthma,1
+25,11,224.80327106209893,0,Male,Yes,None,Breathing issues,Nuts,Asthma,1
+36,0,353.598370481259,3,Female,Yes,Mild,No symptoms,Nuts,Asthma,1
+65,0,936.6300356625308,8,Male,Yes,None,Nausea,Eggs,Eczema,1
+58,21,490.47882303250657,5,Other,No,Severe,Swelling,Eggs,Eczema,1
+12,4,86.71764306050132,9,Other,Yes,Severe,No symptoms,Eggs,Asthma,1
+31,20,317.95531368897355,10,Female,No,Severe,Nausea,Dairy,None,1
+35,8,833.9905209521411,5,Male,Yes,Severe,Nausea,Nuts,Asthma,1
+13,5,40.246335814062505,0,Other,Yes,Moderate,Breathing issues,Gluten,None,0
+66,6,255.99816930567863,2,Male,Yes,Severe,Nausea,Seafood,None,1
+61,10,473.5608805154316,5,Female,Yes,Severe,Breathing issues,Seafood,None,1
+11,14,364.87250039993216,3,Male,Yes,Severe,Nausea,Gluten,Eczema,1
+59,24,561.7629533514796,3,Other,No,Moderate,Swelling,Nuts,None,1
+30,29,259.39422209114645,8,Other,Yes,None,No symptoms,Eggs,None,1
+26,22,129.46200962213646,2,Female,Yes,Moderate,Swelling,Eggs,None,0
+78,15,561.3691601274645,10,Male,Yes,Mild,Breathing issues,Seafood,Eczema,1
+33,10,952.093819484246,8,Other,No,Mild,No symptoms,Nuts,Eczema,1
+58,27,766.1753748895785,7,Male,No,Mild,Swelling,Eggs,Asthma,1
+76,22,673.6320319147012,10,Other,Yes,None,Breathing issues,Dairy,None,1
+21,22,693.4149037143283,2,Male,No,Moderate,Nausea,Gluten,Asthma,1
+29,23,532.6891886703394,1,Other,No,Severe,Nausea,Eggs,None,1
+60,25,170.638888489341,2,Other,No,Mild,No symptoms,Eggs,None,0
+10,24,19.96747401034429,1,Male,No,Moderate,Swelling,Eggs,Eczema,0
+37,12,776.0450926299167,3,Other,No,Moderate,Nausea,Gluten,Asthma,1
+30,6,375.843400282766,7,Male,No,Moderate,Swelling,Gluten,Eczema,1
+43,9,695.1912837186413,2,Female,Yes,Severe,Breathing issues,Nuts,None,1
+61,15,679.4746572908482,5,Female,No,None,Breathing issues,Dairy,None,1
+65,22,2.889820435268502,2,Other,Yes,None,Nausea,Gluten,Eczema,0
+31,21,680.6233805160525,6,Other,No,Mild,Breathing issues,Dairy,None,1
+52,7,19.375047988800578,1,Other,No,None,Swelling,Dairy,None,0
+29,24,148.87166632416964,5,Male,No,None,Swelling,Dairy,None,1
+51,5,796.106970276544,9,Female,Yes,None,Nausea,Gluten,None,1
+5,4,144.7473445359513,7,Female,No,Severe,Breathing issues,Nuts,Eczema,1
+32,0,572.4786507999056,8,Male,No,Mild,Breathing issues,Dairy,Eczema,1
+12,0,439.741965906687,9,Female,No,None,Nausea,Dairy,Asthma,1
+32,24,192.88466505922483,3,Female,No,Mild,Skin rash,Eggs,None,0
+28,1,446.4815154531709,9,Male,Yes,Mild,No symptoms,Gluten,Asthma,1
+7,7,463.7028755857998,3,Other,No,Mild,Nausea,Eggs,Asthma,1
+16,25,113.47283861113962,6,Male,No,Moderate,Nausea,Eggs,None,1
+33,22,231.16061977905497,5,Female,No,Moderate,Skin rash,Nuts,Eczema,1
+22,16,152.75751574754992,10,Male,Yes,Mild,Swelling,Gluten,None,1
+40,29,453.6593052788133,1,Female,No,Severe,Swelling,Eggs,Eczema,1
+5,26,987.2592418750274,9,Other,No,None,No symptoms,Seafood,Asthma,1
+78,17,949.083198774112,5,Male,Yes,None,No symptoms,Gluten,Asthma,1
+39,13,275.2014001668453,10,Male,No,None,Nausea,Dairy,Eczema,1
+42,7,606.0428323096199,2,Other,Yes,Moderate,Skin rash,Eggs,Asthma,1
+77,16,744.708235481068,9,Male,Yes,None,Skin rash,Seafood,Asthma,1
+19,2,630.5306176215528,6,Female,Yes,Severe,Nausea,Gluten,Asthma,1
+17,6,1.5351697173647492,1,Other,Yes,Moderate,No symptoms,Gluten,Asthma,0
+42,13,365.69092194359376,0,Male,Yes,Severe,Nausea,Nuts,Asthma,1
+62,26,366.9183407567641,1,Female,No,Severe,Skin rash,Seafood,Asthma,1
+15,27,580.4265434171153,7,Female,No,None,Skin rash,Gluten,Eczema,1
+6,29,133.9328116259569,6,Female,No,Mild,Breathing issues,Gluten,Asthma,1
+66,0,910.808700776036,8,Male,Yes,None,Swelling,Eggs,Asthma,1
+25,10,782.8772238661983,0,Other,Yes,None,Skin rash,Dairy,Eczema,1
+11,1,530.2383154795762,9,Male,Yes,Moderate,Breathing issues,Seafood,None,1
+43,19,571.1164337756131,0,Female,No,None,Nausea,Nuts,Asthma,1
+15,4,62.5549933495832,10,Male,No,Moderate,Nausea,Eggs,None,1
+17,23,417.3505988166209,2,Male,Yes,Moderate,No symptoms,Gluten,Asthma,1
+35,10,105.38007089002308,6,Female,Yes,None,No symptoms,Seafood,None,1
+7,11,609.6869667233638,1,Other,Yes,Mild,No symptoms,Gluten,Eczema,1
+47,23,621.9440035262837,9,Female,No,None,No symptoms,Dairy,Eczema,1
+57,28,168.32095676261477,7,Male,Yes,Moderate,Swelling,Eggs,Eczema,1
+13,27,966.0297539468492,5,Male,No,Severe,Breathing issues,Nuts,None,1
+19,3,987.273213951504,7,Male,No,None,No symptoms,Seafood,Asthma,1
+64,3,939.226645168337,5,Male,Yes,None,Breathing issues,Dairy,Asthma,1
+18,5,641.7904473411932,10,Male,No,Moderate,Breathing issues,Eggs,None,1
+13,17,868.8438566869353,9,Female,No,Severe,No symptoms,Gluten,None,1
+33,14,144.25306433883628,9,Male,Yes,Mild,Skin rash,Nuts,Asthma,1
+60,3,107.12080528091106,10,Female,No,None,Breathing issues,Nuts,None,1
+54,3,270.3030270974376,4,Female,Yes,Mild,Skin rash,Eggs,Eczema,1
+45,10,832.1942723396303,8,Male,Yes,Mild,Breathing issues,Seafood,None,1
+75,12,169.62306525142648,10,Female,Yes,Mild,Nausea,Gluten,Asthma,1
+7,17,268.63898708248263,4,Female,No,Severe,Swelling,Nuts,Asthma,1
+20,14,473.7833160848263,0,Male,Yes,None,No symptoms,Gluten,None,1
+18,16,121.9217097664938,7,Male,No,Severe,Swelling,Seafood,Eczema,1
+29,29,534.4350908432842,8,Female,Yes,Moderate,Breathing issues,Gluten,Eczema,1
+13,14,983.16120825616,1,Female,No,None,No symptoms,Gluten,Asthma,1
+33,19,649.9122731137777,4,Male,Yes,Mild,Breathing issues,Dairy,None,1
+77,13,69.64280767361988,7,Female,Yes,None,No symptoms,Seafood,None,1
+20,12,12.943746616892678,7,Other,Yes,Moderate,No symptoms,Gluten,Asthma,1
+16,8,829.4792666311878,0,Female,Yes,Severe,Breathing issues,Eggs,Eczema,1
+10,13,408.9385010767873,1,Other,Yes,Mild,Nausea,Nuts,Asthma,1
+64,2,360.2958975752524,9,Male,Yes,Severe,No symptoms,Gluten,None,1
+56,27,884.6552894033805,1,Female,Yes,Moderate,Breathing issues,Gluten,Eczema,1
+55,10,499.8112619334565,1,Male,Yes,None,Nausea,Gluten,Asthma,1
+35,25,263.5939163960824,9,Other,Yes,Moderate,Swelling,Nuts,Asthma,1
+51,22,86.87619557163265,3,Male,No,Moderate,Breathing issues,Gluten,Asthma,0
+48,3,1.496068979724145,2,Male,No,Severe,Nausea,Gluten,Asthma,0
+19,26,253.1144447420856,0,Other,Yes,None,Skin rash,Eggs,Asthma,1
+47,21,768.902645689088,5,Female,No,Severe,Swelling,Dairy,None,1
+39,10,581.4654999420832,3,Other,No,None,Swelling,Gluten,Eczema,1
+34,26,387.1400552657433,10,Female,No,Severe,No symptoms,Gluten,Asthma,1
+53,4,519.3683628459303,4,Female,No,Mild,Breathing issues,Dairy,None,1
+36,19,608.2403882648554,5,Male,No,None,Nausea,Seafood,None,1
+66,29,960.4628718013596,2,Other,No,Severe,No symptoms,Eggs,Eczema,1
+54,4,596.8403113326149,5,Male,No,Mild,Skin rash,Seafood,None,1
+9,24,568.2358067517953,5,Female,No,Mild,Breathing issues,Dairy,None,1
+74,2,65.53347879082226,5,Other,Yes,None,Skin rash,Dairy,Eczema,1
+17,10,890.5336133753995,1,Male,No,Mild,Breathing issues,Eggs,None,1
+26,28,941.426068739508,5,Male,No,Mild,No symptoms,Eggs,Eczema,1
+8,14,22.748963888713376,8,Other,No,Severe,No symptoms,Gluten,Eczema,1
+26,5,893.6993009454848,9,Female,Yes,None,Skin rash,Eggs,Eczema,1
+23,2,670.4682749788561,4,Other,No,Mild,Swelling,Dairy,Asthma,1
+33,26,231.5932454882925,6,Male,No,Severe,No symptoms,Dairy,Eczema,1
+16,0,236.0629763717229,7,Female,No,None,Skin rash,Seafood,Eczema,1
+49,8,884.4645322562087,6,Male,No,None,Breathing issues,Seafood,Asthma,1
+13,10,140.81469770031646,4,Female,Yes,Mild,Swelling,Seafood,Asthma,0
+64,15,920.3406315970508,10,Female,No,Severe,Breathing issues,Gluten,None,1
+64,24,297.86606353474895,9,Other,Yes,Mild,Swelling,Gluten,Asthma,1
+34,29,630.7357187493715,3,Female,No,Moderate,Skin rash,Seafood,None,1
+65,7,469.2748065749571,0,Male,No,Mild,Breathing issues,Gluten,Eczema,1
+13,18,700.5620888196264,8,Male,No,Moderate,No symptoms,Gluten,None,1
+34,10,351.6121811124415,5,Female,No,Severe,Breathing issues,Gluten,Asthma,1
+44,7,106.68811949920884,8,Male,No,Mild,Breathing issues,Dairy,None,1
+78,29,340.6143845762124,8,Other,Yes,Mild,Swelling,Eggs,Eczema,1
+76,8,494.3685040224625,2,Male,No,Mild,No symptoms,Seafood,Eczema,1
+46,9,436.0254848731853,5,Male,Yes,Severe,Swelling,Nuts,Asthma,1
+21,8,165.91325444559016,3,Female,Yes,Severe,Breathing issues,Seafood,None,0
+36,16,528.1012566597689,3,Male,No,Moderate,Skin rash,Eggs,Eczema,1
+63,26,347.0851453590711,8,Male,No,None,Breathing issues,Eggs,None,1
+49,7,252.02077163171657,1,Female,No,None,Nausea,Gluten,Asthma,1
+51,21,189.00072437624743,9,Male,Yes,Severe,Breathing issues,Eggs,Asthma,1
+54,13,618.4658779099873,7,Other,Yes,Severe,Swelling,Dairy,Eczema,1
+27,4,5.045276352081558,4,Male,Yes,Moderate,Breathing issues,Gluten,None,0
+21,12,191.1824907932094,4,Female,Yes,Severe,Nausea,Gluten,None,0
+78,25,476.42228721395327,0,Other,Yes,Severe,Breathing issues,Seafood,None,1
+25,6,435.7944605881093,5,Other,Yes,Moderate,Breathing issues,Gluten,None,1
+26,25,402.8062327374842,8,Female,No,None,Breathing issues,Eggs,None,1
+13,29,717.2081165256252,3,Female,Yes,Moderate,Swelling,Gluten,Eczema,1
+30,25,161.1517745864397,5,Other,No,Severe,No symptoms,Nuts,None,1
+32,1,637.64343824249,2,Female,No,Mild,Swelling,Nuts,Eczema,1
+43,5,990.0458814288362,8,Female,No,Moderate,Swelling,Nuts,Eczema,1
+28,0,301.331588509348,9,Female,No,Moderate,Swelling,Nuts,Eczema,1
+11,4,364.7065431097647,3,Male,Yes,Severe,Skin rash,Gluten,None,1
+12,18,695.6777552638632,3,Male,No,Severe,Nausea,Nuts,Asthma,1
+75,11,985.5748092699104,0,Female,No,Severe,Nausea,Eggs,Eczema,1
+69,5,235.20846457668196,1,Female,No,Mild,Skin rash,Eggs,None,1
+30,25,630.6088110025951,6,Other,No,None,No symptoms,Nuts,None,1
+51,26,728.581125988684,6,Other,Yes,Severe,Swelling,Seafood,Asthma,1
+6,27,226.29829628244184,8,Male,Yes,None,Swelling,Nuts,Asthma,1
+56,2,180.41094631042424,3,Female,No,Mild,Nausea,Seafood,None,0
+70,16,197.6276247610831,5,Female,No,Moderate,Swelling,Eggs,Eczema,1
+79,6,714.5650754609532,1,Male,No,None,Skin rash,Seafood,Eczema,1
+72,22,858.0832448139494,8,Other,No,Mild,Skin rash,Eggs,Asthma,1
+28,3,540.0525847342519,9,Other,No,Severe,Nausea,Gluten,None,1
+39,20,334.5400351396945,7,Other,No,None,Skin rash,Gluten,Asthma,1
+41,27,388.9453999054381,3,Other,No,Severe,Breathing issues,Nuts,Eczema,1
+25,27,785.2134110073326,0,Male,Yes,Moderate,Nausea,Gluten,Eczema,1
+62,5,762.558284082274,10,Male,Yes,Moderate,No symptoms,Seafood,None,1
+30,6,433.00764686095255,1,Male,Yes,Severe,Nausea,Gluten,None,1
+41,8,700.7928804973802,6,Male,Yes,Mild,No symptoms,Eggs,None,1
+14,19,269.32096213274787,6,Female,Yes,Moderate,Breathing issues,Dairy,Eczema,1
+79,11,805.0197576495657,6,Male,No,Moderate,No symptoms,Nuts,None,1
+44,18,759.0129965602168,4,Male,No,Mild,No symptoms,Nuts,Eczema,1
+70,20,743.794026680957,8,Female,Yes,None,Skin rash,Eggs,Eczema,1
+23,8,61.195100666075646,5,Male,Yes,None,Breathing issues,Gluten,None,1
+43,11,792.5606407936859,9,Other,Yes,Severe,Swelling,Seafood,None,1
+54,16,109.79988848980597,10,Other,No,Moderate,Breathing issues,Nuts,Asthma,1
+18,4,16.04315986195222,7,Female,No,Severe,No symptoms,Seafood,None,1
+59,26,110.4132703208476,5,Male,No,Moderate,No symptoms,Seafood,Asthma,1
+33,6,258.5060180941458,9,Female,Yes,Moderate,Breathing issues,Seafood,Eczema,1
+45,6,82.01190638105588,3,Male,No,Mild,No symptoms,Nuts,Asthma,0
+6,9,701.1257403167361,8,Female,Yes,Mild,Swelling,Gluten,Asthma,1
+23,15,934.0527105371806,7,Other,No,Severe,Skin rash,Eggs,None,1
+74,6,458.3697772894567,6,Other,No,Mild,Skin rash,Nuts,Eczema,1
+40,1,48.52400082024285,10,Other,Yes,Severe,Nausea,Nuts,Eczema,1
+30,12,605.0429186683473,10,Other,Yes,Severe,Nausea,Eggs,Eczema,1
+72,13,764.6088367117467,8,Female,Yes,Mild,Swelling,Seafood,None,1
+38,5,91.83052686411703,8,Male,Yes,None,Nausea,Eggs,None,1
+58,9,10.373949470556031,6,Male,Yes,Severe,Skin rash,Gluten,Asthma,1
+23,15,167.9729544517175,4,Female,No,Moderate,No symptoms,Nuts,Asthma,0
+13,1,264.38369336379355,6,Male,Yes,Mild,No symptoms,Eggs,None,1
+32,22,972.665145931814,3,Other,No,Moderate,Skin rash,Nuts,None,1
+23,26,860.5879732393397,8,Female,Yes,Mild,Swelling,Seafood,Eczema,1
+18,1,271.20833263775705,10,Male,Yes,Severe,Breathing issues,Seafood,None,1
+73,23,979.020015710504,8,Female,Yes,Moderate,Nausea,Nuts,None,1
+21,9,694.4383444907402,4,Other,Yes,Moderate,Nausea,Seafood,Asthma,1
+38,25,43.38538758197676,6,Other,Yes,Severe,No symptoms,Seafood,None,1
+24,11,19.78798632652954,8,Other,Yes,Severe,Skin rash,Dairy,Eczema,1
+20,5,255.31649173812357,3,Other,No,Mild,Skin rash,Seafood,None,1
+46,23,107.99481781736102,6,Female,No,None,Swelling,Nuts,Asthma,1
+46,28,696.6955430479296,4,Other,Yes,Severe,Skin rash,Gluten,Eczema,1
+43,7,894.27440972942,3,Male,Yes,None,No symptoms,Seafood,Eczema,1
+45,23,30.622407277812243,2,Male,Yes,Mild,Swelling,Eggs,Asthma,0
+57,1,490.2926625225223,3,Other,Yes,Moderate,Swelling,Gluten,Eczema,1
+17,17,960.5898501143008,4,Male,Yes,Mild,Breathing issues,Dairy,Asthma,1
+27,18,764.191823111496,5,Female,Yes,Moderate,Swelling,Dairy,Asthma,1
+54,15,683.3848732137747,2,Male,No,Mild,No symptoms,Seafood,Asthma,1
+52,7,409.17564129155625,2,Male,No,None,No symptoms,Nuts,Eczema,1
+9,9,780.2387196073543,3,Other,No,Severe,No symptoms,Eggs,None,1
+29,0,300.60338638029964,4,Other,No,Severe,No symptoms,Nuts,Eczema,1
+35,23,930.3534230955474,0,Female,Yes,Mild,Nausea,Eggs,Asthma,1
+63,0,983.4972650666514,7,Female,Yes,Severe,Skin rash,Seafood,Asthma,1
+16,28,569.7014261331816,9,Male,No,None,Breathing issues,Eggs,Asthma,1
+63,20,684.2117700069869,6,Female,No,Moderate,Breathing issues,Eggs,None,1
+25,8,400.0358854070054,8,Female,Yes,Mild,Nausea,Dairy,Eczema,1
+68,18,203.5844922475776,4,Other,No,Moderate,No symptoms,Nuts,Asthma,1
+56,23,953.6345638020798,3,Male,No,Severe,Breathing issues,Seafood,None,1
+39,0,983.0267460708092,7,Female,No,None,No symptoms,Gluten,Asthma,1
+51,7,191.88641607354683,10,Other,No,Mild,Breathing issues,Eggs,Eczema,1
+38,18,181.0886408854087,2,Female,No,Mild,Nausea,Gluten,Asthma,0
+78,24,250.69429782472463,10,Female,No,Moderate,Swelling,Dairy,Asthma,1
+21,17,88.39921213345163,5,Male,Yes,Moderate,Skin rash,Dairy,None,1
+35,18,858.319828786323,8,Other,No,None,No symptoms,Dairy,Asthma,1
+37,13,878.9333906390865,4,Female,Yes,None,Skin rash,Gluten,Asthma,1
+39,16,301.8288973337126,7,Female,Yes,Moderate,Nausea,Seafood,None,1
+55,18,536.8888648688343,0,Female,No,None,No symptoms,Nuts,Eczema,1
+62,1,661.5159833659068,9,Male,Yes,Moderate,No symptoms,Nuts,None,1
+59,17,361.84966609894855,5,Other,Yes,Severe,Swelling,Gluten,None,1
+21,3,954.5931650349472,3,Other,Yes,Severe,Nausea,Nuts,Asthma,1
+40,0,434.02025884518287,0,Other,No,None,No symptoms,Eggs,Eczema,1
+61,0,311.3188121915795,3,Female,Yes,Mild,Swelling,Gluten,None,1
+63,16,723.0828401380188,7,Male,No,Severe,Swelling,Nuts,Eczema,1
+77,28,613.9932482211274,1,Other,No,None,Skin rash,Gluten,Asthma,1
+74,17,412.4145610451511,9,Other,No,Moderate,Breathing issues,Nuts,None,1
+62,26,272.101566119729,8,Female,Yes,None,No symptoms,Dairy,None,1
+7,12,593.2697383358852,9,Male,Yes,Moderate,Breathing issues,Eggs,Asthma,1
+55,4,890.0761897696884,3,Female,No,Moderate,Nausea,Seafood,Eczema,1
+20,15,204.35874898290675,9,Male,No,Severe,Swelling,Gluten,Asthma,1
+26,29,242.3016965009682,2,Female,Yes,Moderate,Nausea,Seafood,None,1
+10,5,637.092566536727,3,Other,Yes,Severe,Breathing issues,Dairy,None,1
+61,21,648.838064811777,10,Female,No,None,Breathing issues,Nuts,None,1
+28,7,713.3027868289078,5,Female,Yes,None,Skin rash,Nuts,None,1
+60,12,754.709900951589,6,Male,No,None,Breathing issues,Nuts,Asthma,1
+66,24,49.890501015295925,9,Male,No,Moderate,Breathing issues,Nuts,None,1
+41,3,673.0957306970859,3,Male,Yes,None,Swelling,Eggs,Asthma,1
+9,5,547.0167959435097,0,Male,No,Severe,Breathing issues,Dairy,Asthma,1
+69,17,240.71437784615367,7,Other,Yes,Mild,Breathing issues,Eggs,None,1
+18,10,744.449572835945,3,Other,Yes,Severe,Breathing issues,Seafood,None,1
+5,10,129.34561821729105,8,Male,Yes,Mild,No symptoms,Dairy,None,1
+41,13,809.8613337964838,9,Male,No,Severe,Nausea,Dairy,None,1
+37,25,803.2440028911493,2,Male,Yes,Moderate,Breathing issues,Gluten,None,1
+64,19,889.967866772378,4,Female,Yes,Moderate,Swelling,Gluten,Asthma,1
+63,9,310.821761950053,1,Male,Yes,Severe,No symptoms,Dairy,Asthma,1
+79,10,824.6944519478171,7,Male,No,Severe,Swelling,Eggs,Asthma,1
+23,5,607.9710118707707,10,Other,No,Severe,Swelling,Nuts,Eczema,1
+36,2,970.4847411513342,9,Male,No,None,Skin rash,Nuts,Asthma,1
+74,0,811.9401836687297,4,Female,No,Moderate,Breathing issues,Dairy,None,1
+16,12,148.3953127167384,5,Female,No,Mild,Swelling,Nuts,Asthma,1
+23,29,169.75034853973864,7,Other,Yes,Severe,Swelling,Dairy,Eczema,1
+51,23,800.7768674588149,9,Female,Yes,Mild,Breathing issues,Seafood,Eczema,1
+78,12,524.1628088870763,5,Other,No,Moderate,Skin rash,Seafood,None,1
+35,2,37.56464178562753,10,Other,No,Mild,Breathing issues,Dairy,None,1
+55,14,488.1606602417363,0,Male,No,Severe,Breathing issues,Dairy,Asthma,1
+71,24,167.76631028933593,7,Other,No,Mild,Skin rash,Seafood,Asthma,1
+22,15,911.6722415891932,0,Male,Yes,Mild,Breathing issues,Eggs,None,1
+59,23,606.0410285747275,7,Female,Yes,Severe,Swelling,Nuts,Asthma,1
+61,14,770.7206918726189,0,Male,No,Mild,No symptoms,Eggs,Asthma,1
+57,11,606.164101824995,5,Other,Yes,Severe,No symptoms,Eggs,Asthma,1
+40,9,58.427928241162775,7,Male,No,Severe,Breathing issues,Nuts,None,1
+51,14,81.06915477449532,1,Male,Yes,Moderate,Skin rash,Gluten,Eczema,0
+5,23,38.71694773880868,6,Other,No,Moderate,Nausea,Eggs,Asthma,1
+21,17,566.4168000420505,0,Other,Yes,None,No symptoms,Nuts,None,1
+19,2,805.172035639294,2,Male,Yes,Mild,Swelling,Dairy,Eczema,1
+30,4,721.3308234441026,9,Other,Yes,None,Skin rash,Eggs,Asthma,1
+56,24,491.1038111028125,7,Male,No,Moderate,Swelling,Eggs,Asthma,1
+77,13,994.0265433717728,10,Female,Yes,Moderate,No symptoms,Gluten,None,1
+33,28,975.932627723632,9,Female,Yes,None,Skin rash,Gluten,Asthma,1
+14,24,351.6324233046816,2,Male,No,Severe,Nausea,Eggs,Eczema,1
+73,20,839.6748902068775,7,Male,Yes,Moderate,Breathing issues,Dairy,Asthma,1
+21,3,548.3324358289494,10,Male,Yes,Moderate,Swelling,Nuts,Asthma,1
+30,12,229.8714379286911,1,Other,No,None,Swelling,Eggs,None,1
+30,17,337.1228935521225,4,Other,No,None,Swelling,Nuts,Eczema,1
+5,3,99.80567529740544,1,Female,Yes,Moderate,Nausea,Gluten,Eczema,0
+58,5,892.80674796766,2,Female,Yes,Severe,Nausea,Seafood,Eczema,1
+46,27,821.9504860571918,0,Other,Yes,Mild,Breathing issues,Gluten,Asthma,1
+28,23,341.1984647405678,7,Male,No,Severe,No symptoms,Eggs,None,1
+76,7,488.7127007271565,10,Male,Yes,Moderate,Nausea,Eggs,Eczema,1
+41,10,597.4205858752019,4,Male,No,Moderate,Nausea,Dairy,Asthma,1
+40,29,540.6046447561339,3,Female,Yes,Mild,No symptoms,Nuts,None,1
+65,23,820.0516696984843,10,Female,Yes,Mild,Skin rash,Seafood,Eczema,1
+62,5,740.3040981318911,9,Other,No,Mild,Nausea,Nuts,Asthma,1
+69,20,673.056644546057,4,Other,Yes,None,Breathing issues,Dairy,None,1
+51,29,657.8093753223252,7,Female,Yes,None,Skin rash,Seafood,Eczema,1
+55,28,828.5072019267111,1,Female,Yes,Moderate,Skin rash,Seafood,None,1
+28,10,830.3153589860905,2,Female,No,Severe,No symptoms,Nuts,Asthma,1
+73,4,949.9347047072628,3,Female,Yes,None,No symptoms,Gluten,Asthma,1
+41,16,781.0339807185558,1,Other,No,Moderate,Skin rash,Seafood,Asthma,1
+78,26,15.308518531485548,3,Male,No,None,Breathing issues,Dairy,Eczema,0
+5,3,171.79013164904083,2,Female,Yes,Severe,No symptoms,Eggs,None,0
+58,21,547.7540283132454,2,Female,Yes,Severe,Swelling,Gluten,Asthma,1
+17,13,215.6183293617832,4,Other,No,None,Swelling,Nuts,None,1
+9,29,307.42494045570527,0,Other,Yes,Moderate,Breathing issues,Nuts,Asthma,1
+61,29,850.3316820937213,2,Other,No,Moderate,Skin rash,Gluten,Asthma,1
+28,22,146.41569744408278,3,Other,No,Moderate,Breathing issues,Seafood,Eczema,0
+57,25,322.20692209512384,8,Female,Yes,Severe,Skin rash,Dairy,Asthma,1
+71,3,396.7309560755596,4,Male,Yes,Moderate,Breathing issues,Nuts,Asthma,1
+66,8,753.707820659347,3,Other,No,Severe,Swelling,Seafood,Asthma,1
+6,19,731.1283053385292,2,Other,Yes,Severe,Breathing issues,Seafood,None,1
+67,29,114.08999868272736,0,Female,Yes,Mild,No symptoms,Gluten,Eczema,0
+30,27,733.1252305163205,1,Other,No,Moderate,No symptoms,Eggs,Asthma,1
+50,8,221.58791797791923,0,Female,Yes,Mild,Skin rash,Eggs,Eczema,1
+78,6,116.39349361392334,5,Female,Yes,None,Nausea,Seafood,None,1
+23,27,740.4512095326019,6,Male,No,None,Nausea,Eggs,Eczema,1
+29,22,286.0425018717304,2,Female,No,None,Skin rash,Nuts,Asthma,1
+23,14,496.3941933845077,6,Other,No,Severe,Skin rash,Eggs,Eczema,1
+73,15,802.5147518129196,5,Female,No,Mild,Nausea,Nuts,None,1
+42,29,207.6852312110726,9,Female,No,Severe,Skin rash,Nuts,None,1
+6,3,9.745585874374257,3,Female,No,Severe,Swelling,Nuts,Eczema,0
+12,27,142.9438875297679,5,Female,Yes,None,Nausea,Seafood,Eczema,1
+68,22,299.9982863430757,0,Female,No,Mild,Nausea,Gluten,None,1
+17,18,893.1889312275141,4,Other,No,Moderate,Breathing issues,Gluten,None,1
+66,13,951.3951665482156,5,Other,No,None,Swelling,Gluten,Asthma,1
+8,27,229.83515479089328,7,Male,Yes,Moderate,Skin rash,Eggs,None,1
+42,1,69.3178401095754,9,Male,No,Moderate,Breathing issues,Seafood,None,1
+49,13,516.8758158284869,1,Male,No,Mild,Swelling,Seafood,None,1
+31,20,605.7315137506617,10,Other,No,Moderate,Nausea,Gluten,Eczema,1
+73,21,264.7103555222336,1,Other,No,None,Breathing issues,Seafood,Asthma,1
+16,4,404.0318660779222,5,Male,Yes,None,Nausea,Dairy,None,1
+27,11,516.3434666314856,6,Other,Yes,Moderate,Nausea,Dairy,Asthma,1
+49,14,364.7781190056024,4,Male,Yes,None,Breathing issues,Nuts,Asthma,1
+27,21,869.4110623556692,6,Female,No,Moderate,Breathing issues,Gluten,Eczema,1
+31,22,764.8771724103041,6,Other,Yes,Mild,Skin rash,Seafood,Asthma,1
+31,25,338.9725159981172,9,Female,No,None,No symptoms,Nuts,Asthma,1
+53,13,783.0271673594066,1,Male,No,Moderate,Breathing issues,Eggs,Eczema,1
+47,15,197.34591392863285,2,Male,No,Moderate,Breathing issues,Dairy,Eczema,0
+30,16,797.18263671886,0,Other,No,None,Skin rash,Gluten,None,1
+22,0,36.626543716788426,7,Female,Yes,Severe,Swelling,Eggs,Asthma,1
+52,10,534.7847330974348,0,Female,No,Mild,Swelling,Eggs,Eczema,1
+38,7,740.8435285652682,0,Female,Yes,Mild,No symptoms,Dairy,Eczema,1
+46,27,492.0375619153379,9,Male,No,Mild,No symptoms,Dairy,None,1
+35,0,642.3660564800499,0,Other,Yes,None,Breathing issues,Nuts,None,1
+5,11,762.1272445035446,2,Male,Yes,Moderate,Skin rash,Gluten,Asthma,1
+5,26,578.1196044361872,3,Male,No,Mild,No symptoms,Gluten,Asthma,1
+24,8,441.83106421903807,4,Female,Yes,Mild,Swelling,Gluten,Asthma,1
+32,21,283.2240819788767,8,Other,No,Severe,No symptoms,Seafood,Eczema,1
+36,13,73.4091102962066,0,Male,Yes,Moderate,Swelling,Gluten,None,0
+66,1,607.2152537025078,1,Other,No,Severe,Breathing issues,Eggs,Eczema,1
+75,12,609.6269928629825,6,Other,Yes,Mild,Skin rash,Eggs,Asthma,1
+32,29,533.0146113239191,1,Other,No,Moderate,Breathing issues,Seafood,Asthma,1
+42,6,715.3532120892872,3,Male,Yes,Moderate,Skin rash,Eggs,Asthma,1
+75,5,897.9654848138201,4,Female,No,Mild,Breathing issues,Nuts,Eczema,1
+12,26,488.8584288765088,1,Female,No,Moderate,No symptoms,Gluten,Eczema,1
+31,4,336.00360766242784,6,Other,Yes,Moderate,Skin rash,Nuts,Asthma,1
+66,11,579.8487930890158,0,Female,Yes,Moderate,Breathing issues,Nuts,Eczema,1
+71,20,778.151749812977,3,Male,Yes,Moderate,Breathing issues,Gluten,Eczema,1
+24,18,244.61513223809644,0,Female,No,Moderate,Breathing issues,Seafood,Asthma,1
+54,1,792.2344836515408,10,Other,Yes,Severe,No symptoms,Nuts,None,1
+13,11,534.6250582140894,2,Female,Yes,Moderate,Nausea,Nuts,Asthma,1
+70,8,759.5166336511231,4,Female,Yes,None,Nausea,Eggs,Asthma,1
+58,7,499.1467422753663,9,Female,Yes,Severe,Swelling,Gluten,Eczema,1
+42,22,213.8703838883011,4,Female,Yes,None,No symptoms,Dairy,Eczema,1
+10,4,841.1987396995323,2,Female,No,Severe,No symptoms,Nuts,None,1
+60,10,111.55042085580727,0,Male,Yes,None,Breathing issues,Seafood,Asthma,0
+9,4,325.06258872952094,10,Male,No,Severe,No symptoms,Seafood,Asthma,1
+67,11,542.9178753913797,7,Other,Yes,Moderate,Nausea,Seafood,None,1
+52,4,859.3658713793599,8,Female,Yes,None,Skin rash,Nuts,None,1
+35,27,474.183787101134,3,Female,No,Mild,Nausea,Dairy,Eczema,1
+35,3,772.7285393453578,5,Female,Yes,Severe,Nausea,Gluten,Asthma,1
+79,15,899.9784675690014,10,Female,No,None,Swelling,Nuts,Eczema,1
+26,8,837.5495652884579,8,Male,No,Moderate,Skin rash,Seafood,Eczema,1
+58,22,500.873248921162,9,Male,No,None,No symptoms,Nuts,None,1
+66,7,821.1360512193676,7,Other,Yes,Mild,Breathing issues,Nuts,Asthma,1
+63,6,778.6551714341609,9,Other,No,Mild,No symptoms,Eggs,Asthma,1
+54,10,216.46268093126068,3,Male,Yes,None,Nausea,Dairy,Eczema,1

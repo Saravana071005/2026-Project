@@ -15,6 +15,7 @@ import medicalReportRoutes from './routes/medicalReportRoutes.js';
 import foodDiaryRoutes from './routes/foodDiaryRoutes.js';
 import symptomRoutes from './routes/symptomRoutes.js';
 import aiAnalysisRoutes from './routes/aiAnalysisRoutes.js';
+import mlRoutes from './routes/mlRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -100,6 +101,7 @@ app.use('/api/medical-reports', requireDbConnection, medicalReportRoutes);
 app.use('/api/food-diary', requireDbConnection, foodDiaryRoutes);
 app.use('/api/symptoms', requireDbConnection, symptomRoutes);
 app.use('/api/ai-analysis', requireDbConnection, aiAnalysisRoutes);
+app.use('/api/ml', mlRoutes);
 
 // Serve static frontend files if built (for monolithic or production single-service hosting)
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
