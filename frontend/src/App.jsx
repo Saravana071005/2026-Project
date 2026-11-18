@@ -14,12 +14,12 @@ import NotFoundPage from './pages/NotFoundPage';
  */
 function getPageFromPath(pathname) {
   if (!pathname) return 'home';
-  // Strip trailing slashes and normalize
-  const cleanPath = pathname.replace(/\/+$/, '') || '/';
-  if (cleanPath === '/' || cleanPath === '') return 'home';
-  if (cleanPath === '/login') return 'login';
-  if (cleanPath === '/register') return 'register';
-  if (cleanPath === '/dashboard') return 'dashboard';
+  // Strip query parameters, hashes, and trailing slashes
+  const purePath = pathname.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+  if (purePath === '/' || purePath === '') return 'home';
+  if (purePath === '/login') return 'login';
+  if (purePath === '/register') return 'register';
+  if (purePath === '/dashboard') return 'dashboard';
   return 'not_found';
 }
 

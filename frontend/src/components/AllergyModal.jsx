@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, AlertCircle, ShieldAlert, Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 
 const COMMON_REACTIONS = [
@@ -32,6 +33,7 @@ const CATEGORIES = [
 ];
 
 export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) {
+  const { t } = useTranslation();
   const [allergenName, setAllergenName] = useState('');
   const [allergenCategory, setAllergenCategory] = useState('Peanuts');
   const [severity, setSeverity] = useState('Moderate');
@@ -79,7 +81,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!allergenName.trim()) {
-      setError('Please provide the food allergen name.');
+      setError(t('allergies.allergenName') + ' is required.');
       return;
     }
 
@@ -120,22 +122,23 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-200 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
+      <div className="relative bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-200/80 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
         {/* Modal Header */}
         <div className="px-6 py-4 bg-gradient-to-r from-teal-700 to-cyan-700 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <ShieldAlert className="w-6 h-6 text-teal-200" />
             <div>
               <h3 className="text-lg font-bold">
-                {initialData ? 'Update Food Allergy Record' : 'Record New Food Allergy'}
+                {initialData ? t('allergies.editAllergy') : t('allergies.addNewAllergy')}
               </h3>
               <p className="text-xs text-teal-100">
-                Logged to your secure health record in MongoDB Atlas
+                {t('allergies.subtitle')}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
+            aria-label="Close"
             className="p-1 rounded-lg text-teal-100 hover:text-white hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
@@ -155,7 +158,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
             {/* Allergen Name */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Food Allergen Name <span className="text-rose-500">*</span>
+                {t('allergies.allergenName')} <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
@@ -170,7 +173,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
             {/* Category */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Allergen Category
+                {t('allergies.category')}
               </label>
               <select
                 value={allergenCategory}
@@ -188,34 +191,32 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
             {/* Severity */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Severity Level
+                {t('allergies.severity')}
               </label>
               <select
                 value={severity}
                 onChange={(e) => setSeverity(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs bg-white"
               >
-                <option value="Mild">Mild (Minor rash, localized itching)</option>
-                <option value="Moderate">Moderate (Systemic hives, swelling, GI distress)</option>
-                <option value="Severe / Anaphylactic Risk">
-                  Severe / Anaphylactic Risk (Airway restriction, EpiPen required)
-                </option>
+                <option value="Mild">{t('allergies.mild')}</option>
+                <option value="Moderate">{t('allergies.moderate')}</option>
+                <option value="Severe / Anaphylactic Risk">{t('allergies.severe')}</option>
               </select>
             </div>
 
             {/* Diagnosis Type */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Diagnosis Classification
+                {t('allergies.diagnosisType')}
               </label>
               <select
                 value={diagnosisType}
                 onChange={(e) => setDiagnosisType(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs bg-white"
               >
-                <option value="Doctor-Confirmed Diagnosis">Doctor-Confirmed Diagnosis</option>
+                <option value="Doctor-Confirmed Diagnosis">{t('allergies.doctorConfirmed')}</option>
                 <option value="Prescription Documented">Prescription Documented</option>
-                <option value="Suspected by Patient">Suspected by Patient</option>
+                <option value="Suspected by Patient">{t('allergies.suspected')}</option>
                 <option value="Family History / Precautionary">Family History / Precautionary</option>
               </select>
             </div>
@@ -224,7 +225,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
           {/* Known Reactions */}
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              Known Allergic Reactions & Symptoms
+              {t('allergies.reactions')}
             </label>
             <div className="flex flex-wrap gap-2">
               {COMMON_REACTIONS.map((reaction) => {
@@ -251,7 +252,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
           {/* Reaction Description */}
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-              Detailed Reaction Notes / Patient Experience
+              {t('allergies.reactionDescription')}
             </label>
             <textarea
               rows={2}
@@ -266,7 +267,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
             {/* Prescribing Doctor */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Diagnosing Doctor / Clinic
+                {t('allergies.doctorName')}
               </label>
               <input
                 type="text"
@@ -280,7 +281,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
             {/* Emergency Medication */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Prescribed Emergency Medication
+                {t('allergies.emergencyMedication')}
               </label>
               <input
                 type="text"
@@ -300,14 +301,14 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
               disabled={loading}
               className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={loading}
               className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-md hover:from-teal-700 hover:to-cyan-700 transition-all disabled:opacity-50"
             >
-              {loading ? 'Saving to Database...' : initialData ? 'Update Record' : 'Save Allergy Record'}
+              {loading ? t('common.saving') : initialData ? t('common.saveChanges') : t('allergies.addNewAllergy')}
             </button>
           </div>
         </form>

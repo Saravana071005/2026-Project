@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ShieldCheck,
   User,
@@ -19,6 +20,7 @@ import { useAuth } from '../context/AuthContext';
 const TODAY_DATE_STRING = new Date().toISOString().split('T')[0];
 
 export default function RegisterPage({ setActivePage }) {
+  const { t } = useTranslation();
   const { register } = useAuth();
 
   const [name, setName] = useState('');
@@ -55,11 +57,11 @@ export default function RegisterPage({ setActivePage }) {
 
     // Client-side validations
     if (!name.trim()) {
-      setError('Please enter your full legal name.');
+      setError(t('auth.fullName') + ' ' + t('common.required'));
       return;
     }
     if (!dob) {
-      setError('Please select your date of birth.');
+      setError(t('auth.dob') + ' ' + t('common.required'));
       return;
     }
     if (new Date(dob) > new Date()) {
@@ -67,11 +69,11 @@ export default function RegisterPage({ setActivePage }) {
       return;
     }
     if (!address.trim()) {
-      setError('Please enter your residential address.');
+      setError(t('auth.address') + ' ' + t('common.required'));
       return;
     }
     if (!email.trim()) {
-      setError('Please provide a valid email address.');
+      setError(t('auth.email') + ' ' + t('common.required'));
       return;
     }
     if (password.length < 6) {
@@ -122,17 +124,17 @@ export default function RegisterPage({ setActivePage }) {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+      <div className="bg-white/95 backdrop-blur-xl rounded-3xl border border-slate-200/80 shadow-2xl overflow-hidden transition-all">
         {/* Header Banner */}
-        <div className="px-8 py-6 bg-gradient-to-r from-teal-700 via-teal-600 to-cyan-600 text-white">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center">
-              <ShieldCheck className="w-7 h-7 text-teal-200" />
+        <div className="px-8 py-7 bg-gradient-to-r from-teal-700 via-teal-600 to-cyan-600 text-white relative overflow-hidden">
+          <div className="flex items-center gap-3.5 relative z-10">
+            <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center border border-white/20 shadow-inner">
+              <ShieldCheck className="w-8 h-8 text-teal-100" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">Create Patient Account</h2>
+              <h2 className="text-2xl font-black tracking-tight">{t('auth.registerTitle')}</h2>
               <p className="text-xs text-teal-100 mt-0.5">
-                Register to log prescriptions, lab tests, and food allergy records in MongoDB Atlas
+                {t('auth.registerSubtitle')}
               </p>
             </div>
           </div>
@@ -141,14 +143,14 @@ export default function RegisterPage({ setActivePage }) {
         {/* Form Container */}
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           {error && (
-            <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-3 animate-in fade-in">
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-3 animate-in fade-in">
               <AlertCircle className="w-5 h-5 shrink-0 text-rose-600" />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="p-4 rounded-xl bg-teal-50 border border-teal-200 text-teal-800 text-sm flex items-center gap-3 animate-in fade-in">
+            <div className="p-4 rounded-2xl bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold flex items-center gap-3 animate-in fade-in">
               <CheckCircle className="w-5 h-5 shrink-0 text-teal-600" />
               <span>{success}</span>
             </div>
@@ -158,7 +160,7 @@ export default function RegisterPage({ setActivePage }) {
             {/* Full Name */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Full Name <span className="text-rose-500">*</span>
+                {t('auth.fullName')} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -167,16 +169,16 @@ export default function RegisterPage({ setActivePage }) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Eleanor Vance"
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs"
+                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs transition-all bg-white"
                 />
-                <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <User className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
               </div>
             </div>
 
             {/* Email Address */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Email Address <span className="text-rose-500">*</span>
+                {t('auth.email')} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -185,16 +187,16 @@ export default function RegisterPage({ setActivePage }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="patient@example.com"
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs"
+                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs transition-all bg-white"
                 />
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
               </div>
             </div>
 
             {/* Date of Birth */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Date of Birth (DOB) <span className="text-rose-500">*</span>
+                {t('auth.dob')} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -203,24 +205,24 @@ export default function RegisterPage({ setActivePage }) {
                   max={TODAY_DATE_STRING}
                   value={dob}
                   onChange={handleDobChange}
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs"
+                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs transition-all bg-white"
                 />
-                <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
               </div>
             </div>
 
             {/* Auto-Calculated Age */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                <span>Calculated Age</span>
+                <span>{t('auth.calculatedAge')}</span>
                 <span className="text-[10px] text-teal-600 font-semibold flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" /> Dynamic from DOB
+                  <Sparkles className="w-3 h-3" /> {t('auth.autoComputed')}
                 </span>
               </label>
-              <div className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 text-sm font-semibold flex items-center justify-between shadow-xs">
-                <span>{calculatedAge !== null ? `${calculatedAge} years old` : 'Select DOB'}</span>
-                <span className="text-xs px-2 py-0.5 rounded-md bg-teal-100 text-teal-800 font-medium">
-                  Auto-Computed
+              <div className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50/80 text-slate-900 text-sm font-semibold flex items-center justify-between shadow-2xs">
+                <span>{calculatedAge !== null ? `${calculatedAge} ${t('common.yearsOld')}` : t('auth.dob')}</span>
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-800 font-semibold">
+                  {t('auth.autoComputed')}
                 </span>
               </div>
             </div>
@@ -228,17 +230,17 @@ export default function RegisterPage({ setActivePage }) {
             {/* Sex */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Sex / Gender <span className="text-rose-500">*</span>
+                {t('auth.sex')} <span className="text-rose-500">*</span>
               </label>
               <select
                 value={sex}
                 onChange={(e) => setSex(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs bg-white"
+                className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs bg-white"
               >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-                <option value="Prefer not to say">Prefer not to say</option>
+                <option value="Male">{t('auth.male')}</option>
+                <option value="Female">{t('auth.female')}</option>
+                <option value="Other">{t('auth.other')}</option>
+                <option value="Prefer not to say">{t('auth.preferNotToSay')}</option>
               </select>
             </div>
           </div>
@@ -246,7 +248,7 @@ export default function RegisterPage({ setActivePage }) {
           {/* Address */}
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Residential Address <span className="text-rose-500">*</span>
+              {t('auth.address')} <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
               <textarea
@@ -254,10 +256,10 @@ export default function RegisterPage({ setActivePage }) {
                 required
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Residential address, city, state, postal code"
-                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs resize-none"
+                placeholder={t('auth.address')}
+                className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs resize-none bg-white"
               />
-              <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
             </div>
           </div>
 
@@ -265,7 +267,7 @@ export default function RegisterPage({ setActivePage }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Password <span className="text-rose-500">*</span>
+                {t('auth.password')} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -274,13 +276,14 @@ export default function RegisterPage({ setActivePage }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 6 characters"
-                  className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs"
+                  className="w-full pl-9 pr-10 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs bg-white"
                 />
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 p-1"
+                  aria-label="Toggle password visibility"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -289,7 +292,7 @@ export default function RegisterPage({ setActivePage }) {
 
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Confirm Password <span className="text-rose-500">*</span>
+                {t('auth.confirmPassword')} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -298,9 +301,9 @@ export default function RegisterPage({ setActivePage }) {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Re-type password"
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs"
+                  className="w-full pl-9 pr-3.5 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs bg-white"
                 />
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
               </div>
             </div>
           </div>
@@ -308,14 +311,14 @@ export default function RegisterPage({ setActivePage }) {
           {/* Food Allergy Details */}
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Initial Food Allergy Details / Clinical Background
+              {t('auth.initialAllergyDetails')}
             </label>
             <textarea
               rows={2}
               value={foodAllergySummary}
               onChange={(e) => setFoodAllergySummary(e.target.value)}
               placeholder="e.g. Known peanut allergy since age 6; carries Epipen; mild tingling with soy."
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs resize-none"
+              className="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-2xs resize-none bg-white"
             />
           </div>
 
@@ -323,13 +326,13 @@ export default function RegisterPage({ setActivePage }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {loading ? (
-              <span>Saving details to MongoDB Atlas...</span>
+              <span>{t('auth.savingAtlas')}</span>
             ) : (
               <>
-                <span>Complete Registration & Open Dashboard</span>
+                <span>{t('auth.registerSubmit')}</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -337,13 +340,13 @@ export default function RegisterPage({ setActivePage }) {
 
           {/* Redirect to login */}
           <div className="text-center pt-2 text-xs text-slate-600">
-            Already have an account?{' '}
+            {t('auth.alreadyHaveAccount')}{' '}
             <button
               type="button"
               onClick={() => setActivePage('login')}
-              className="font-bold text-teal-600 hover:text-teal-800 underline"
+              className="font-bold text-teal-600 hover:text-teal-800 underline ml-1 cursor-pointer"
             >
-              Sign In Here
+              {t('auth.signInHere')}
             </button>
           </div>
         </form>

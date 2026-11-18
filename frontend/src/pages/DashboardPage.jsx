@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ShieldAlert,
   FileCheck,
@@ -32,6 +33,9 @@ import {
   Microscope,
   TrendingUp,
   Bot,
+  Compass,
+  ArrowRight,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -51,6 +55,7 @@ import SymptomJournalView from '../components/SymptomJournalView';
 import AIAnalysisView from '../components/AIAnalysisView';
 import HistoryAndPatternsView from '../components/HistoryAndPatternsView';
 import AIHealthAssistantView from '../components/AIHealthAssistantView';
+import VisualAIAssistant from '../components/VisualAIAssistant';
 import {
   SUPPORTED_TEST_TYPES_LIST,
   TEST_SCHEMAS,
@@ -335,10 +340,20 @@ function TestSpecificParametersView({ test }) {
 }
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { t } = useTranslation();
+  const { user, language, hasCompletedTutorial, completeTutorial, restartTutorial } = useAuth();
 
-  // Active Tab: allergies | tests | diary | symptoms | analysis | history | assistant | reports | profile
-  const [activeTab, setActiveTab] = useState('allergies');
+  // Active Tab: persisted to localStorage (allergies | tests | diary | symptoms | analysis | history | assistant | reports | profile)
+  const [activeTab, setActiveTab] = useState(() => {
+    return (typeof window !== 'undefined' && localStorage.getItem('food_allergy_active_tab')) || 'allergies';
+  });
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('food_allergy_active_tab', tab);
+    }
+  };
 
   // Data States
   const [allergies, setAllergies] = useState([]);
@@ -648,10 +663,13 @@ export default function DashboardPage() {
         await api.delete(`/food-diary/${id}`);
         setFoodEntries((prev) => prev.filter((f) => f._id !== id));
         showToast('Food intake diary entry deleted.');
+        api.get('/ai-analysis/diet-monitoring').then((r) => setDietMonitoring(r.data.data)).catch(() => {});
+        api.get('/ai-analysis/patterns').then((r) => setPatterns(r.data.data)).catch(() => {});
       } else if (type === 'symptom') {
         await api.delete(`/symptoms/${id}`);
         setSymptoms((prev) => prev.filter((s) => s._id !== id));
         showToast('Symptom journal record deleted.');
+        api.get('/ai-analysis/patterns').then((r) => setPatterns(r.data.data)).catch(() => {});
       } else if (type === 'analysis') {
         await api.delete(`/ai-analysis/${id}`);
         setAnalyses((prev) => prev.filter((a) => a._id !== id));
@@ -736,18 +754,79 @@ export default function DashboardPage() {
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
   };
 
+  // Determine the next recommended action based on user onboarding status
+  const getRecommendedAction = () => {
+    if (!user?.address || !user?.foodAllergySummary) {
+      return {
+        title: t('dashboard.completeProfileTitle'),
+        desc: t('dashboard.completeProfileDesc'),
+        action: () => setIsProfileModalOpen(true),
+        badge: t('dashboard.nextActionBadge'),
+        icon: User,
+        gradient: 'from-teal-600 to-cyan-600',
+      };
+    }
+    if (allergies.length === 0) {
+      return {
+        title: t('dashboard.addAllergyTitle'),
+        desc: t('dashboard.addAllergyDesc'),
+        action: () => {
+          setEditingAllergy(null);
+          setIsAllergyModalOpen(true);
+        },
+        badge: t('dashboard.nextActionBadge'),
+        icon: ShieldAlert,
+        gradient: 'from-rose-600 to-pink-600',
+      };
+    }
+    if (reports.length === 0) {
+      return {
+        title: t('dashboard.scanReportTitle'),
+        desc: t('dashboard.scanReportDesc'),
+        action: () => setIsUploadModalOpen(true),
+        badge: t('dashboard.nextActionBadge'),
+        icon: UploadCloud,
+        gradient: 'from-amber-500 to-orange-500',
+      };
+    }
+    if (foodEntries.length === 0) {
+      return {
+        title: t('dashboard.logMealTitle'),
+        desc: t('dashboard.logMealDesc'),
+        action: () => {
+          setEditingFood(null);
+          setIsFoodModalOpen(true);
+        },
+        badge: t('dashboard.nextActionBadge'),
+        icon: Utensils,
+        gradient: 'from-emerald-600 to-teal-600',
+      };
+    }
+    return {
+      title: t('dashboard.checkAnalysisTitle'),
+      desc: t('dashboard.checkAnalysisDesc'),
+      action: () => handleRunAnalysis(''),
+      badge: t('dashboard.nextActionBadge'),
+      icon: Sparkles,
+      gradient: 'from-indigo-600 to-purple-600',
+    };
+  };
+
+  const recommendedAction = getRecommendedAction();
+  const RecommendedIcon = recommendedAction.icon;
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-slate-900 text-white text-sm font-medium shadow-2xl flex items-center gap-3 border border-slate-700 animate-in slide-in-from-bottom-5">
+        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-slate-900/95 text-white text-sm font-medium shadow-2xl flex items-center gap-3 border border-slate-700 animate-in slide-in-from-bottom-5 backdrop-blur">
           <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Top Banner: User Demographics & Actions */}
-      <div className="rounded-3xl bg-gradient-to-r from-teal-800 via-teal-700 to-cyan-700 text-white p-6 sm:p-8 shadow-xl relative overflow-hidden">
+      {/* Top Banner: Welcome & Quick Demographic Profile */}
+      <div className="rounded-3xl bg-gradient-to-r from-teal-800 via-teal-700 to-cyan-700 text-white p-6 sm:p-8 shadow-xl relative overflow-hidden backdrop-blur">
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start sm:items-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center font-extrabold text-2xl text-teal-100 shadow-inner shrink-0">
@@ -755,24 +834,27 @@ export default function DashboardPage() {
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                  Welcome, {user?.name || 'Patient'}
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+                  {t('dashboard.welcomeTitle')}
                 </h1>
                 <span className="px-2.5 py-0.5 rounded-full bg-teal-500/30 border border-teal-300/30 text-teal-100 text-xs font-semibold">
-                  Verified Patient Record
+                  {t('common.verified')}
                 </span>
               </div>
+              <p className="text-xs text-teal-100 mt-1">
+                {t('dashboard.welcomeUser', { name: user?.name || 'Patient' })} • {t('dashboard.welcomeSubtitle')}
+              </p>
 
-              {/* Quick Demographics Chips */}
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-teal-100">
+              {/* Demographics Chips */}
+              <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-teal-100">
                 <span className="flex items-center gap-1 font-medium">
                   <Calendar className="w-3.5 h-3.5" />
-                  DOB: {formatDate(user?.dob)} (<strong>Age: {user?.age ?? 'N/A'} yrs</strong>)
+                  {t('common.dob')}: {formatDate(user?.dob, language)} (<strong>{t('common.age')}: {user?.age ?? 'N/A'} {t('common.yearsOld')}</strong>)
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1">
                   <User className="w-3.5 h-3.5" />
-                  Sex: {user?.sex || 'N/A'}
+                  {t('common.sex')}: {user?.sex || 'N/A'}
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1">
@@ -782,7 +864,7 @@ export default function DashboardPage() {
                 <span>•</span>
                 <span className="flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5" />
-                  {user?.address || 'Address provided'}
+                  {user?.address || t('common.address')}
                 </span>
               </div>
             </div>
@@ -795,54 +877,52 @@ export default function DashboardPage() {
                 setEditingFood(null);
                 setIsFoodModalOpen(true);
               }}
-              className="px-3.5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
             >
               <Utensils className="w-3.5 h-3.5" />
-              <span>Log Meal</span>
+              <span>{t('diary.logMeal')}</span>
             </button>
             <button
               onClick={() => {
                 setEditingSymptom(null);
                 setIsSymptomModalOpen(true);
               }}
-              className="px-3.5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
             >
               <Activity className="w-3.5 h-3.5" />
-              <span>Record Symptom</span>
+              <span>{t('symptoms.recordSymptom')}</span>
             </button>
             <button
               onClick={() => setIsUploadModalOpen(true)}
-              className="px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
             >
               <UploadCloud className="w-4 h-4 text-slate-900" />
-              <span>Scan Report (OCR)</span>
+              <span>{t('reports.uploadButton')}</span>
             </button>
             <button
               onClick={() => {
                 setEditingAllergy(null);
                 setIsAllergyModalOpen(true);
               }}
-              className="px-3.5 py-2.5 rounded-xl bg-white text-teal-900 hover:bg-teal-50 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+              className="px-3.5 py-2.5 rounded-xl bg-white text-teal-900 hover:bg-teal-50 text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4 text-teal-700" />
-              <span>Add Allergy</span>
-            </button>
-            <button
-              onClick={() => {
-                setEditingTest(null);
-                setIsTestModalOpen(true);
-              }}
-              className="px-3.5 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-900 text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
-            >
-              <Plus className="w-4 h-4 text-slate-900" />
-              <span>Add Test</span>
+              <span>{t('nav.allergies')}</span>
             </button>
             <button
               onClick={() => setIsProfileModalOpen(true)}
-              className="px-3 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition-all border border-white/20 flex items-center gap-1 shadow-xs"
+              className="px-3 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition-all border border-white/20 flex items-center gap-1 shadow-xs cursor-pointer"
             >
               <Edit2 className="w-3.5 h-3.5" />
-              <span>Edit Profile</span>
+              <span>{t('common.edit')}</span>
+            </button>
+            <button
+              onClick={restartTutorial}
+              className="px-3 py-2.5 rounded-xl bg-teal-400/30 hover:bg-teal-400/40 text-teal-100 text-xs font-bold transition-all border border-teal-300/40 flex items-center gap-1.5 shadow-xs cursor-pointer"
+              title={t('common.restartTutorial')}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span className="hidden sm:inline">{t('common.help')}</span>
             </button>
           </div>
         </div>
@@ -855,94 +935,343 @@ export default function DashboardPage() {
       <EmergencyAlertBanner
         emergencySymptoms={emergencySymptoms}
         emergencyAnalyses={emergencyAnalyses}
-        onNavigateToSymptoms={() => setActiveTab('symptoms')}
+        onNavigateToSymptoms={() => handleTabChange('symptoms')}
       />
+
+      {/* "What should I do next?" Intelligent Guidance Section */}
+      <div className="p-6 rounded-3xl bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 text-white shadow-xl border border-slate-800 relative overflow-hidden">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-teal-400/20 text-teal-300 border border-teal-400/30 text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1">
+                <Compass className="w-3 h-3 text-teal-400" />
+                <span>{recommendedAction.badge}</span>
+              </span>
+              <span className="text-xs text-slate-400 font-semibold">•</span>
+              <h3 className="text-sm font-bold text-slate-300">{t('dashboard.whatShouldIDoNext')}</h3>
+            </div>
+            <h4 className="text-lg sm:text-xl font-black text-white">
+              {recommendedAction.title}
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+              {recommendedAction.desc}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={recommendedAction.action}
+            className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-teal-400 to-cyan-400 hover:from-teal-300 hover:to-cyan-300 text-slate-950 font-black text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2 transition-all self-start md:self-auto cursor-pointer shrink-0"
+          >
+            <RecommendedIcon className="w-4 h-4 text-slate-950" />
+            <span>{t('dashboard.takeAction')}</span>
+            <ArrowRight className="w-4 h-4 text-slate-950" />
+          </button>
+        </div>
+      </div>
+
+      {/* PART 3: 8 Clear Action Cards Grid */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-teal-600" />
+            <span>{t('dashboard.actionCardsTitle')}</span>
+          </h2>
+          <p className="text-xs text-slate-500">{t('dashboard.actionCardsSubtitle')}</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Card 1: My Health Profile */}
+          <div
+            data-tour="profile"
+            onClick={() => handleTabChange('profile')}
+            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+              activeTab === 'profile'
+                ? 'border-teal-500 ring-2 ring-teal-400/40 bg-teal-50/30'
+                : 'border-slate-200/80 hover:border-teal-300'
+            }`}
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <User className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                {user?.age ? `${user.age} yrs` : 'Setup'}
+              </span>
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.profileTitle')}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.profileDesc')}</p>
+            <div className="flex items-center text-xs font-bold text-teal-600 group-hover:text-teal-700">
+              <span>{t('common.viewDetails')}</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 2: My Food Allergies */}
+          <div
+            data-tour="allergies"
+            onClick={() => handleTabChange('allergies')}
+            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+              activeTab === 'allergies'
+                ? 'border-rose-500 ring-2 ring-rose-400/40 bg-rose-50/30'
+                : 'border-slate-200/80 hover:border-rose-300'
+            }`}
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <ShieldAlert className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">
+                {allergies.length} {t('stats.recorded')}
+              </span>
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.allergiesTitle')}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.allergiesDesc')}</p>
+            <div className="flex items-center text-xs font-bold text-rose-600 group-hover:text-rose-700">
+              <span>{t('common.viewDetails')}</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 3: Upload Medical Report */}
+          <div
+            data-tour="reports"
+            onClick={() => setIsUploadModalOpen(true)}
+            className="group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border border-slate-200/80 hover:border-amber-300 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer relative overflow-hidden"
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <UploadCloud className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                {reports.length} Docs
+              </span>
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.uploadReportTitle')}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.uploadReportDesc')}</p>
+            <div className="flex items-center text-xs font-bold text-amber-700 group-hover:text-amber-800">
+              <span>{t('reports.uploadButton')}</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 4: My Test Results */}
+          <div
+            data-tour="tests"
+            onClick={() => handleTabChange('tests')}
+            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+              activeTab === 'tests'
+                ? 'border-cyan-500 ring-2 ring-cyan-400/40 bg-cyan-50/30'
+                : 'border-slate-200/80 hover:border-cyan-300'
+            }`}
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <FileCheck className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800">
+                {medicalTests.length} Tests
+              </span>
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.testResultsTitle')}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.testResultsDesc')}</p>
+            <div className="flex items-center text-xs font-bold text-cyan-600 group-hover:text-cyan-700">
+              <span>{t('common.viewDetails')}</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 5: Daily Food Diary */}
+          <div
+            data-tour="diary"
+            onClick={() => handleTabChange('diary')}
+            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+              activeTab === 'diary'
+                ? 'border-emerald-500 ring-2 ring-emerald-400/40 bg-emerald-50/30'
+                : 'border-slate-200/80 hover:border-emerald-300'
+            }`}
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Utensils className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                {foodEntries.length} {t('stats.mealsLogged')}
+              </span>
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.foodDiaryTitle')}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.foodDiaryDesc')}</p>
+            <div className="flex items-center text-xs font-bold text-emerald-600 group-hover:text-emerald-700">
+              <span>{t('common.viewDetails')}</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 6: Report Symptoms */}
+          <div
+            data-tour="symptoms"
+            onClick={() => handleTabChange('symptoms')}
+            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+              activeTab === 'symptoms'
+                ? 'border-red-500 ring-2 ring-red-400/40 bg-red-50/30'
+                : 'border-slate-200/80 hover:border-red-300'
+            }`}
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Activity className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-800">
+                {symptoms.length} {t('stats.episodes')}
+              </span>
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.reportSymptomsTitle')}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.reportSymptomsDesc')}</p>
+            <div className="flex items-center text-xs font-bold text-red-600 group-hover:text-red-700">
+              <span>{t('common.viewDetails')}</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 7: AI Food Analysis */}
+          <div
+            data-tour="analysis"
+            onClick={() => handleTabChange('analysis')}
+            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+              activeTab === 'analysis'
+                ? 'border-indigo-500 ring-2 ring-indigo-400/40 bg-indigo-50/30'
+                : 'border-slate-200/80 hover:border-indigo-300'
+            }`}
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
+                {analyses.length} Reports
+              </span>
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.aiAnalysisTitle')}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.aiAnalysisDesc')}</p>
+            <div className="flex items-center text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+              <span>{t('common.viewDetails')}</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* Card 8: My Health History */}
+          <div
+            data-tour="history"
+            onClick={() => handleTabChange('history')}
+            className={`group p-5 rounded-3xl bg-white/95 backdrop-blur-xl border transition-all cursor-pointer relative overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+              activeTab === 'history'
+                ? 'border-purple-500 ring-2 ring-purple-400/40 bg-purple-50/30'
+                : 'border-slate-200/80 hover:border-purple-300'
+            }`}
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <TrendingUp className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                {patterns?.repeatedAssociations?.length || 0} Patterns
+              </span>
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm mb-1">{t('dashboard.cards.healthHistoryTitle')}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-3">{t('dashboard.cards.healthHistoryDesc')}</p>
+            <div className="flex items-center text-xs font-bold text-purple-600 group-hover:text-purple-700">
+              <span>{t('common.viewDetails')}</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Stats Cards Row (6 KPI Metrics) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {/* Total Allergies */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
             <ShieldAlert className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-              Allergies
+              {t('stats.allergies')}
             </p>
             <h3 className="text-lg font-black text-slate-900">{allergies.length}</h3>
-            <p className="text-[9px] text-teal-600 font-medium">Recorded</p>
+            <p className="text-[9px] text-teal-600 font-medium">{t('stats.recorded')}</p>
           </div>
         </div>
 
         {/* Medical Tests */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center shrink-0">
             <FileCheck className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-              Lab Tests
+              {t('stats.labTests')}
             </p>
             <h3 className="text-lg font-black text-slate-900">{medicalTests.length}</h3>
-            <p className="text-[9px] text-cyan-600 font-medium">sIgE / SPT</p>
+            <p className="text-[9px] text-cyan-600 font-medium">{t('stats.sIgeSpt')}</p>
           </div>
         </div>
 
         {/* Daily Food Intake Entries */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
             <Utensils className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-              Food Diary
+              {t('stats.foodDiary')}
             </p>
             <h3 className="text-lg font-black text-slate-900">{foodEntries.length}</h3>
-            <p className="text-[9px] text-emerald-600 font-medium">Meals Logged</p>
+            <p className="text-[9px] text-emerald-600 font-medium">{t('stats.mealsLogged')}</p>
           </div>
         </div>
 
         {/* Reported Symptoms */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
             <Activity className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-              Symptoms
+              {t('stats.symptoms')}
             </p>
             <h3 className="text-lg font-black text-slate-900">{symptoms.length}</h3>
-            <p className="text-[9px] text-rose-600 font-medium">Episodes</p>
+            <p className="text-[9px] text-rose-600 font-medium">{t('stats.episodes')}</p>
           </div>
         </div>
 
         {/* AI Analyses */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0">
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-              AI Analyses
+              {t('stats.aiAnalyses')}
             </p>
             <h3 className="text-lg font-black text-slate-900">{analyses.length}</h3>
-            <p className="text-[9px] text-indigo-600 font-medium">Clinical Reports</p>
+            <p className="text-[9px] text-indigo-600 font-medium">{t('stats.clinicalReports')}</p>
           </div>
         </div>
 
         {/* Severe Risks */}
-        <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-2.5">
+        <div className="p-3.5 rounded-2xl bg-white/90 backdrop-blur border border-slate-200/80 shadow-2xs flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-red-50 text-red-700 flex items-center justify-center shrink-0">
             <AlertTriangle className="w-4 h-4" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-              Severe Alerts
+              {t('stats.severeAlerts')}
             </p>
             <h3 className="text-lg font-black text-rose-600">
               {severeRiskCount + emergencySymptoms.length}
             </h3>
-            <p className="text-[9px] text-rose-600 font-medium">Action Level</p>
+            <p className="text-[9px] text-rose-600 font-medium">{t('stats.actionLevel')}</p>
           </div>
         </div>
       </div>
@@ -951,80 +1280,80 @@ export default function DashboardPage() {
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-3">
           {/* 9 Navigation Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-thin">
             <button
-              onClick={() => setActiveTab('allergies')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => handleTabChange('allergies')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'allergies'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <ShieldAlert className="w-4 h-4" />
-              <span>Allergies ({allergies.length})</span>
+              <span>{t('nav.allergies')} ({allergies.length})</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('tests')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => handleTabChange('tests')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'tests'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <FileCheck className="w-4 h-4" />
-              <span>Medical Tests ({medicalTests.length})</span>
+              <span>{t('nav.tests')} ({medicalTests.length})</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('diary')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => handleTabChange('diary')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'diary'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <Utensils className="w-4 h-4" />
-              <span>Food Diary ({foodEntries.length})</span>
+              <span>{t('nav.diary')} ({foodEntries.length})</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('symptoms')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => handleTabChange('symptoms')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'symptoms'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <Activity className="w-4 h-4" />
-              <span>Symptoms ({symptoms.length})</span>
+              <span>{t('nav.symptoms')} ({symptoms.length})</span>
               {emergencySymptoms.length > 0 && (
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
               )}
             </button>
 
             <button
-              onClick={() => setActiveTab('analysis')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => handleTabChange('analysis')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'analysis'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <Sparkles className="w-4 h-4" />
-              <span>AI Analysis ({analyses.length})</span>
+              <span>{t('nav.analysis')} ({analyses.length})</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('history')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => handleTabChange('history')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'history'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <TrendingUp className="w-4 h-4" />
-              <span>History & Patterns</span>
+              <span>{t('nav.history')}</span>
               {patterns?.repeatedAssociations?.length > 0 && (
                 <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-400 text-slate-950 font-black">
                   {patterns.repeatedAssociations.length}
@@ -1033,47 +1362,47 @@ export default function DashboardPage() {
             </button>
 
             <button
-              onClick={() => setActiveTab('assistant')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => handleTabChange('assistant')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'assistant'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <Bot className="w-4 h-4" />
-              <span>AI Assistant</span>
+              <span>{t('nav.assistant')}</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('reports')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => handleTabChange('reports')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'reports'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <UploadCloud className="w-4 h-4" />
-              <span>Documents ({reports.length})</span>
+              <span>{t('nav.reports')} ({reports.length})</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('profile')}
-              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+              onClick={() => handleTabChange('profile')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'profile'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <User className="w-4 h-4" />
-              <span>Profile</span>
+              <span>{t('nav.profile')}</span>
             </button>
           </div>
 
           {/* Refresh button */}
           <button
             onClick={fetchData}
-            title="Reload from MongoDB Atlas"
-            className="self-end sm:self-auto p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors flex items-center gap-1 text-xs font-semibold"
+            title={t('common.refresh')}
+            className="self-end sm:self-auto p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors flex items-center gap-1 text-xs font-semibold cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Sync</span>
@@ -2212,6 +2541,16 @@ export default function DashboardPage() {
         }}
         report={selectedReportForReview}
         onConfirmedSaved={handleReportConfirmed}
+      />
+
+      {/* Visual AI Assistant - Jarvis-style Cute Healthcare Robot Companion */}
+      <VisualAIAssistant
+        activeTab={activeTab}
+        onNavigateTab={handleTabChange}
+        hasCompletedTutorial={hasCompletedTutorial}
+        onCompleteTutorial={completeTutorial}
+        onRestartTutorial={restartTutorial}
+        userName={user?.name}
       />
     </div>
   );

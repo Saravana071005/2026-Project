@@ -40,7 +40,7 @@ export const getProfile = async (req, res) => {
  */
 export const updateProfile = async (req, res) => {
   try {
-    const { name, dob, address, sex, email, foodAllergySummary } = req.body;
+    const { name, dob, address, sex, email, foodAllergySummary, preferredLanguage, hasCompletedTutorial } = req.body;
     const user = await User.findById(req.user._id);
 
     if (!user) {
@@ -70,6 +70,12 @@ export const updateProfile = async (req, res) => {
     if (address) user.address = address.trim();
     if (sex) user.sex = sex;
     if (foodAllergySummary !== undefined) user.foodAllergySummary = foodAllergySummary.trim();
+    if (preferredLanguage && ['en', 'hi', 'ta'].includes(preferredLanguage)) {
+      user.preferredLanguage = preferredLanguage;
+    }
+    if (hasCompletedTutorial !== undefined) {
+      user.hasCompletedTutorial = Boolean(hasCompletedTutorial);
+    }
 
     if (dob) {
       const parsedDob = new Date(dob);
@@ -96,6 +102,7 @@ export const updateProfile = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: 'Personal profile updated successfully.',
+      data: updatedUser,
       user: updatedUser,
     });
   } catch (error) {
@@ -103,6 +110,55 @@ export const updateProfile = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message || 'Failed to update personal profile.',
+    });
+  }
+};
+
+/**
+ * Update user preferences (language, tutorial completion)
+ * PUT /api/user/preferences
+ */
+export const updatePreferences = async (req, res) => {
+  try {
+    const { preferredLanguage, hasCompletedTutorial } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found.',
+      });
+    }
+
+    if (preferredLanguage !== undefined) {
+      if (!['en', 'hi', 'ta'].includes(preferredLanguage)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid preferred language. Supported languages are "en", "hi", "ta".',
+        });
+      }
+      user.preferredLanguage = preferredLanguage;
+    }
+
+    if (hasCompletedTutorial !== undefined) {
+      user.hasCompletedTutorial = Boolean(hasCompletedTutorial);
+    }
+
+    await user.save();
+
+    const updatedUser = await User.findById(user._id).select('-password');
+
+    return res.status(200).json({
+      success: true,
+      message: 'Preferences updated successfully.',
+      data: updatedUser,
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error('[Update Preferences Error]:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to update preferences.',
     });
   }
 };

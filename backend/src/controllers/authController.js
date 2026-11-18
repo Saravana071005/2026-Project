@@ -7,7 +7,7 @@ import { generateToken } from '../middleware/authMiddleware.js';
  */
 export const register = async (req, res) => {
   try {
-    const { name, dob, address, sex, email, password, foodAllergySummary } = req.body;
+    const { name, dob, address, sex, email, password, foodAllergySummary, preferredLanguage } = req.body;
 
     // Check for duplicate email
     const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
@@ -45,6 +45,7 @@ export const register = async (req, res) => {
       email: email.toLowerCase().trim(),
       password,
       foodAllergySummary: foodAllergySummary ? foodAllergySummary.trim() : '',
+      preferredLanguage: ['en', 'hi', 'ta'].includes(preferredLanguage) ? preferredLanguage : 'en',
     });
 
     await user.save();
@@ -64,6 +65,8 @@ export const register = async (req, res) => {
         address: user.address,
         sex: user.sex,
         foodAllergySummary: user.foodAllergySummary,
+        preferredLanguage: user.preferredLanguage || 'en',
+        hasCompletedTutorial: user.hasCompletedTutorial || false,
         createdAt: user.createdAt,
       },
     });
@@ -123,6 +126,8 @@ export const login = async (req, res) => {
         address: user.address,
         sex: user.sex,
         foodAllergySummary: user.foodAllergySummary,
+        preferredLanguage: user.preferredLanguage || 'en',
+        hasCompletedTutorial: user.hasCompletedTutorial || false,
         createdAt: user.createdAt,
       },
     });

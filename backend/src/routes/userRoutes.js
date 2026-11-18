@@ -1,6 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator';
-import { getProfile, updateProfile } from '../controllers/userController.js';
+import { getProfile, updateProfile, updatePreferences } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { handleValidationErrors } from '../middleware/validateMiddleware.js';
 
@@ -33,10 +33,31 @@ const updateProfileValidation = [
     .isEmail()
     .withMessage('Please provide a valid email address')
     .normalizeEmail(),
+  body('preferredLanguage')
+    .optional()
+    .isIn(['en', 'hi', 'ta'])
+    .withMessage('Invalid language option'),
+  body('hasCompletedTutorial')
+    .optional()
+    .isBoolean()
+    .withMessage('hasCompletedTutorial must be a boolean'),
+  handleValidationErrors,
+];
+
+const updatePreferencesValidation = [
+  body('preferredLanguage')
+    .optional()
+    .isIn(['en', 'hi', 'ta'])
+    .withMessage('Invalid language option'),
+  body('hasCompletedTutorial')
+    .optional()
+    .isBoolean()
+    .withMessage('hasCompletedTutorial must be a boolean'),
   handleValidationErrors,
 ];
 
 router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfileValidation, updateProfile);
+router.put('/preferences', protect, updatePreferencesValidation, updatePreferences);
 
 export default router;

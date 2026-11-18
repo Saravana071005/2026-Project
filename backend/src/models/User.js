@@ -74,6 +74,15 @@ const userSchema = new mongoose.Schema(
       default: '',
       maxlength: [1000, 'Allergy summary cannot exceed 1000 characters'],
     },
+    preferredLanguage: {
+      type: String,
+      enum: ['en', 'hi', 'ta'],
+      default: 'en',
+    },
+    hasCompletedTutorial: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
