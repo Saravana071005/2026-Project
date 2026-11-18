@@ -1,32 +1,605 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ShieldCheck,
-  Activity,
   FileCheck,
   Database,
   Lock,
   ArrowRight,
   Sparkles,
   HeartPulse,
-  Award,
+  UserCheck,
+  ShieldAlert,
+  UploadCloud,
+  Utensils,
+  TrendingUp,
+  MapPin,
+  CheckCircle2,
+  ChevronRight,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
+import HomepageAIAssistant from '../components/HomepageAIAssistant';
+import HumanBody3D from '../components/HumanBody3D';
+import ProfileEditModal from '../components/ProfileEditModal';
+import AllergyModal from '../components/AllergyModal';
+import FoodEntryModal from '../components/FoodEntryModal';
+import SymptomEntryModal from '../components/SymptomEntryModal';
+import ReportUploadModal from '../components/ReportUploadModal';
+import ReportReviewModal from '../components/ReportReviewModal';
 
 export default function HomePage({ setActivePage }) {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated, refreshProfile } = useAuth();
 
+  // Summary statistics for logged-in profile dashboard
+  const [stats, setStats] = useState({
+    allergiesCount: 0,
+    confirmedAllergies: [],
+    testsCount: 0,
+    latestTest: null,
+    todayMealsCount: 0,
+    recentSymptomsCount: 0,
+    latestReport: null,
+    loading: false,
+  });
+
+  // Modal controls
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isAllergyModalOpen, setIsAllergyModalOpen] = useState(false);
+  const [isFoodModalOpen, setIsFoodModalOpen] = useState(false);
+  const [isSymptomModalOpen, setIsSymptomModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedReportForReview, setSelectedReportForReview] = useState(null);
+  const [symptomModalPrefill, setSymptomModalPrefill] = useState(null);
+
+  const loadUserStats = useCallback(async () => {
+    setStats((prev) => ({ ...prev, loading: true }));
+    try {
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      const [allergiesRes, testsRes, foodRes, symptomsRes, reportsRes] = await Promise.allSettled([
+        api.get('/allergies'),
+        api.get('/medical-tests'),
+        api.get('/food-diary', { params: { date: todayStr } }),
+        api.get('/symptoms'),
+        api.get('/medical-reports'),
+      ]);
+
+      const allergies = allergiesRes.status === 'fulfilled' ? allergiesRes.value.data?.data || [] : [];
+      const tests = testsRes.status === 'fulfilled' ? testsRes.value.data?.data || [] : [];
+      const foods = foodRes.status === 'fulfilled' ? foodRes.value.data?.data || [] : [];
+      const symptoms = symptomsRes.status === 'fulfilled' ? symptomsRes.value.data?.data || [] : [];
+      const reports = reportsRes.status === 'fulfilled' ? reportsRes.value.data?.data || [] : [];
+
+      const confirmed = allergies.filter((a) => a.diagnosisType === 'Doctor-Confirmed Diagnosis');
+
+      setStats({
+        allergiesCount: allergies.length,
+        confirmedAllergies: confirmed,
+        testsCount: tests.length,
+        latestTest: tests.length > 0 ? tests[0] : null,
+        todayMealsCount: foods.length,
+        recentSymptomsCount: symptoms.length,
+        latestReport: reports.length > 0 ? reports[0] : null,
+        loading: false,
+      });
+    } catch {
+      setStats((prev) => ({ ...prev, loading: false }));
+    }
+  }, []);
+
+  // Fetch summary data when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadUserStats();
+    }
+  }, [isAuthenticated, loadUserStats]);
+
+  // Navigate to Dashboard tab
+  const navigateToDashboardTab = (tabName) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('food_allergy_active_tab', tabName);
+    }
+    if (setActivePage) {
+      setActivePage('dashboard');
+    }
+  };
+
+  // Calculate profile completion score
+  const completionScore = (() => {
+    if (!user) return 0;
+    let score = 30; // Account created
+    if (user.dob && user.age) score += 20;
+    if (user.address && user.address.length > 5) score += 15;
+    if (stats.allergiesCount > 0) score += 15;
+    if (stats.testsCount > 0 || stats.latestReport) score += 10;
+    if (stats.todayMealsCount > 0 || stats.recentSymptomsCount > 0) score += 10;
+    return Math.min(score, 100);
+  })();
+
+  // ---------------------------------------------------------------------------
+  // AUTHENTICATED PATIENT WORKSPACE VIEW
+  // ---------------------------------------------------------------------------
+  if (isAuthenticated) {
+    return (
+      <div className="space-y-10 py-6 sm:py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-in fade-in duration-300">
+        {/* Top Liquid Glass Welcome & Health Status Panel */}
+        <section className="relative rounded-3xl p-6 sm:p-8 liquid-glass overflow-hidden">
+          {/* Ambient Lighting Orbs */}
+          <div className="absolute -top-16 -right-16 w-64 h-64 bg-purple-400/25 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-cyan-400/25 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            {/* User Demographic Vitals */}
+            <div className="flex items-center gap-4 sm:gap-5">
+              <div className="relative">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 text-white flex items-center justify-center font-extrabold text-2xl sm:text-3xl shadow-lg shadow-purple-500/30 border-2 border-white/60">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : 'P'}
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-xs" title="Verified Active Account">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Welcome back, {user?.name ? user.name.split(' ')[0] : 'Patient'}!
+                  </h1>
+                  <span className="px-2.5 py-0.5 rounded-full bg-purple-100/90 text-purple-900 text-xs font-bold border border-purple-200">
+                    Patient Portal
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  Your health journey starts here. Real-time food allergy detection, AI diet monitoring & OCR clinical reports.
+                </p>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 pt-1">
+                  <span><strong>Age:</strong> {user?.age ?? 'N/A'} yrs</span>
+                  <span>•</span>
+                  <span><strong>Sex:</strong> {user?.sex || 'Unspecified'}</span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="truncate max-w-[200px]">{user?.address || 'Address on file'}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Completion Card & Quick Edit */}
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-4 bg-white/60 backdrop-blur p-4 rounded-2xl border border-white/80 shadow-xs shrink-0">
+              <div className="space-y-1.5 min-w-[180px]">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-700">Health Profile Completion</span>
+                  <span className="font-extrabold text-purple-700">{completionScore}%</span>
+                </div>
+                <div className="w-full h-2 bg-slate-200/80 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-purple-600 to-cyan-500 rounded-full transition-all duration-500"
+                    style={{ width: `${completionScore}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-slate-500">
+                  {completionScore === 100
+                    ? 'All demographic & allergy records verified'
+                    : 'Complete medical tests & food logs for 100%'}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsProfileModalOpen(true)}
+                className="px-4 py-2.5 rounded-xl text-xs font-bold btn-liquid-purple shadow-xs shrink-0 flex items-center justify-center gap-1.5"
+              >
+                <UserCheck className="w-4 h-4" />
+                <span>Edit Profile</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Metrics Strip */}
+          <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-6 border-t border-slate-200/60">
+            {/* Metric 1: Confirmed Allergies */}
+            <div
+              onClick={() => navigateToDashboardTab('allergies')}
+              className="p-3.5 rounded-2xl bg-white/70 hover:bg-white/95 border border-white/80 shadow-2xs cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Confirmed Allergies</span>
+                <ShieldAlert className="w-4 h-4 text-rose-600" />
+              </div>
+              <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                {stats.confirmedAllergies.length}
+              </div>
+              <p className="text-[10px] text-slate-500 truncate mt-0.5">
+                {stats.confirmedAllergies.length > 0
+                  ? stats.confirmedAllergies.map((a) => a.allergenName).join(', ')
+                  : 'No confirmed allergies'}
+              </p>
+            </div>
+
+            {/* Metric 2: Medical Tests */}
+            <div
+              onClick={() => navigateToDashboardTab('tests')}
+              className="p-3.5 rounded-2xl bg-white/70 hover:bg-white/95 border border-white/80 shadow-2xs cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Diagnostic Tests</span>
+                <FileCheck className="w-4 h-4 text-purple-600" />
+              </div>
+              <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                {stats.testsCount}
+              </div>
+              <p className="text-[10px] text-slate-500 truncate mt-0.5">
+                {stats.latestTest
+                  ? `${stats.latestTest.allergenName} (${stats.latestTest.testType})`
+                  : 'No lab reports recorded'}
+              </p>
+            </div>
+
+            {/* Metric 3: Today's Meals */}
+            <div
+              onClick={() => navigateToDashboardTab('diary')}
+              className="p-3.5 rounded-2xl bg-white/70 hover:bg-white/95 border border-white/80 shadow-2xs cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Today's Meals</span>
+                <Utensils className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                {stats.todayMealsCount}
+              </div>
+              <p className="text-[10px] text-slate-500 truncate mt-0.5">
+                {stats.todayMealsCount > 0 ? 'Actively logging meals' : 'No meals logged today yet'}
+              </p>
+            </div>
+
+            {/* Metric 4: Recent Symptoms */}
+            <div
+              onClick={() => navigateToDashboardTab('symptoms')}
+              className="p-3.5 rounded-2xl bg-white/70 hover:bg-white/95 border border-white/80 shadow-2xs cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Reported Reactions</span>
+                <HeartPulse className="w-4 h-4 text-amber-600" />
+              </div>
+              <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                {stats.recentSymptomsCount}
+              </div>
+              <p className="text-[10px] text-slate-500 truncate mt-0.5">
+                {stats.recentSymptomsCount > 0 ? 'Symptom tracker active' : 'Zero reactions logged'}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 8 Prominent Liquid Glass Action Cards Section */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                Quick Action Health Center
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600">
+                Direct access to all 8 core patient tools and medical monitoring services
+              </p>
+            </div>
+            <button
+              onClick={() => setActivePage('dashboard')}
+              className="text-xs font-bold text-purple-700 hover:text-purple-900 flex items-center gap-1 transition-colors"
+            >
+              <span>Open Full Dashboard</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {/* Card 1: My Profile */}
+            <div
+              onClick={() => setIsProfileModalOpen(true)}
+              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-purple-600 text-white flex items-center justify-center shadow-md shadow-violet-500/25 group-hover:scale-110 transition-transform">
+                  <UserCheck className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-100 text-violet-800">
+                  Profile
+                </span>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-purple-700 transition-colors">
+                  1. My Health Profile
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Update demographics, date of birth, emergency details, and language preference.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-purple-600 flex items-center gap-1">
+                <span>Edit Profile</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 2: My Food Allergies */}
+            <div
+              onClick={() => navigateToDashboardTab('allergies')}
+              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-purple-500/25 group-hover:scale-110 transition-transform">
+                  <ShieldAlert className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                  {stats.allergiesCount} Records
+                </span>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-purple-700 transition-colors">
+                  2. My Food Allergies
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Document verified food allergens, severity classification, and doctor notes.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-purple-600 flex items-center gap-1">
+                <span>View Allergies</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 3: Medical Test Reports */}
+            <div
+              onClick={() => navigateToDashboardTab('tests')}
+              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 group-hover:scale-110 transition-transform">
+                  <FileCheck className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
+                  Diagnostic
+                </span>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-indigo-700 transition-colors">
+                  3. Medical Test Reports
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Review Skin Prick Tests (SPT), Specific IgE titers, and Component Resolved lab data.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-indigo-600 flex items-center gap-1">
+                <span>Inspect Tests</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 4: Upload New Report */}
+            <div
+              onClick={() => setIsUploadModalOpen(true)}
+              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48 border-cyan-300/60"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-600 to-teal-600 text-white flex items-center justify-center shadow-md shadow-cyan-500/25 group-hover:scale-110 transition-transform">
+                  <UploadCloud className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800">
+                  OCR Scanner
+                </span>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-cyan-700 transition-colors">
+                  4. Upload New Report
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Upload PDF or laboratory photos for intelligent OCR extraction and verification.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-cyan-700 flex items-center gap-1">
+                <span>Upload & Extract</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 5: Daily Food Diary */}
+            <div
+              onClick={() => navigateToDashboardTab('diary')}
+              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/25 group-hover:scale-110 transition-transform">
+                  <Utensils className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                  {stats.todayMealsCount} Today
+                </span>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-emerald-700 transition-colors">
+                  5. Daily Food Diary
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Log daily meals, recipes, and ingredients with real-time pre-check allergen warnings.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+                <span>Log Meals</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 6: Symptom Tracker */}
+            <div
+              onClick={() => navigateToDashboardTab('symptoms')}
+              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-rose-600 text-white flex items-center justify-center shadow-md shadow-amber-500/25 group-hover:scale-110 transition-transform">
+                  <HeartPulse className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                  Reactions
+                </span>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-amber-700 transition-colors">
+                  6. Symptom Tracker
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Record hives, oral tingling, or gastrointestinal events linked to specific meals.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-amber-700 flex items-center gap-1">
+                <span>Track Symptoms</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 7: AI Food Analysis */}
+            <div
+              onClick={() => navigateToDashboardTab('analysis')}
+              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-fuchsia-600 to-purple-600 text-white flex items-center justify-center shadow-md shadow-fuchsia-500/25 group-hover:scale-110 transition-transform">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-fuchsia-100 text-fuchsia-800">
+                  AI Grounded
+                </span>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-fuchsia-700 transition-colors">
+                  7. AI Food Analysis
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Structured 9-part clinical risk evaluations correlating food, lab results & symptoms.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-fuchsia-700 flex items-center gap-1">
+                <span>View Insights</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* Card 8: Health History & Trends */}
+            <div
+              onClick={() => navigateToDashboardTab('history')}
+              className="liquid-glass-card p-5 rounded-3xl cursor-pointer group flex flex-col justify-between h-48"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-600 text-white flex items-center justify-center shadow-md shadow-purple-500/25 group-hover:scale-110 transition-transform">
+                  <TrendingUp className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                  Patterns
+                </span>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-base mb-1 group-hover:text-purple-700 transition-colors">
+                  8. Health History
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Discover repeated food-symptom pairs and review chronological clinical timelines.
+                </p>
+              </div>
+              <div className="text-[11px] font-bold text-purple-600 flex items-center gap-1">
+                <span>Explore Patterns</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Dedicated AI Assistant Embedded Directly on the Homepage */}
+        <section id="homepage-ai-assistant">
+          <HomepageAIAssistant user={user} />
+        </section>
+
+        {/* Interactive 3D Human Body Anatomy Visualization Section */}
+        <section id="homepage-3d-body">
+          <HumanBody3D
+            onSymptomLogged={loadUserStats}
+            onOpenSymptomModal={(prefill) => {
+              setSymptomModalPrefill(prefill);
+              setIsSymptomModalOpen(true);
+            }}
+          />
+        </section>
+
+        {/* Modals Mounted for Direct Action */}
+        <ProfileEditModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setIsProfileModalOpen(false)}
+          onUpdated={() => {
+            if (refreshProfile) refreshProfile();
+            loadUserStats();
+          }}
+        />
+
+        <AllergyModal
+          isOpen={isAllergyModalOpen}
+          onClose={() => setIsAllergyModalOpen(false)}
+          onSaved={() => loadUserStats()}
+        />
+
+        <FoodEntryModal
+          isOpen={isFoodModalOpen}
+          onClose={() => setIsFoodModalOpen(false)}
+          onSaved={() => loadUserStats()}
+        />
+
+        <SymptomEntryModal
+          isOpen={isSymptomModalOpen}
+          onClose={() => {
+            setIsSymptomModalOpen(false);
+            setSymptomModalPrefill(null);
+          }}
+          initialData={symptomModalPrefill}
+          onSaved={() => loadUserStats()}
+        />
+
+        <ReportUploadModal
+          isOpen={isUploadModalOpen}
+          onClose={() => setIsUploadModalOpen(false)}
+          onUploadSuccess={(report) => {
+            setSelectedReportForReview(report);
+            setIsReviewModalOpen(true);
+            loadUserStats();
+          }}
+        />
+
+        {selectedReportForReview && (
+          <ReportReviewModal
+            isOpen={isReviewModalOpen}
+            onClose={() => {
+              setIsReviewModalOpen(false);
+              setSelectedReportForReview(null);
+            }}
+            report={selectedReportForReview}
+            onSavedTests={() => loadUserStats()}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // PUBLIC / UNTOUCHED VISITOR LANDING VIEW (Liquid Glass Redesign)
+  // ---------------------------------------------------------------------------
   return (
     <div className="space-y-16 pb-16">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-16 md:py-20 bg-gradient-to-b from-teal-50/70 via-sky-50/40 to-transparent">
+      <section className="relative overflow-hidden pt-12 pb-16 md:py-24 liquid-ambient-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto space-y-6">
             {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-100/90 border border-teal-200 text-teal-900 text-xs font-semibold shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-teal-600" />
-              <span>{t('home.heroPill')}</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-100/90 border border-purple-200/80 text-purple-900 text-xs font-semibold shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+              <span>{t('home.heroPill')} • Liquid Glass Edition</span>
             </div>
 
             {/* Main Headline */}
@@ -41,39 +614,26 @@ export default function HomePage({ setActivePage }) {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              {isAuthenticated ? (
-                <button
-                  onClick={() => setActivePage('dashboard')}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-teal-600 to-cyan-600 shadow-lg shadow-teal-500/25 hover:from-teal-700 hover:to-cyan-700 transition-all flex items-center justify-center gap-2"
-                >
-                  <Activity className="w-5 h-5" />
-                  <span>{t('home.goToDashboard')}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={() => setActivePage('register')}
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-teal-600 to-cyan-600 shadow-lg shadow-teal-500/25 hover:from-teal-700 hover:to-cyan-700 transition-all flex items-center justify-center gap-2"
-                  >
-                    <span>{t('home.registerNewAccount')}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => setActivePage('login')}
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold text-slate-700 bg-white/90 border border-slate-300 hover:bg-slate-50 transition-all shadow-xs backdrop-blur"
-                  >
-                    {t('home.patientLogin')}
-                  </button>
-                </>
-              )}
+              <button
+                onClick={() => setActivePage('register')}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold btn-liquid-purple shadow-lg flex items-center justify-center gap-2"
+              >
+                <span>{t('home.registerNewAccount')}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setActivePage('login')}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold btn-liquid-cyan shadow-md flex items-center justify-center gap-2"
+              >
+                <span>{t('home.patientLogin')}</span>
+              </button>
             </div>
 
             {/* Trust Badges */}
             <div className="pt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
               <span className="flex items-center gap-1.5 font-medium">
-                <Database className="w-4 h-4 text-teal-600" />
-                MongoDB Atlas Cloud Database
+                <Database className="w-4 h-4 text-purple-600" />
+                MongoDB Atlas Cloud
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5 font-medium">
@@ -83,17 +643,29 @@ export default function HomePage({ setActivePage }) {
               <span>•</span>
               <span className="flex items-center gap-1.5 font-medium">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                Strict User Data Isolation
+                Multi-Provider AI (Gemini & OpenAI)
               </span>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Interactive 3D Anatomy Preview on Landing Page */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <HumanBody3D
+          onSymptomLogged={() => {
+            setActivePage('login');
+          }}
+          onOpenSymptomModal={() => {
+            setActivePage('login');
+          }}
+        />
+      </section>
+
       {/* Workflow Steps Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
             {t('home.howItWorks')}
           </h2>
           <p className="mt-2 text-slate-600 text-sm sm:text-base">
@@ -102,94 +674,36 @@ export default function HomePage({ setActivePage }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {/* Step 1 */}
-          <div className="p-6 rounded-3xl bg-white/80 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow backdrop-blur">
-            <div className="w-10 h-10 rounded-2xl bg-teal-100 text-teal-700 font-bold flex items-center justify-center mb-4">
+          <div className="liquid-glass-card p-6 rounded-3xl">
+            <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 font-bold flex items-center justify-center mb-4">
               01
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step1Title')}</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {t('home.step1Desc')}
-            </p>
+            <p className="text-xs text-slate-600 leading-relaxed">{t('home.step1Desc')}</p>
           </div>
 
-          {/* Step 2 */}
-          <div className="p-6 rounded-3xl bg-white/80 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow backdrop-blur">
+          <div className="liquid-glass-card p-6 rounded-3xl">
             <div className="w-10 h-10 rounded-2xl bg-cyan-100 text-cyan-700 font-bold flex items-center justify-center mb-4">
               02
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step2Title')}</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {t('home.step2Desc')}
-            </p>
+            <p className="text-xs text-slate-600 leading-relaxed">{t('home.step2Desc')}</p>
           </div>
 
-          {/* Step 3 */}
-          <div className="p-6 rounded-3xl bg-white/80 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow backdrop-blur">
-            <div className="w-10 h-10 rounded-2xl bg-sky-100 text-sky-700 font-bold flex items-center justify-center mb-4">
+          <div className="liquid-glass-card p-6 rounded-3xl">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center mb-4">
               03
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step3Title')}</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {t('home.step3Desc')}
-            </p>
+            <p className="text-xs text-slate-600 leading-relaxed">{t('home.step3Desc')}</p>
           </div>
 
-          {/* Step 4 */}
-          <div className="p-6 rounded-3xl bg-white/80 border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow backdrop-blur">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center mb-4">
+          <div className="liquid-glass-card p-6 rounded-3xl">
+            <div className="w-10 h-10 rounded-2xl bg-fuchsia-100 text-fuchsia-700 font-bold flex items-center justify-center mb-4">
               04
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step4Title')}</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {t('home.step4Desc')}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Highlights Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-white/90 border border-slate-200/80 p-8 sm:p-12 shadow-sm backdrop-blur">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0">
-                <HeartPulse className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-base">Automatic Age Calculation</h4>
-                <p className="mt-1 text-xs text-slate-600 leading-relaxed">
-                  Calculates exact chronological age dynamically from your Date of Birth on both client and server sides.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0">
-                <FileCheck className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-base">Clinical Distinction Rule</h4>
-                <p className="mt-1 text-xs text-slate-600 leading-relaxed">
-                  Strictly avoids automated diagnostic assumptions. Distinguishes raw lab sensitization tests from doctor-confirmed clinical diagnoses.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                <Award className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-base">Full Patient CRUD Control</h4>
-                <p className="mt-1 text-xs text-slate-600 leading-relaxed">
-                  Easily add, view, update, and delete allergy and medical test records. Zero unauthorized access across patient accounts.
-                </p>
-              </div>
-            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">{t('home.step4Desc')}</p>
           </div>
         </div>
       </section>

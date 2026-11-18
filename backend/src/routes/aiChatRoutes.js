@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  getAIStatus,
   getChatHistory,
   sendMessage,
   clearChatHistory,
@@ -10,6 +11,7 @@ const router = express.Router();
 
 router.use(protect);
 
+router.get('/status', getAIStatus);
 router.get('/history', getChatHistory);
 router.post('/message', sendMessage);
 router.delete('/history', clearChatHistory);

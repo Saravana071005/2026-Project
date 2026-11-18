@@ -36,6 +36,7 @@ import {
   Compass,
   ArrowRight,
   ShieldCheck,
+  HeartPulse,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -54,7 +55,8 @@ import DailyFoodDiaryView from '../components/DailyFoodDiaryView';
 import SymptomJournalView from '../components/SymptomJournalView';
 import AIAnalysisView from '../components/AIAnalysisView';
 import HistoryAndPatternsView from '../components/HistoryAndPatternsView';
-import AIHealthAssistantView from '../components/AIHealthAssistantView';
+import HomepageAIAssistant from '../components/HomepageAIAssistant';
+import HumanBody3D from '../components/HumanBody3D';
 import VisualAIAssistant from '../components/VisualAIAssistant';
 import {
   SUPPORTED_TEST_TYPES_LIST,
@@ -364,8 +366,6 @@ export default function DashboardPage() {
   const [analyses, setAnalyses] = useState([]);
   const [dietMonitoring, setDietMonitoring] = useState(null);
   const [patterns, setPatterns] = useState(null);
-  const [chatMessages, setChatMessages] = useState([]);
-  const [chatLoading, setChatLoading] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -549,51 +549,6 @@ export default function DashboardPage() {
     } catch (err) {
       console.error('AI Analysis failed:', err);
       showToast(err.response?.data?.message || 'Failed to generate AI analysis.');
-    }
-  };
-
-  // AI Chat callbacks
-  const handleSendMessage = async (text) => {
-    if (!text.trim()) return;
-    const optimisticMsg = {
-      role: 'user',
-      content: text,
-      createdAt: new Date().toISOString(),
-    };
-    setChatMessages((prev) => [...prev, optimisticMsg]);
-    setChatLoading(true);
-
-    try {
-      const res = await api.post('/ai-chat/message', { message: text });
-      const replyData = res.data.data;
-      const assistantMsg = {
-        role: 'assistant',
-        content: replyData.reply,
-        emergencyAlert: replyData.emergencyAlert,
-        createdAt: new Date().toISOString(),
-      };
-      setChatMessages((prev) => [...prev, assistantMsg]);
-    } catch (err) {
-      console.error('Chat error:', err);
-      const errorMsg = {
-        role: 'assistant',
-        content: 'I apologize, but I could not connect to the medical AI assistant. Please check your network connection.',
-        createdAt: new Date().toISOString(),
-      };
-      setChatMessages((prev) => [...prev, errorMsg]);
-    } finally {
-      setChatLoading(false);
-    }
-  };
-
-  const handleClearChat = async () => {
-    try {
-      await api.delete('/ai-chat/history');
-      setChatMessages([]);
-      showToast('Chat conversation cleared.');
-    } catch (err) {
-      console.error('Failed to clear chat:', err);
-      showToast('Failed to clear chat.');
     }
   };
 
@@ -1362,10 +1317,22 @@ export default function DashboardPage() {
             </button>
 
             <button
+              onClick={() => handleTabChange('body')}
+              className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
+                activeTab === 'body'
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <HeartPulse className="w-4 h-4" />
+              <span>3D Body Map</span>
+            </button>
+
+            <button
               onClick={() => handleTabChange('assistant')}
               className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === 'assistant'
-                  ? 'bg-teal-600 text-white shadow-xs'
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -2443,15 +2410,20 @@ export default function DashboardPage() {
             />
           )}
 
-          {/* TAB 9: AI HEALTH ASSISTANT CHAT */}
-          {activeTab === 'assistant' && (
-            <AIHealthAssistantView
-              user={user}
-              chatMessages={chatMessages}
-              onSendMessage={handleSendMessage}
-              onClearChat={handleClearChat}
-              loading={chatLoading}
+          {/* TAB: INTERACTIVE 3D HUMAN BODY ANATOMY */}
+          {activeTab === 'body' && (
+            <HumanBody3D
+              onSymptomLogged={fetchData}
+              onOpenSymptomModal={(prefill) => {
+                setEditingSymptom(prefill);
+                setIsSymptomModalOpen(true);
+              }}
             />
+          )}
+
+          {/* TAB: AI HEALTH ASSISTANT CHAT */}
+          {activeTab === 'assistant' && (
+            <HomepageAIAssistant user={user} />
           )}
         </>
       )}

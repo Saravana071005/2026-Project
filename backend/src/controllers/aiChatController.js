@@ -4,7 +4,30 @@ import AllergyRecord from '../models/AllergyRecord.js';
 import MedicalTestRecord from '../models/MedicalTestRecord.js';
 import DailyFoodEntry from '../models/DailyFoodEntry.js';
 import SymptomRecord from '../models/SymptomRecord.js';
-import { processAIChatMessage } from '../services/ai/aiChatService.js';
+import {
+  processAIChatMessageWithMultiProvider,
+  getAIProviderStatus,
+} from '../services/ai/aiProviderService.js';
+
+/**
+ * Retrieve active AI providers and system status
+ * GET /api/ai-chat/status
+ */
+export const getAIStatus = async (_req, res) => {
+  try {
+    const status = getAIProviderStatus();
+    return res.status(200).json({
+      success: true,
+      data: status,
+    });
+  } catch (error) {
+    console.error('[Get AI Status Error]:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve AI system status.',
+    });
+  }
+};
 
 /**
  * Retrieve chat history for authenticated user
@@ -51,7 +74,7 @@ export const sendMessage = async (req, res) => {
 
     // 1. Fetch user medical context
     const [userDoc, allergies, tests, recentFoods, recentSymptoms, historyDocs] = await Promise.all([
-      User.findById(userId).select('name age dob email sex'),
+      User.findById(userId).select('name age dob email sex foodAllergySummary'),
       AllergyRecord.find({ userId }),
       MedicalTestRecord.find({ userId }).sort({ testDate: -1 }),
       DailyFoodEntry.find({ userId }).sort({ consumptionDate: -1 }).limit(10),
@@ -68,15 +91,17 @@ export const sendMessage = async (req, res) => {
       content: h.content,
     }));
 
-    // 3. Process message
-    const result = await processAIChatMessage({
+    // 3. Process message using Multi-Provider Architecture (Gemini, OpenAI, Grounded Fallback)
+    const result = await processAIChatMessageWithMultiProvider({
       userId,
       userMessage: message.trim(),
       chatHistory: chronologicalHistory,
       user: {
         name: userDoc?.name || req.user.name,
         age: userDoc?.age ?? req.user.age,
+        sex: userDoc?.sex || req.user.sex,
         dob: userDoc?.dob,
+        foodAllergySummary: userDoc?.foodAllergySummary || req.user.foodAllergySummary,
       },
       confirmedAllergies,
       suspectedAllergies,
@@ -107,6 +132,9 @@ export const sendMessage = async (req, res) => {
       success: true,
       data: {
         reply: result.reply,
+        providerUsed: result.providerUsed || 'clinical_grounded_engine',
+        model: result.model || 'Grounded Clinical Engine',
+        sources: result.sources || ['AAAAI Clinical Guidelines', 'EAACI Guidelines'],
         isEmergency: result.isEmergency,
         emergencyAlert: {
           isEmergency: result.isEmergency,
