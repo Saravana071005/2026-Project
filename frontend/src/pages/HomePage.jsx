@@ -134,10 +134,10 @@ export default function HomePage({ setActivePage }) {
             {/* User Demographic Vitals */}
             <div className="flex items-center gap-4 sm:gap-5">
               <div className="relative shrink-0">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-extrabold text-2xl sm:text-3xl shadow-xs">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-teal-600 text-white flex items-center justify-center font-extrabold text-2xl sm:text-3xl shadow-xs">
                   {user?.name ? user.name.charAt(0).toUpperCase() : 'P'}
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-slate-900 border-2 border-white flex items-center justify-center shadow-xs" title="Verified Active Account">
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-teal-600 border-2 border-white flex items-center justify-center shadow-xs" title="Verified Active Account">
                   <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
@@ -147,7 +147,7 @@ export default function HomePage({ setActivePage }) {
                   <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                     Welcome back, {user?.name ? user.name.split(' ')[0] : 'Patient'}!
                   </h1>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-900 text-xs font-bold border border-slate-200">
+                  <span className="px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 text-xs font-bold border border-teal-200">
                     Patient Portal
                   </span>
                 </div>
@@ -172,11 +172,11 @@ export default function HomePage({ setActivePage }) {
               <div className="space-y-1.5 min-w-[180px]">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-slate-700">Profile Completion</span>
-                  <span className="font-extrabold text-slate-900">{completionScore}%</span>
+                  <span className="font-extrabold text-teal-700">{completionScore}%</span>
                 </div>
                 <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-slate-900 rounded-full transition-all duration-500"
+                    className="h-full bg-teal-600 rounded-full transition-all duration-500"
                     style={{ width: `${completionScore}%` }}
                   />
                 </div>
@@ -190,7 +190,7 @@ export default function HomePage({ setActivePage }) {
               <button
                 type="button"
                 onClick={() => setIsProfileModalOpen(true)}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 shadow-xs shrink-0 flex items-center justify-center gap-1.5 transition-colors"
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-teal-600 text-white hover:bg-teal-700 shadow-xs shrink-0 flex items-center justify-center gap-1.5 transition-colors"
               >
                 <UserCheck className="w-4 h-4" />
                 <span>Edit Profile</span>
@@ -203,11 +203,11 @@ export default function HomePage({ setActivePage }) {
             {/* Metric 1: Confirmed Allergies */}
             <div
               onClick={() => navigateToDashboardTab('allergies')}
-              className="p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200 cursor-pointer transition-all"
+              className="p-3.5 rounded-xl bg-slate-50 hover:bg-teal-50/50 border border-slate-200 hover:border-teal-300 cursor-pointer transition-all"
             >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Confirmed Allergies</span>
-                <ShieldAlert className="w-4 h-4 text-slate-900" />
+                <ShieldAlert className="w-4 h-4 text-teal-600" />
               </div>
               <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 {stats.confirmedAllergies.length}
@@ -222,11 +222,11 @@ export default function HomePage({ setActivePage }) {
             {/* Metric 2: Medical Tests */}
             <div
               onClick={() => navigateToDashboardTab('tests')}
-              className="p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200 cursor-pointer transition-all"
+              className="p-3.5 rounded-xl bg-slate-50 hover:bg-teal-50/50 border border-slate-200 hover:border-teal-300 cursor-pointer transition-all"
             >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Diagnostic Tests</span>
-                <FileCheck className="w-4 h-4 text-slate-900" />
+                <FileCheck className="w-4 h-4 text-teal-600" />
               </div>
               <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 {stats.testsCount}
@@ -241,11 +241,11 @@ export default function HomePage({ setActivePage }) {
             {/* Metric 3: Today's Meals */}
             <div
               onClick={() => navigateToDashboardTab('diary')}
-              className="p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200 cursor-pointer transition-all"
+              className="p-3.5 rounded-xl bg-slate-50 hover:bg-teal-50/50 border border-slate-200 hover:border-teal-300 cursor-pointer transition-all"
             >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Today's Meals</span>
-                <Utensils className="w-4 h-4 text-slate-900" />
+                <Utensils className="w-4 h-4 text-teal-600" />
               </div>
               <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 {stats.todayMealsCount}
@@ -258,11 +258,11 @@ export default function HomePage({ setActivePage }) {
             {/* Metric 4: Recent Symptoms */}
             <div
               onClick={() => navigateToDashboardTab('symptoms')}
-              className="p-3.5 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200 cursor-pointer transition-all"
+              className="p-3.5 rounded-xl bg-slate-50 hover:bg-teal-50/50 border border-slate-200 hover:border-teal-300 cursor-pointer transition-all"
             >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Reported Reactions</span>
-                <HeartPulse className="w-4 h-4 text-slate-900" />
+                <HeartPulse className="w-4 h-4 text-teal-600" />
               </div>
               <div className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 {stats.recentSymptomsCount}
@@ -287,7 +287,7 @@ export default function HomePage({ setActivePage }) {
             </div>
             <button
               onClick={() => setActivePage('dashboard')}
-              className="text-xs font-bold text-slate-900 hover:text-slate-700 flex items-center gap-1 transition-colors"
+              className="text-xs font-bold text-teal-600 hover:text-teal-700 flex items-center gap-1 transition-colors"
             >
               <span>Open Full Dashboard</span>
               <ChevronRight className="w-4 h-4" />
@@ -298,13 +298,13 @@ export default function HomePage({ setActivePage }) {
             {/* Card 1: User Profile */}
             <div
               onClick={() => setIsProfileModalOpen(true)}
-              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
+              className="bg-white border border-slate-200 hover:border-teal-500 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
                   <UserCheck className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-100">
                   Profile
                 </span>
               </div>
@@ -316,7 +316,7 @@ export default function HomePage({ setActivePage }) {
                   Update demographics, date of birth, emergency contact, and language preference.
                 </p>
               </div>
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
+              <div className="text-xs font-bold text-teal-600 group-hover:text-teal-700 flex items-center gap-1">
                 <span>Edit Profile</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -325,13 +325,13 @@ export default function HomePage({ setActivePage }) {
             {/* Card 2: Food Allergy Records */}
             <div
               onClick={() => navigateToDashboardTab('allergies')}
-              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
+              className="bg-white border border-slate-200 hover:border-teal-500 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
                   <ShieldAlert className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-100">
                   {stats.allergiesCount} Records
                 </span>
               </div>
@@ -343,7 +343,7 @@ export default function HomePage({ setActivePage }) {
                   Document confirmed and suspected food allergens, severity levels, and doctor notes.
                 </p>
               </div>
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
+              <div className="text-xs font-bold text-teal-600 group-hover:text-teal-700 flex items-center gap-1">
                 <span>View Allergies</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -352,13 +352,13 @@ export default function HomePage({ setActivePage }) {
             {/* Card 3: Medical Test Reports */}
             <div
               onClick={() => navigateToDashboardTab('tests')}
-              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
+              className="bg-white border border-slate-200 hover:border-teal-500 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
                   <FileCheck className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-100">
                   Diagnostic
                 </span>
               </div>
@@ -370,7 +370,7 @@ export default function HomePage({ setActivePage }) {
                   Review Skin Prick Tests (SPT), Specific IgE antibody levels, and lab parameters.
                 </p>
               </div>
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
+              <div className="text-xs font-bold text-teal-600 group-hover:text-teal-700 flex items-center gap-1">
                 <span>Inspect Tests</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -379,13 +379,13 @@ export default function HomePage({ setActivePage }) {
             {/* Card 4: OCR Report Upload */}
             <div
               onClick={() => setIsUploadModalOpen(true)}
-              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
+              className="bg-white border border-slate-200 hover:border-teal-500 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
                   <UploadCloud className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-100">
                   OCR Scanner
                 </span>
               </div>
@@ -397,7 +397,7 @@ export default function HomePage({ setActivePage }) {
                   Upload PDF or laboratory image reports for deterministic OCR extraction and verification.
                 </p>
               </div>
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
+              <div className="text-xs font-bold text-teal-600 group-hover:text-teal-700 flex items-center gap-1">
                 <span>Upload & Extract</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -406,13 +406,13 @@ export default function HomePage({ setActivePage }) {
             {/* Card 5: Daily Food Diary */}
             <div
               onClick={() => navigateToDashboardTab('diary')}
-              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
+              className="bg-white border border-slate-200 hover:border-teal-500 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
                   <Utensils className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-100">
                   {stats.todayMealsCount} Today
                 </span>
               </div>
@@ -424,7 +424,7 @@ export default function HomePage({ setActivePage }) {
                   Log daily meals, recipes, and ingredients with real-time pre-check allergen warnings.
                 </p>
               </div>
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
+              <div className="text-xs font-bold text-teal-600 group-hover:text-teal-700 flex items-center gap-1">
                 <span>Log Meals</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -433,13 +433,13 @@ export default function HomePage({ setActivePage }) {
             {/* Card 6: Symptom Tracker */}
             <div
               onClick={() => navigateToDashboardTab('symptoms')}
-              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
+              className="bg-white border border-slate-200 hover:border-teal-500 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
                   <HeartPulse className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-100">
                   Reactions
                 </span>
               </div>
@@ -451,7 +451,7 @@ export default function HomePage({ setActivePage }) {
                   Record hives, oral tingling, or digestive symptoms linked to specific meals.
                 </p>
               </div>
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
+              <div className="text-xs font-bold text-teal-600 group-hover:text-teal-700 flex items-center gap-1">
                 <span>Track Symptoms</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -460,13 +460,13 @@ export default function HomePage({ setActivePage }) {
             {/* Card 7: My Health Insights */}
             <div
               onClick={() => navigateToDashboardTab('analysis')}
-              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
+              className="bg-white border border-slate-200 hover:border-teal-500 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
                   <TrendingUp className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-100">
                   Insights
                 </span>
               </div>
@@ -478,7 +478,7 @@ export default function HomePage({ setActivePage }) {
                   Deterministic allergen cross-matching, missing information audits & statistical recurrence.
                 </p>
               </div>
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
+              <div className="text-xs font-bold text-teal-600 group-hover:text-teal-700 flex items-center gap-1">
                 <span>View Insights</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -487,13 +487,13 @@ export default function HomePage({ setActivePage }) {
             {/* Card 8: Medical History */}
             <div
               onClick={() => navigateToDashboardTab('history')}
-              className="bg-white border border-slate-200 hover:border-slate-900 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
+              className="bg-white border border-slate-200 hover:border-teal-500 rounded-xl p-5 cursor-pointer group flex flex-col justify-between h-48 transition-all shadow-xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-11 h-11 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <div className="w-11 h-11 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors">
                   <Clock className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-100">
                   Timeline
                 </span>
               </div>
@@ -505,7 +505,7 @@ export default function HomePage({ setActivePage }) {
                   Discover repeated food-symptom pairs and review chronological medical reaction history.
                 </p>
               </div>
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
+              <div className="text-xs font-bold text-teal-600 group-hover:text-teal-700 flex items-center gap-1">
                 <span>Explore Patterns</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -584,7 +584,7 @@ export default function HomePage({ setActivePage }) {
   }
 
   // ---------------------------------------------------------------------------
-  // PUBLIC / VISITOR LANDING VIEW (Minimal White & Deep Navy Blue)
+  // PUBLIC / VISITOR LANDING VIEW (Pleasant Teal-Green & Clean White)
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-16 pb-16">
@@ -593,8 +593,8 @@ export default function HomePage({ setActivePage }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto space-y-6">
             {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5 text-slate-900" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold">
+              <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
               <span>{t('home.heroPill')}</span>
             </div>
 
@@ -612,14 +612,14 @@ export default function HomePage({ setActivePage }) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
               <button
                 onClick={() => setActivePage('register')}
-                className="w-full sm:w-auto px-7 py-3 rounded-xl font-bold bg-slate-900 text-white hover:bg-slate-800 transition-colors shadow-xs flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl font-bold bg-teal-600 text-white hover:bg-teal-700 transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>{t('home.registerNewAccount')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setActivePage('login')}
-                className="w-full sm:w-auto px-7 py-3 rounded-xl font-bold bg-white text-slate-900 border border-slate-300 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl font-bold bg-white text-teal-800 border border-teal-600 hover:bg-teal-50 transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>{t('home.patientLogin')}</span>
               </button>
@@ -628,17 +628,17 @@ export default function HomePage({ setActivePage }) {
             {/* Trust Badges */}
             <div className="pt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
               <span className="flex items-center gap-1.5 font-medium">
-                <Database className="w-4 h-4 text-slate-700" />
+                <Database className="w-4 h-4 text-teal-600" />
                 MongoDB Atlas Cloud
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5 font-medium">
-                <Lock className="w-4 h-4 text-slate-700" />
+                <Lock className="w-4 h-4 text-teal-600" />
                 Bcrypt Hashed & JWT Secured
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5 font-medium">
-                <ShieldCheck className="w-4 h-4 text-slate-700" />
+                <ShieldCheck className="w-4 h-4 text-teal-600" />
                 Intelligent OCR & Clinical ML Engine
               </span>
             </div>
@@ -658,32 +658,32 @@ export default function HomePage({ setActivePage }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
-            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center mb-4 text-sm">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs hover:border-teal-300 transition-all">
+            <div className="w-9 h-9 rounded-lg bg-teal-600 text-white font-bold flex items-center justify-center mb-4 text-sm">
               01
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step1Title')}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">{t('home.step1Desc')}</p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
-            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center mb-4 text-sm">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs hover:border-teal-300 transition-all">
+            <div className="w-9 h-9 rounded-lg bg-teal-600 text-white font-bold flex items-center justify-center mb-4 text-sm">
               02
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step2Title')}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">{t('home.step2Desc')}</p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
-            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center mb-4 text-sm">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs hover:border-teal-300 transition-all">
+            <div className="w-9 h-9 rounded-lg bg-teal-600 text-white font-bold flex items-center justify-center mb-4 text-sm">
               03
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step3Title')}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">{t('home.step3Desc')}</p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
-            <div className="w-9 h-9 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center mb-4 text-sm">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs hover:border-teal-300 transition-all">
+            <div className="w-9 h-9 rounded-lg bg-teal-600 text-white font-bold flex items-center justify-center mb-4 text-sm">
               04
             </div>
             <h3 className="font-bold text-slate-900 text-base mb-1">{t('home.step4Title')}</h3>

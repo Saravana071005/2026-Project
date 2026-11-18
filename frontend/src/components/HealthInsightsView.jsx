@@ -180,7 +180,7 @@ export default function HealthInsightsView({
               <button
                 type="button"
                 onClick={onRefresh}
-                className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-2 shadow-xs transition-colors"
+                className="px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold flex items-center gap-2 shadow-xs transition-colors cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5 text-white" />
                 <span>Refresh Insights</span>
@@ -391,7 +391,7 @@ export default function HealthInsightsView({
                   <span
                     className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
                       test.isDoctorConfirmedDiagnosis
-                        ? 'bg-slate-900 text-white border-slate-900'
+                        ? 'bg-teal-600 text-white border-teal-600'
                         : 'bg-slate-100 text-slate-700 border-slate-200'
                     }`}
                   >
@@ -518,7 +518,7 @@ export default function HealthInsightsView({
               >
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-slate-900" />
+                    <span className="w-2 h-2 rounded-full bg-teal-600" />
                     <span className="font-bold text-xs text-slate-900">{gap.title}</span>
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed max-w-2xl">{gap.description}</p>
@@ -528,7 +528,7 @@ export default function HealthInsightsView({
                   <button
                     type="button"
                     onClick={() => onNavigateTab(gap.actionTab)}
-                    className="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 shrink-0 self-start sm:self-center transition-colors"
+                    className="px-3.5 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold flex items-center gap-1.5 shrink-0 self-start sm:self-center transition-colors cursor-pointer"
                   >
                     <span>{gap.actionLabel}</span>
                     <ArrowRight className="w-3.5 h-3.5" />

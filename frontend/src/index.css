@@ -4,12 +4,21 @@
   font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
   --bg-primary: #ffffff;
   --bg-surface: #ffffff;
-  --text-primary: #0f172a; /* Deep Navy */
+  --text-primary: #0f172a; /* Deep Slate */
   --text-secondary: #475569; /* Slate */
   --border-subtle: #e2e8f0;
-  --navy-primary: #0f172a; /* Deep Navy Blue */
-  --navy-hover: #1e293b;
-  --navy-light: #f1f5f9;
+  
+  /* Coordinated Teal-Green Palette */
+  --teal-primary: #0d9488; /* Teal 600 */
+  --teal-hover: #0f766e; /* Teal 700 */
+  --teal-dark: #115e59; /* Teal 800 */
+  --teal-light: #f0fdfa; /* Teal 50 */
+  --teal-border: #99f6e4; /* Teal 200 */
+  
+  /* Retained alias variables for legacy class bindings */
+  --navy-primary: #0d9488;
+  --navy-hover: #0f766e;
+  --navy-light: #f0fdfa;
 }
 
 body {
@@ -36,11 +45,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0f172a;
+  background: #0d9488;
 }
 
 /* =========================================================================
-   MINIMAL TWO-COLOR DESIGN SYSTEM: WHITE & DEEP NAVY BLUE
+   TEAL-GREEN & CLEAN WHITE HEALTHCARE DESIGN SYSTEM
    ========================================================================= */
 
 /* Clean Minimal Surface */
@@ -48,7 +57,7 @@ body {
   background-color: #ffffff;
 }
 
-/* Minimal Plain White Card with Subtle Navy-Slate Border */
+/* Minimal Plain White Card with Subtle Border */
 .app-card {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
@@ -66,40 +75,44 @@ body {
 }
 
 .app-card-hover:hover {
-  border-color: #0f172a;
-  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  border-color: #0d9488;
+  box-shadow: 0 4px 12px -2px rgba(13, 148, 136, 0.12);
 }
 
-/* Deep Navy Primary Action Button */
+/* Teal-Green Primary Action Button */
+.btn-teal,
 .btn-navy {
-  background-color: #0f172a;
+  background-color: #0d9488;
   color: #ffffff;
-  border: 1px solid #0f172a;
+  border: 1px solid #0d9488;
   font-weight: 700;
   transition: all 0.15s ease;
 }
 
+.btn-teal:hover,
 .btn-navy:hover {
-  background-color: #1e293b;
-  border-color: #1e293b;
+  background-color: #0f766e;
+  border-color: #0f766e;
 }
 
-/* Deep Navy Outline / Secondary Action Button */
+/* Teal-Green Outline / Secondary Action Button */
+.btn-teal-outline,
 .btn-navy-outline {
   background-color: #ffffff;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  color: #0f766e;
+  border: 1px solid #0d9488;
   font-weight: 600;
   transition: all 0.15s ease;
 }
 
+.btn-teal-outline:hover,
 .btn-navy-outline:hover {
-  background-color: #f8fafc;
-  border-color: #0f172a;
-  color: #0f172a;
+  background-color: #f0fdfa;
+  border-color: #0f766e;
+  color: #115e59;
 }
 
-/* Backward compatibility mappings for any lingering references */
+/* Backward compatibility mappings */
 .liquid-ambient-bg {
   background-color: #ffffff;
 }
@@ -118,32 +131,32 @@ body {
 }
 
 .liquid-glass-card:hover {
-  border-color: #0f172a;
-  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  border-color: #0d9488;
+  box-shadow: 0 4px 12px -2px rgba(13, 148, 136, 0.12);
 }
 
 .btn-liquid-purple {
-  background-color: #0f172a;
+  background-color: #0d9488;
   color: #ffffff;
-  border: 1px solid #0f172a;
+  border: 1px solid #0d9488;
   font-weight: 700;
   transition: all 0.15s ease;
 }
 
 .btn-liquid-purple:hover {
-  background-color: #1e293b;
-  border-color: #1e293b;
+  background-color: #0f766e;
+  border-color: #0f766e;
 }
 
 .btn-liquid-cyan {
   background-color: #ffffff;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  color: #0f766e;
+  border: 1px solid #0d9488;
   font-weight: 600;
   transition: all 0.15s ease;
 }
 
 .btn-liquid-cyan:hover {
-  background-color: #f8fafc;
-  border-color: #0f172a;
+  background-color: #f0fdfa;
+  border-color: #0f766e;
 }

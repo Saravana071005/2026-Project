@@ -197,14 +197,14 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="relative bg-white rounded-3xl shadow-2xl max-w-xl w-full border border-slate-200 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-5 bg-slate-900 text-white flex items-center justify-between">
+        <div className="px-6 py-5 bg-teal-700 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-teal-800 border border-teal-600 flex items-center justify-center">
               <UploadCloud className="w-5 h-5 text-white" />
             </div>
             <div>
               <h3 className="text-lg font-bold tracking-tight">{t('medicalReports.uploadReport')}</h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-teal-100">
                 {t('medicalReports.ocrSubtitle')}
               </p>
             </div>
@@ -213,7 +213,7 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
             onClick={handleClose}
             disabled={uploading}
             aria-label="Close"
-            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-teal-100 hover:text-white hover:bg-teal-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -239,7 +239,7 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
             <select
               value={selectedTestType}
               onChange={(e) => setSelectedTestType(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-slate-900 bg-white text-slate-800 shadow-xs"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-teal-500 bg-white text-slate-800 shadow-xs"
             >
               <option value="">✨ {t('medicalReports.autoDetect')}</option>
               {SUPPORTED_TEST_TYPES_LIST.map((schema) => (
@@ -260,8 +260,8 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
             onDrop={handleDrop}
             className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all cursor-pointer ${
               isDragging
-                ? 'border-slate-900 bg-slate-100 scale-[1.01]'
-                : 'border-slate-300 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-100/50'
+                ? 'border-teal-600 bg-teal-50 scale-[1.01]'
+                : 'border-slate-300 hover:border-teal-400 bg-slate-50/50 hover:bg-teal-50/30'
             }`}
             onClick={() => fileInputRef.current?.click()}
           >
@@ -283,13 +283,13 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
               className="hidden"
             />
 
-            <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center mx-auto mb-3">
               <UploadCloud className="w-6 h-6" />
             </div>
 
             <h4 className="text-sm font-bold text-slate-800 mb-1">
               {t('medicalReports.dragDrop')}{' '}
-              <span className="text-slate-900 underline">{t('medicalReports.browse')}</span>
+              <span className="text-teal-700 underline">{t('medicalReports.browse')}</span>
             </h4>
             <p className="text-xs text-slate-500">
               {t('medicalReports.supportedFormats')}
@@ -302,7 +302,7 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
                   e.stopPropagation();
                   fileInputRef.current?.click();
                 }}
-                className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold shadow-xs flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <FileText className="w-3.5 h-3.5 text-slate-700" />
                 <span>{t('medicalReports.selectDocument')}</span>
@@ -314,7 +314,7 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
                   e.stopPropagation();
                   cameraInputRef.current?.click();
                 }}
-                className="px-3.5 py-1.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold shadow-xs flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 text-xs font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <Camera className="w-3.5 h-3.5" />
                 <span>{t('medicalReports.takePhoto')}</span>
@@ -371,15 +371,15 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
 
           {/* Upload Progress Bar */}
           {uploading && (
-            <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 space-y-2 animate-in fade-in">
-              <div className="flex items-center gap-2.5 text-xs font-bold text-slate-900">
-                <Loader2 className="w-4 h-4 animate-spin text-slate-900" />
+            <div className="p-4 rounded-2xl bg-teal-50 border border-teal-200 space-y-2 animate-in fade-in">
+              <div className="flex items-center gap-2.5 text-xs font-bold text-teal-900">
+                <Loader2 className="w-4 h-4 animate-spin text-teal-700" />
                 <span>{progressStage || 'Processing document with OCR...'}</span>
               </div>
-              <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                <div className="h-full bg-slate-900 rounded-full animate-pulse w-3/4" />
+              <div className="w-full h-1.5 bg-teal-200 rounded-full overflow-hidden">
+                <div className="h-full bg-teal-600 rounded-full animate-pulse w-3/4" />
               </div>
-              <p className="text-[11px] text-slate-600">
+              <p className="text-[11px] text-teal-800">
                 Extracting test names, decimal values, units, and reference ranges...
               </p>
             </div>
@@ -387,7 +387,7 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
 
           {/* Privacy & Security Note */}
           <div className="flex items-center gap-2 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-            <ShieldCheck className="w-4 h-4 text-slate-700 shrink-0" />
+            <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0" />
             <span>
               All medical documents are encrypted and accessible only by you. Raw OCR data must be verified before saving.
             </span>
@@ -399,7 +399,7 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
               type="button"
               onClick={handleClose}
               disabled={uploading}
-              className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+              className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
             >
               {t('common.cancel')}
             </button>
@@ -407,7 +407,7 @@ export default function ReportUploadModal({ isOpen, onClose, onUploadSuccess, in
               type="button"
               onClick={handleUploadAndScan}
               disabled={uploading || selectedFiles.length === 0}
-              className="px-5 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs hover:bg-slate-800 transition-all disabled:opacity-50 flex items-center gap-1.5"
+              className="px-5 py-2.5 rounded-xl text-xs font-bold bg-teal-600 text-white shadow-xs hover:bg-teal-700 transition-all disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
             >
               {uploading ? (
                 <>

@@ -42,21 +42,21 @@ export default function AIAnalysisDetailModal({ isOpen, onClose, analysis }) {
           className={`p-5 sm:p-6 text-white flex items-center justify-between ${
             isEmergency
               ? 'bg-rose-900'
-              : 'bg-slate-900'
+              : 'bg-teal-700'
           }`}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-teal-800 border border-teal-600 flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-lg font-bold">Personalized Health Insights & Clinical Analysis</h3>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-200 border border-slate-700">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-800 text-teal-100 border border-teal-600">
                   {analysis.modelUsed || 'Clinical Analysis Engine'}
                 </span>
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-teal-100">
                 Generated {formatDate(analysis.createdAt)}
               </p>
             </div>
@@ -253,7 +253,7 @@ export default function AIAnalysisDetailModal({ isOpen, onClose, analysis }) {
         <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end">
           <button
             onClick={onClose}
-            className="px-6 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold transition-colors"
+            className="px-6 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition-colors cursor-pointer"
           >
             Close Report
           </button>

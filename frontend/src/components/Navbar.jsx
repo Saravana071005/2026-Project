@@ -21,7 +21,7 @@ export default function Navbar({ activePage, setActivePage }) {
             onClick={() => setActivePage('home')}
             className="flex items-center gap-3 cursor-pointer group shrink-0"
           >
-            <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-xs group-hover:bg-slate-800 transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-xs group-hover:bg-teal-700 transition-colors">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -29,8 +29,8 @@ export default function Navbar({ activePage, setActivePage }) {
                 <span className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
                   {t('common.appName')}
                 </span>
-                <span className="hidden lg:inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200">
-                  <Database className="w-3 h-3 text-slate-700" />
+                <span className="hidden lg:inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
+                  <Database className="w-3 h-3 text-teal-700" />
                   MongoDB Atlas
                 </span>
               </div>
@@ -50,8 +50,8 @@ export default function Navbar({ activePage, setActivePage }) {
                 onClick={() => changeLanguage('en')}
                 className={`px-2 py-1 rounded transition-all ${
                   language === 'en'
-                    ? 'bg-slate-900 text-white font-bold'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-teal-600 text-white font-bold'
+                    : 'text-slate-600 hover:text-teal-700'
                 }`}
                 title="English"
               >
@@ -63,8 +63,8 @@ export default function Navbar({ activePage, setActivePage }) {
                 onClick={() => changeLanguage('hi')}
                 className={`px-2 py-1 rounded transition-all ${
                   language === 'hi'
-                    ? 'bg-slate-900 text-white font-bold'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-teal-600 text-white font-bold'
+                    : 'text-slate-600 hover:text-teal-700'
                 }`}
                 title="हिन्दी (Hindi)"
               >
@@ -76,8 +76,8 @@ export default function Navbar({ activePage, setActivePage }) {
                 onClick={() => changeLanguage('ta')}
                 className={`px-2 py-1 rounded transition-all ${
                   language === 'ta'
-                    ? 'bg-slate-900 text-white font-bold'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-teal-600 text-white font-bold'
+                    : 'text-slate-600 hover:text-teal-700'
                 }`}
                 title="தமிழ் (Tamil)"
               >
@@ -92,8 +92,8 @@ export default function Navbar({ activePage, setActivePage }) {
                 onClick={() => setActivePage('home')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                   activePage === 'home'
-                    ? 'bg-slate-900 text-white shadow-2xs'
-                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                    ? 'bg-teal-600 text-white shadow-2xs'
+                    : 'text-slate-700 hover:text-teal-700 hover:bg-teal-50'
                 }`}
               >
                 <Home className="w-4 h-4" />
@@ -106,8 +106,8 @@ export default function Navbar({ activePage, setActivePage }) {
                     onClick={() => setActivePage('dashboard')}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                       activePage === 'dashboard'
-                        ? 'bg-slate-900 text-white shadow-2xs'
-                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                        ? 'bg-teal-600 text-white shadow-2xs'
+                        : 'text-slate-700 hover:text-teal-700 hover:bg-teal-50'
                     }`}
                   >
                     <Activity className="w-4 h-4" />
@@ -116,7 +116,7 @@ export default function Navbar({ activePage, setActivePage }) {
 
                   {/* User Info Capsule */}
                   <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700">
-                    <div className="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+                    <div className="w-6 h-6 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs">
                       {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                     </div>
                     <div className="text-left">
@@ -145,15 +145,15 @@ export default function Navbar({ activePage, setActivePage }) {
                     onClick={() => setActivePage('login')}
                     className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
                       activePage === 'login'
-                        ? 'bg-slate-100 text-slate-900'
-                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                        ? 'bg-teal-50 text-teal-800 font-bold'
+                        : 'text-slate-700 hover:text-teal-700 hover:bg-teal-50'
                     }`}
                   >
                     {t('nav.login')}
                   </button>
                   <button
                     onClick={() => setActivePage('register')}
-                    className="px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 shadow-xs"
+                    className="px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-teal-600 text-white hover:bg-teal-700 shadow-xs"
                   >
                     {t('nav.register')}
                   </button>

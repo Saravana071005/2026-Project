@@ -195,30 +195,30 @@ export default function HistoryAndPatternsView({
           <div className="flex items-center gap-1.5 self-start sm:self-auto">
             <button
               onClick={() => setTimelineFilter('ALL')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 timelineFilter === 'ALL'
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                  ? 'bg-teal-600 text-white'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-teal-50 hover:text-teal-800'
               }`}
             >
               All Events ({timelineEvents.length})
             </button>
             <button
               onClick={() => setTimelineFilter('FOOD')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 timelineFilter === 'FOOD'
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                  ? 'bg-teal-600 text-white'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-teal-50 hover:text-teal-800'
               }`}
             >
               Meals ({foodEntries.length})
             </button>
             <button
               onClick={() => setTimelineFilter('SYMPTOM')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 timelineFilter === 'SYMPTOM'
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                  ? 'bg-teal-600 text-white'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-teal-50 hover:text-teal-800'
               }`}
             >
               Symptoms ({symptoms.length})
@@ -239,7 +239,7 @@ export default function HistoryAndPatternsView({
                   {/* Timeline dot */}
                   <div
                     className={`absolute -left-6 top-1.5 w-4 h-4 rounded-full border-2 border-white shadow-xs ${
-                      isFood ? 'bg-slate-900' : item.isEmergency ? 'bg-red-600 animate-ping' : 'bg-slate-600'
+                      isFood ? 'bg-teal-600' : item.isEmergency ? 'bg-red-600 animate-ping' : 'bg-slate-600'
                     }`}
                   />
 

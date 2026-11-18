@@ -272,23 +272,23 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
       <div className="relative bg-white rounded-3xl shadow-2xl max-w-3xl w-full border border-slate-200 overflow-hidden my-6 max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div className="px-6 py-4 bg-teal-700 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-teal-800 border border-teal-600 flex items-center justify-center">
               <FileCheck className="w-5 h-5 text-white" />
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold tracking-tight">
                 {initialData ? 'Update Test-Specific Medical Record' : 'Dynamic Medical Test Questionnaire'}
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-teal-100">
                 Tailored diagnostic fields adhering to the Food Allergy Testing Educational Guidelines
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-teal-100 hover:text-white hover:bg-teal-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -339,7 +339,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                     onClick={() => handleCategorySwitch(schema.id)}
                     className={`p-2.5 rounded-xl text-left border transition-all text-xs flex flex-col justify-between ${
                       isSelected
-                        ? 'border-slate-900 bg-slate-900 text-white font-bold shadow-xs'
+                        ? 'border-teal-600 bg-teal-600 text-white font-bold shadow-xs'
                         : 'border-slate-200 hover:border-slate-300 bg-white text-slate-600 hover:bg-slate-50'
                     }`}
                   >
@@ -423,7 +423,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                       <select
                         value={val}
                         onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none bg-white text-slate-800 shadow-xs"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white text-slate-800 shadow-xs"
                       >
                         {field.options.map((opt) => (
                           <option key={opt} value={opt}>
@@ -449,7 +449,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                         value={val}
                         placeholder={field.placeholder}
                         onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none bg-white text-slate-800 shadow-xs resize-none"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white text-slate-800 shadow-xs resize-none"
                       />
                       {field.helpText && (
                         <p className="text-[11px] text-slate-400">{field.helpText}</p>
@@ -469,7 +469,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                         max={TODAY_DATE_STRING}
                         value={val}
                         onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none bg-white text-slate-800 shadow-xs"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white text-slate-800 shadow-xs"
                       />
                       {field.helpText && (
                         <p className="text-[11px] text-slate-400">{field.helpText}</p>
@@ -489,7 +489,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                       value={val}
                       placeholder={field.placeholder}
                       onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none bg-white text-slate-800 shadow-xs"
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white text-slate-800 shadow-xs"
                     />
                     {field.helpText && (
                       <p className="text-[11px] text-slate-400">{field.helpText}</p>
@@ -530,21 +530,21 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                       placeholder="Parameter name (e.g. CD203c MFI, Wheal Area)"
                       value={p.key}
                       onChange={(e) => updateCustomParam(idx, 'key', e.target.value)}
-                      className="flex-1 px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 bg-white"
+                      className="flex-1 px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                     />
                     <input
                       type="text"
                       placeholder="Value"
                       value={p.value}
                       onChange={(e) => updateCustomParam(idx, 'value', e.target.value)}
-                      className="w-28 px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 bg-white"
+                      className="w-28 px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                     />
                     <input
                       type="text"
                       placeholder="Unit"
                       value={p.unit}
                       onChange={(e) => updateCustomParam(idx, 'unit', e.target.value)}
-                      className="w-24 px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 bg-white"
+                      className="w-24 px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                     />
                     <button
                       type="button"
@@ -573,9 +573,9 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                 <button
                   type="button"
                   onClick={() => handleConfirmationToggle(false)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 cursor-pointer ${
                     !isDoctorConfirmedDiagnosis
-                      ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                      ? 'border-teal-600 bg-teal-600 text-white shadow-xs'
                       : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -586,9 +586,9 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                 <button
                   type="button"
                   onClick={() => handleConfirmationToggle(true)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 cursor-pointer ${
                     isDoctorConfirmedDiagnosis
-                      ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                      ? 'border-teal-600 bg-teal-600 text-white shadow-xs'
                       : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -609,7 +609,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                   placeholder="e.g. Quest Diagnostics, Metro Allergy Clinic"
                   value={clinicOrLabName}
                   onChange={(e) => setClinicOrLabName(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 bg-white"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                 />
               </div>
 
@@ -622,7 +622,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                   placeholder="e.g. Mild lip tingling, urticaria, or None"
                   value={recordedReactionDetails}
                   onChange={(e) => setRecordedReactionDetails(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 bg-white"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                 />
               </div>
 
@@ -635,7 +635,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
                   placeholder="Doctor's dietary recommendations or follow-up test plan..."
                   value={doctorNotes}
                   onChange={(e) => setDoctorNotes(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 bg-white resize-none"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white resize-none"
                 />
               </div>
             </div>
@@ -647,7 +647,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -655,7 +655,7 @@ export default function MedicalTestModal({ isOpen, onClose, onSaved, initialData
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all flex items-center gap-2"
+              className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all flex items-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <>

@@ -124,14 +124,14 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="relative bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-200/80 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
         {/* Modal Header */}
-        <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <div className="px-6 py-4 bg-teal-700 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <ShieldAlert className="w-5 h-5 text-white" />
             <div>
               <h3 className="text-lg font-bold">
                 {initialData ? t('allergies.editAllergy') : t('allergies.addNewAllergy')}
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-teal-100">
                 {t('allergies.subtitle')}
               </p>
             </div>
@@ -139,7 +139,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
           <button
             onClick={onClose}
             aria-label="Close"
-            className="p-1 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1 rounded-lg text-teal-100 hover:text-white hover:bg-teal-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -166,7 +166,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
                 value={allergenName}
                 onChange={(e) => setAllergenName(e.target.value)}
                 placeholder="e.g. Peanuts, Shrimp, Cow's Milk"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-xs"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs"
               />
             </div>
 
@@ -178,7 +178,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
               <select
                 value={allergenCategory}
                 onChange={(e) => setAllergenCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-xs bg-white"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs bg-white"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -196,7 +196,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
               <select
                 value={severity}
                 onChange={(e) => setSeverity(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-xs bg-white"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs bg-white"
               >
                 <option value="Mild">{t('allergies.mild')}</option>
                 <option value="Moderate">{t('allergies.moderate')}</option>
@@ -212,7 +212,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
               <select
                 value={diagnosisType}
                 onChange={(e) => setDiagnosisType(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-xs bg-white"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs bg-white"
               >
                 <option value="Doctor-Confirmed Diagnosis">{t('allergies.doctorConfirmed')}</option>
                 <option value="Prescription Documented">Prescription Documented</option>
@@ -259,7 +259,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
               value={reactionDescription}
               onChange={(e) => setReactionDescription(e.target.value)}
               placeholder="Describe symptom onset, timing, exposure details..."
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-xs resize-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs resize-none"
             />
           </div>
 
@@ -274,7 +274,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
                 value={doctorName}
                 onChange={(e) => setDoctorName(e.target.value)}
                 placeholder="e.g. Dr. A. Johnson, MD"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-xs"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs"
               />
             </div>
 
@@ -288,7 +288,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
                 value={emergencyMedication}
                 onChange={(e) => setEmergencyMedication(e.target.value)}
                 placeholder="e.g. Epinephrine Auto-Injector 0.3mg"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 text-sm shadow-xs"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-slate-900 text-sm shadow-xs"
               />
             </div>
           </div>
@@ -306,7 +306,7 @@ export default function AllergyModal({ isOpen, onClose, onSaved, initialData }) 
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-all disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-teal-600 text-white hover:bg-teal-700 transition-all disabled:opacity-50 cursor-pointer"
             >
               {loading ? t('common.saving') : initialData ? t('common.saveChanges') : t('allergies.addNewAllergy')}
             </button>

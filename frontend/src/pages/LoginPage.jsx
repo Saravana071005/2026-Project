@@ -62,20 +62,20 @@ export default function LoginPage({ setActivePage }) {
     <div className="max-w-md mx-auto px-4 py-12">
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all">
         {/* Header Banner */}
-        <div className="px-8 py-7 bg-slate-900 text-white text-center relative">
-          <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 mx-auto flex items-center justify-center mb-3">
+        <div className="px-8 py-7 bg-teal-700 text-white text-center relative">
+          <div className="w-12 h-12 rounded-xl bg-teal-800 border border-teal-600 mx-auto flex items-center justify-center mb-3">
             <ShieldCheck className="w-7 h-7 text-white" />
           </div>
           <h2 className="text-2xl font-bold tracking-tight">{t('auth.loginTitle')}</h2>
-          <p className="text-xs text-slate-300 mt-1 max-w-xs mx-auto">
+          <p className="text-xs text-teal-100 mt-1 max-w-xs mx-auto">
             {t('auth.loginSubtitle')}
           </p>
         </div>
 
         {/* Session Expired Notice */}
         {sessionExpiredNotice && (
-          <div className="mx-6 mt-6 p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 text-xs font-medium flex items-center gap-2.5">
-            <Clock className="w-4 h-4 text-slate-600 shrink-0" />
+          <div className="mx-6 mt-6 p-3 rounded-xl bg-teal-50 border border-teal-200 text-teal-900 text-xs font-medium flex items-center gap-2.5">
+            <Clock className="w-4 h-4 text-teal-700 shrink-0" />
             <span>{t('auth.sessionExpired')}</span>
           </div>
         )}
@@ -101,7 +101,7 @@ export default function LoginPage({ setActivePage }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="patient@example.com"
-                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 text-sm bg-white"
+                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-slate-900 text-sm bg-white"
               />
               <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
             </div>
@@ -119,7 +119,7 @@ export default function LoginPage({ setActivePage }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t('auth.password')}
-                className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 text-sm bg-white"
+                className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-slate-900 text-sm bg-white"
               />
               <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
               <button
@@ -137,7 +137,7 @@ export default function LoginPage({ setActivePage }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl font-bold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-xs disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 transition-all shadow-xs disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {loading ? (
               <span>{t('auth.authenticating')}</span>
@@ -154,9 +154,9 @@ export default function LoginPage({ setActivePage }) {
             <button
               type="button"
               onClick={handleUseDemo}
-              className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-slate-200"
+              className="w-full py-2.5 px-3 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-teal-200 cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-slate-700" />
+              <Sparkles className="w-3.5 h-3.5 text-teal-700" />
               <span>{t('auth.demoFill')}</span>
             </button>
           </div>
@@ -167,7 +167,7 @@ export default function LoginPage({ setActivePage }) {
             <button
               type="button"
               onClick={() => setActivePage('register')}
-              className="font-bold text-slate-900 hover:underline ml-1 cursor-pointer"
+              className="font-bold text-teal-700 hover:text-teal-800 hover:underline ml-1 cursor-pointer"
             >
               {t('auth.createAccount')}
             </button>

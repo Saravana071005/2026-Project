@@ -410,9 +410,9 @@ export default function ReportReviewModal({
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4">
       <div className="relative bg-white rounded-3xl shadow-2xl max-w-6xl w-full border border-slate-200 overflow-hidden my-4 max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div className="px-6 py-4 bg-teal-700 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-teal-800 border border-teal-600 flex items-center justify-center">
               <FileCheck className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -420,16 +420,16 @@ export default function ReportReviewModal({
                 <h3 className="text-base sm:text-lg font-bold tracking-tight">
                   Verify Extracted Medical Report Data
                 </h3>
-                <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 text-[11px] font-semibold border border-slate-700">
+                <span className="px-2 py-0.5 rounded-md bg-teal-800 text-teal-100 text-[11px] font-semibold border border-teal-600">
                   OCR Engine: {report.ocrEngine || 'Hybrid'}
                 </span>
                 {report.detectedTestType && (
-                  <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-200 text-[11px] font-bold border border-slate-700">
+                  <span className="px-2 py-0.5 rounded-md bg-teal-800 text-teal-100 text-[11px] font-bold border border-teal-600">
                     Detected: {report.detectedTestType}
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-teal-100 mt-0.5">
                 Document: <span className="font-mono">{report.originalFileName}</span> &bull; Verify extracted values, units, and missing parameters
               </p>
             </div>
@@ -437,7 +437,7 @@ export default function ReportReviewModal({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-teal-100 hover:text-white hover:bg-teal-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -603,7 +603,7 @@ export default function ReportReviewModal({
                     value={clinicOrLabName}
                     onChange={(e) => setClinicOrLabName(e.target.value)}
                     placeholder="e.g. QUEST DIAGNOSTICS IMMUNOLOGY LABORATORY"
-                    className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 bg-white"
+                    className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                   />
                 </div>
 
@@ -617,7 +617,7 @@ export default function ReportReviewModal({
                     max={TODAY_DATE_STRING}
                     value={testDate}
                     onChange={(e) => setTestDate(e.target.value)}
-                    className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 bg-white"
+                    className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                   />
                 </div>
 
@@ -631,7 +631,7 @@ export default function ReportReviewModal({
                     value={doctorName}
                     onChange={(e) => setDoctorName(e.target.value)}
                     placeholder="e.g. Dr. Marcus Bennett, MD"
-                    className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-slate-900 bg-white"
+                    className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 bg-white"
                   />
                 </div>
               </div>
@@ -647,9 +647,9 @@ export default function ReportReviewModal({
                     onClick={() =>
                       setClinicalDiagnosisStatus('Recorded Test Result (Not yet confirmed)')
                     }
-                    className={`p-2.5 rounded-xl text-left text-xs font-semibold border transition-all ${
+                    className={`p-2.5 rounded-xl text-left text-xs font-semibold border transition-all cursor-pointer ${
                       clinicalDiagnosisStatus !== 'Doctor-Confirmed Diagnosis'
-                        ? 'bg-slate-900 border-slate-900 text-white shadow-xs'
+                        ? 'bg-teal-600 border-teal-600 text-white shadow-xs'
                         : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
                     }`}
                   >
@@ -659,7 +659,7 @@ export default function ReportReviewModal({
                         <Check className="w-3.5 h-3.5 text-white" />
                       )}
                     </div>
-                    <p className={`text-[10px] font-normal mt-0.5 ${clinicalDiagnosisStatus !== 'Doctor-Confirmed Diagnosis' ? 'text-slate-300' : 'text-slate-500'}`}>
+                    <p className={`text-[10px] font-normal mt-0.5 ${clinicalDiagnosisStatus !== 'Doctor-Confirmed Diagnosis' ? 'text-teal-100' : 'text-slate-500'}`}>
                       Sensitization recorded; not yet formally confirmed by physician.
                     </p>
                   </button>
@@ -667,9 +667,9 @@ export default function ReportReviewModal({
                   <button
                     type="button"
                     onClick={() => setClinicalDiagnosisStatus('Doctor-Confirmed Diagnosis')}
-                    className={`p-2.5 rounded-xl text-left text-xs font-semibold border transition-all ${
+                    className={`p-2.5 rounded-xl text-left text-xs font-semibold border transition-all cursor-pointer ${
                       clinicalDiagnosisStatus === 'Doctor-Confirmed Diagnosis'
-                        ? 'bg-slate-900 border-slate-900 text-white shadow-xs'
+                        ? 'bg-teal-600 border-teal-600 text-white shadow-xs'
                         : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
                     }`}
                   >
@@ -1133,7 +1133,7 @@ export default function ReportReviewModal({
               type="button"
               onClick={handleConfirmAndSave}
               disabled={saving}
-              className="px-5 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-xs hover:bg-slate-800 transition-all disabled:opacity-50 flex items-center gap-1.5"
+              className="px-5 py-2.5 rounded-xl text-xs font-bold bg-teal-600 text-white shadow-xs hover:bg-teal-700 transition-all disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
             >
               {saving ? (
                 <>

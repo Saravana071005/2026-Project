@@ -84,7 +84,7 @@ export default function SymptomJournalView({
 
         <button
           onClick={onOpenAddModal}
-          className="px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 shadow-xs flex items-center gap-1.5 transition-all self-start sm:self-auto"
+          className="px-4 py-2.5 rounded-xl bg-teal-600 text-white text-xs font-bold hover:bg-teal-700 shadow-xs flex items-center gap-1.5 transition-all self-start sm:self-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Record Symptom / Reaction</span>
@@ -187,7 +187,7 @@ export default function SymptomJournalView({
           </div>
           <button
             onClick={onOpenAddModal}
-            className="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors inline-flex items-center gap-1.5 shadow-xs"
+            className="px-5 py-2.5 rounded-xl bg-teal-600 text-white text-xs font-bold hover:bg-teal-700 transition-colors inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Record First Symptom</span>
